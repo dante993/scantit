@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head lang="es">
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>Control de Usuarios y Servicios</title>
+    <link type="image/x-icon" href="../static/img/libsoft.png" rel="shortcut icon"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'css/materialize.css' %}">
+        <link rel="stylesheet" href="{% static 'css/estiloss.css' %}">
+    {% endblock css %}
+    {% block js %}
+        <script src="{% static 'js/jquery.js' %}" ></script>
+        <script src="{% static 'js/materialize.js' %}" ></script>
+    {% endblock js %}
+</head>
+<body style="background: url({% static 'img/biblioteca.jpg' %}) no-repeat fixed center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;">
+<div class="navbar-fixed cont-f">
+
+    <nav>
+        <div class="nav-wrapper blue">
+            <img width="200" src="{% static 'img/logo_utm2.png' %}" style="margin-top: 5px;margin-right: 1%;margin-left: 5px"/>
+            <a href="#!" class="brand-logo">Bienvenido! {{user.per_nombre}} {{user.per_apellido}}</a>
+            <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="{% url 'inicio' %}">Inicio</a></li>
+                <li><a href="{% url 'editar_usuario' %}">Editar perfil</a></li>
+                <li><a href="{% url 'clave_edit' %}">Cambiar contraseña</a></li>
+                <li><a href="{% url 'logout' %}"><i class="material-icons right">input</i> Salir</a></li>
+            </ul>
+            <ul class="side-nav" id="mobile-demo">
+                <li><a href="{% url 'inicio' %}">Inicio</a></li>
+                <li><a href="{% url 'editar_usuario' %}">Editar perfil</a></li>
+                <li><a href="{% url 'clave_edit' %}">Cambiar contraseña</a></li>
+                <li><a href="{% url 'logout' %}"><i class="material-icons right">input</i> Salir</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div id="contenido" class="cont-f">
+    {% block content %}
+
+    {% endblock content %}
+</div>
+<script>
+    $(".button-collapse").sideNav();
+</script>
+</body>
+</html>
