@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="es">
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>Deteccion de Cancer</title>
+    <link type="image/x-icon" href="../static/img/logo.png" rel="shortcut icon"/>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"/> -->
+
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'css/viewport.css' %}">
+        <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+        <!-- <link rel="stylesheet" href="{% static 'css/estiloss.css' %}"> -->
+    {% endblock css %}
+    {% block js %}
+        <script src="{% static 'js/jquery.js' %}" ></script>
+        <script src="{% static 'js/bootstrap.js' %}" ></script>
+        <script src="{% static 'js/holder.min.js' %}" ></script>
+        <script src="{% static 'js/viewport.js' %}" ></script>
+        <script src="{% static 'js/ie-emulation-modes-warning.js' %}" ></script>
+    {% endblock js %}
+</head>
+<body style="background: url(../static/img/fondo.jpg) no-repeat fixed center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;">
+  <div class="container" style="max-width:30%;margin-top:5%;">
+
+        <form class="form-signin" method="post">{% csrf_token %}
+          <h2 class="form-signin-heading">Iniciar sesion</h2>
+          {{ form.username.label_tag }}
+          {{ form.username }}
+          <br>
+          {{ form.password.label_tag }}
+          {{ form.password }}
+          <br>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">iniciar</button>
+        </form>
+
+      </div> <!-- /container -->
+</body>

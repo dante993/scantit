@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -39,6 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'scanm',
 ]
+
+from django.core.urlresolvers import reverse_lazy
+LOGIN_URL= reverse_lazy('login')
+LOGIN_REDIRECT_URL= reverse_lazy('inicio')
+LOGOUT_URL=reverse_lazy('logout')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
