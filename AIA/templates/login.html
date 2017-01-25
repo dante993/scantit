@@ -31,8 +31,8 @@
 
         <form class="form-signin" method="post">{% csrf_token %}
           <h2 class="form-signin-heading">Iniciar sesion</h2>
-          {{ form.username.label_tag }}
-          {{ form.username }}
+          {{ form.cedula.label_tag }}
+          {{ form.cedula }}
           <br>
           {{ form.password.label_tag }}
           {{ form.password }}

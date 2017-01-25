@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  <h1 class="page-header">Historial Clinico</h1>
+
+  <h2 class="sub-header">Nuevo Historial Clinico</h2>
+  <form method="post" action="">{% csrf_token %}
+      <div class="container">
+        <div class="form-group">
+          {{ form.hc_nombre.label_tag }}
+          {{ form.hc_nombre }}
+          {{ form.hc_nombre.errors }}
+        </div>
+        <div class="form-group">
+          {{ form.hc_apellido.label_tag }}
+          {{ form.hc_apellido }}
+          {{ form.hc_apellido.errors }}
+        </div>
+        <div class="form-group">
+          {{ form.hc_edad.label_tag }}
+          {{ form.hc_edad }}
+          {{ form.hc_edad.errors }}
+        </div>
+        <div class="form-group">
+          <label>Medico:</label>
+          {{ form.cedula }}
+        </div>
+      </div>
+      <div class="container" >
+          <div class="form-group has-feedback">
+              <a href="{% url 'cargar_img'%}" class="btn btn-danger">Cancelar</a> <button type="submit" class="btn btn-success">Guardar</button>
+          </div>
+      </div>
+  </form>
+
+  </div>
+</div>
+{% endblock content %}
+{% block jscrpt %}
+<script type="text/javascript">
+$( document ).ready(function() {
+  $("#id_cedula").val("{{usuario.cedula}}");
+
+});
+
+</script>
+{% endblock jscrpt %}

@@ -26,12 +26,12 @@ SECRET_KEY = '!du-$aduj3el81v4nxkv+$^z7^835@gm@li8ak!zq#xujbjec='
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+AUTH_USER_MODEL = 'scanm.Usuario'
 
 # Application definition
 
 INSTALLED_APPS = [
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
