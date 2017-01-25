@@ -4,7 +4,6 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
   <h1 class="page-header">Cargar imagen</h1>
   <br>
-
 <!--..................................................canvas ..................................................................  -->
   <!-- <div align="center">
     <input name="btnCargar" id="btnCargar" type="file" />
@@ -16,7 +15,7 @@
     <canvas id="canvas" width="1200" height="500" style="display:none"></canvas>
   </div>
 <!--..................................................canvas ..................................................................  -->
-<br>
+<br><br>
 
   <h2 class="sub-header">Areas seleccionadas</h2>
   <div class="table-responsive">
@@ -28,6 +27,7 @@
           <th>Posicion en Y</th>
           <th>Ancho</th>
           <th>Alto</th>
+          <th>Eliminar</th>
         </tr>
       </thead>
       <tbody>
@@ -42,9 +42,15 @@
 </div>
 
 {% endblock content %}
-
 {% block jscrpt %}
 <script type="text/javascript">
+
+// function quitar(){
+//     if (contN > 1) {
+//         $('#tablaR tr:last').remove()
+//         contN--;
+//     }
+// }
 
 // function pantalla(){
 //       alert($('input[type=file]').val());
@@ -61,6 +67,13 @@ var canvasLimites; // los margenes del canvas
 var paint=false; // nos dice si pintar o no
 var mbegin; // info de mi cuadro (x,y)
 var mend; // info de mi cuadro (width,height)
+var contRegistros=0;
+
+$(document).on('click', '.borrar', function (event) {
+    event.preventDefault();
+    conrec-=1;
+    $(this).closest('tr').remove();
+});
 
 function leerarray(){
       var recc=recuadros[recuadros.length-1];
@@ -72,6 +85,7 @@ function leerarray(){
               +'<td>'+recc[2]+'</td>'
               +'<td>'+recc[3]+'</td>'
               +'<td>'+recc[4]+'</td>'
+              +'<td><button type="button" class="borrar btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></button></td>'
               +'</tr>');
 }
 function prepareCanvas(){

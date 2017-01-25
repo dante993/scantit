@@ -5,7 +5,7 @@ from django.db import models
 # Create your models here.
 class Imagen(models.Model):
     img_id=models.AutoField(primary_key=True)
-    img_ruta = models.CharField(max_length = 300)
+    img_ruta = models.ImageField(upload_to='mamas', blank=True)
     img_descripcion=models.TextField()
     def __unicode__(self):
         return self.img_ruta
