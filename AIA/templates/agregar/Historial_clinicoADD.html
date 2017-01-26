@@ -23,9 +23,20 @@
           {{ form.hc_edad }}
           {{ form.hc_edad.errors }}
         </div>
-        <div class="form-group">
-          <label>Medico:</label>
+        <div class="form-group ocul">
+          {{ form.hc_fecha.label_tag }}
+          {{ form.hc_fecha }}
+          {{ form.hc_fecha.errors }}
+        </div>
+        <div class="form-group ocul">
+          {{ form.hc_estado.label_tag }}
+          {{ form.hc_estado }}
+          {{ form.hc_estado.errors }}
+        </div>
+        <div class="form-group ocul">
+          {{ form.cedula.label_tag }}
           {{ form.cedula }}
+          {{ form.cedula.errors }}
         </div>
       </div>
       <div class="container" >
@@ -42,6 +53,8 @@
 <script type="text/javascript">
 $( document ).ready(function() {
   $("#id_cedula").val("{{usuario.cedula}}");
+  $(".ocul").hide();
+
 
 });
 

@@ -74,7 +74,7 @@ class Historial_clinico(models.Model):
     hc_nombre = models.CharField(max_length = 25,verbose_name="Nombre")
     hc_apellido = models.CharField(max_length = 25,verbose_name="Apellido")
     hc_edad = models.IntegerField(verbose_name="Edad")
-    hc_fecha = models.DateField(auto_now_add = True,verbose_name="Fecha")
+    hc_fecha = models.DateField(auto_now_add = True,verbose_name="Fecha",blank=True)
     ESTADO_CHOICES =((u'activo',u'Activo'),
                     (u'inactivo',u'Inactivo'),)
     hc_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES,verbose_name="Estado", default='activo',blank=True)
