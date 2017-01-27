@@ -13,17 +13,6 @@ class LoginForm(Form):
                                                            "placeholder": "password..."}))
 
 class ImagenForm(forms.ModelForm):
-    img_id=models.AutoField(primary_key=True)
-    img_ruta = models.ImageField(upload_to='mamas')
-    img_descripcion=models.TextField()
-    ESTADO_CHOICES =((u'analizada',u'Analizada'),
-                    (u'no analizada',u'No Analizada'),)
-    img_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES, blank=True)
-    VALIDEZ_CHOICES =((u'valida',u'Valida'),
-                    (u'no valida',u'No Valida'),)
-    img_validez = models.CharField(max_length = 25,choices=VALIDEZ_CHOICES, blank=True)
-    img_fecha=models.DateField(auto_now_add=True)
-    hc_id=models.ForeignKey(Historial_clinico,verbose_name="Historial_clinico")
     class Meta:
         model = Imagen
         widgets={

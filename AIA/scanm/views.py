@@ -24,7 +24,7 @@ def loginView(request):
                                 password=form.cleaned_data['password'])
             if user is not None and user.is_active:
                 login(request, user)
-                return redirect(request.POST.get('next', '/cargar_imagen/'))
+                return redirect(request.POST.get('next', '/area_imagen/'))
             else:
                 messages.error(request, "Nombre de Usuario o clave Incorrecto")
                 return redirect("/login/")
@@ -38,9 +38,22 @@ def Historial_clinicoCreate(request, template_name='agregar/Historial_clinicoADD
     form = Historial_clinicoForm(request.POST or None)
     if form.is_valid():
         form.save()
-        return redirect("cargar_img")
+        return redirect("area_img")
     return render(request,template_name,{'form':form,'usuario':usuario})
 
+# ------------------------------------------Imagen-----------------------------------------
+@login_required(login_url='/')
+def ImagenCreate(request, template_name='agregar/ImagenADD.html'):
+    form = ImagenForm()
+    if request.method == 'POST':
+        print("1")
+        form=ImagenForm(request.POST or None,request.FILES)
+        print("3")
+        if form.is_valid():
+            print("3")
+            form.save()
+            return redirect("area_img")
+    return render(request,template_name,{'form':form})
 
 
 

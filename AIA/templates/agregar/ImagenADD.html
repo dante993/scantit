@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  <h1 class="page-header">Imagen</h1>
+
+  <h2 class="sub-header">Imagen del paciente</h2>
+  <form method="post" action="" ENCTYPE="multipart/form-data">{% csrf_token %}
+      <div class="container">
+        <div class="form-group">
+          {{ form.img_ruta.label_tag }}
+          {{ form.img_ruta }}
+          {{ form.img_ruta.errors }}
+        </div>
+        <div class="form-group">
+          {{ form.img_descripcion.label_tag }}
+          {{ form.img_descripcion }}
+          {{ form.img_descripcion.errors }}
+        </div>
+        <div class="form-group">
+          {{ form.img_fecha.label_tag }}
+          {{ form.img_fecha }}
+          {{ form.img_fecha.errors }}
+        </div>
+        <div class="form-group ocul">
+          {{ form.hc_id.label_tag }}
+          {{ form.hc_id }}
+          {{ form.hc_id.errors }}
+        </div>
+      </div>
+      <div class="container" >
+          <div class="form-group has-feedback">
+              <a href="{% url 'area_img'%}" class="btn btn-danger">Cancelar</a> <button type="submit" class="btn btn-success">Guardar</button>
+          </div>
+      </div>
+  </form>
+
+  </div>
+</div>
+{% endblock content %}

@@ -85,7 +85,7 @@ class Historial_clinico(models.Model):
 
 class Imagen(models.Model):
     img_id=models.AutoField(primary_key=True)
-    img_ruta = models.ImageField(upload_to='mamas')
+    img_ruta = models.ImageField(upload_to='media')
     img_descripcion=models.TextField()
     ESTADO_CHOICES =((u'analizada',u'Analizada'),
                     (u'no analizada',u'No Analizada'),)
