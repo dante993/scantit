@@ -8,6 +8,11 @@ import time
 
 # Create your views here.
 # @login_required()
+def v_inicio(request):
+    usuario=get_object_or_404(Usuario,cedula=request.user)
+    return render(request, "inicio.html", {"usuario": usuario})
+
+@login_required()
 def v_cargar_img(request):
     mi_template = loader.get_template("cargar_img.html")
     return HttpResponse(mi_template.render())
@@ -24,7 +29,7 @@ def loginView(request):
                                 password=form.cleaned_data['password'])
             if user is not None and user.is_active:
                 login(request, user)
-                return redirect(request.POST.get('next', '/area_imagen/'))
+                return redirect(request.POST.get('next', '/inicio/'))
             else:
                 messages.error(request, "Nombre de Usuario o clave Incorrecto")
                 return redirect("/login/")

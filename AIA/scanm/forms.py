@@ -5,12 +5,13 @@ from django.forms import Form, CharField, TextInput
 class LoginForm(Form):
     cedula = CharField(max_length=10, widget=TextInput(attrs=
                                                           {"class": "form-control",
-                                                           "placeholder": "cedula...",
+                                                           "placeholder": "Cedula...",
+                                                           "type": "text",
                                                            "autofocus": True}))
     password = CharField(max_length=30, widget=TextInput(attrs=
                                                           {"class": "form-control",
                                                            "type": "password",
-                                                           "placeholder": "password..."}))
+                                                           "placeholder": "Password..."}))
 
 class ImagenForm(forms.ModelForm):
     class Meta:
