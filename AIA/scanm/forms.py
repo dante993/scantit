@@ -18,18 +18,18 @@ class ImagenForm(forms.ModelForm):
         model = Imagen
         widgets={
             'img_ruta':forms.FileInput(attrs={
-                'class':'form-control'
+                'class':'form-control',
+                'accept':'image/jpg,image/png,image/jepg'
             }),
             'img_descripcion':forms.Textarea(attrs={
                 'class':'form-control',
-                'placeholder':'Breve descripcion del producto...'
             }),
             'img_fecha':forms.DateInput(attrs={
                 'class':'form-control',
                 'type':'date'
             }),
             'hc_id':forms.Select(attrs={
-                'class':'form-control'
+                'class':'datepicker form-control'
             }),
         }
         fields = '__all__'

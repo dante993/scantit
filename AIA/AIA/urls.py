@@ -24,9 +24,10 @@ urlpatterns = [
     url(r'^$', loginView, name='login'),
     url(r'^logout/$', logoutView, name='logout'),
     url(r'^inicio/$', v_inicio, name='inicio'),
-    url(r'^area_imagen/$', v_cargar_img, name='area_img'),
-    url(r'^crear_historial_clinico/$', Historial_clinicoCreate, name='crear_historial_clinico'),
     url(r'^cargar_imagen/$', ImagenCreate, name='crear_imagen'),
+    url(r'^area_imagen/$', v_area_img, name='area_img'),
+    url(r'^crear_historial_clinico/$', Historial_clinicoCreate, name='crear_historial_clinico'),
+
 
     # url(r'^login/$', auth_views.login, name='login'),
     # url(r'^cerrar/$', auth_views.logout, name='logout'),

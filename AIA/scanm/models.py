@@ -86,15 +86,16 @@ class Historial_clinico(models.Model):
 class Imagen(models.Model):
     img_id=models.AutoField(primary_key=True)
     img_ruta = models.ImageField(upload_to='media')
-    img_descripcion=models.TextField()
+    img_descripcion=models.TextField(verbose_name="Descripcion de la imagen",blank=True,default="sin comentarios...")
     ESTADO_CHOICES =((u'analizada',u'Analizada'),
                     (u'no analizada',u'No Analizada'),)
-    img_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES, default='no analizada')
+    img_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES, default='no analizada',blank=True)
     VALIDEZ_CHOICES =((u'valida',u'Valida'),
+                    (u'no definido',u'No definido'),
                     (u'no valida',u'No Valida'),)
-    img_validez = models.CharField(max_length = 25,choices=VALIDEZ_CHOICES, default='valida')
-    img_fecha=models.DateField(auto_now_add=True)
-    hc_id=models.ForeignKey(Historial_clinico,verbose_name="Historial_clinico")
+    img_validez = models.CharField(max_length = 25,choices=VALIDEZ_CHOICES, default='no definido',blank=True)
+    img_fecha=models.DateField(auto_now_add=True,blank=True)
+    hc_id=models.ForeignKey(Historial_clinico,verbose_name="Historial clinico")
     def __unicode__(self):
         return self.img_ruta
 

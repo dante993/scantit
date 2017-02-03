@@ -13,8 +13,9 @@ def v_inicio(request):
     return render(request, "inicio.html", {"usuario": usuario})
 
 @login_required()
-def v_cargar_img(request):
-    mi_template = loader.get_template("cargar_img.html")
+def v_area_img(request):
+    cargar_img_activacion='active'
+    mi_template = loader.get_template("agregar/marcar_img.html")
     return HttpResponse(mi_template.render())
 
 def logoutView(request):
@@ -41,24 +42,33 @@ def loginView(request):
 def Historial_clinicoCreate(request, template_name='agregar/Historial_clinicoADD.html'):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     form = Historial_clinicoForm(request.POST or None)
+    crear_hc_activacion='active'
     if form.is_valid():
         form.save()
         return redirect("area_img")
-    return render(request,template_name,{'form':form,'usuario':usuario})
+    return render(request,template_name,{'form':form,'usuario':usuario,'crear_hc_activacion':crear_hc_activacion})
 
 # ------------------------------------------Imagen-----------------------------------------
 @login_required(login_url='/')
 def ImagenCreate(request, template_name='agregar/ImagenADD.html'):
-    form = ImagenForm()
-    if request.method == 'POST':
-        print("1")
-        form=ImagenForm(request.POST or None,request.FILES)
-        print("3")
-        if form.is_valid():
-            print("3")
-            form.save()
-            return redirect("area_img")
-    return render(request,template_name,{'form':form})
+    form = ImagenForm(request.POST or None,request.FILES or None)
+    cargar_img_activacion='active'
+    if form.is_valid():
+        form.save()
+        return redirect("inicio")
+    # if request.method == 'POST':
+    #     ruta=request.POST["img_ruta"]
+    #     print(ruta)
+    #     descripcion=request.POST["img_descripcion"]
+    #     estado='no analizada'
+    #     validez='no definido'
+    #     fecha=str(time.strftime("%d/%m/%y"))
+    #     hc=request.POST["hc_id"]
+    #     hc_obj=get_object_or_404(Historial_clinico, hc_id=hc)
+    #     obj = Imagen(img_ruta=ruta,img_descripcion=descripcion,img_estado=estado,img_validez=validez,img_fecha=fecha,hc_id=hc_obj)
+    #     obj.save()
+    #     return redirect("inicio")
+    return render(request,template_name,{'form':form,"cargar_img_activacion":cargar_img_activacion})
 
 
 
