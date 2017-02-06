@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header" data-background-color="purple">
+          <h4 class="title">Agregar imagen</h4>
+          <p class="category">Mamografia del paciente</p>
+        </div>
+        <div class="card-content">
+          <form method="post" action="" ENCTYPE="multipart/form-data">{% csrf_token %}
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group label-floating">
+                  {{ form.hc_id.label_tag }}
+                  {{ form.hc_id }}
+                  {{ form.hc_id.errors }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Descripcion de la imagen:</label>
+                  {{ form.img_descripcion }}
+                  {{ form.img_descripcion.errors }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group label-floating">
+                  {{ form.img_estado.label_tag }}
+                  {{ form.img_estado }}
+                  {{ form.img_estado.errors }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group label-floating">
+                  {{ form.img_validez.label_tag }}
+                  {{ form.img_validez }}
+                  {{ form.hcimg_validez_id.errors }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  {{ form.img_fecha.label_tag }}
+                  {{ form.img_fecha }}
+                  {{ form.img_fecha.errors }}
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-success pull-right">Guardar</button>
+            <div class="clearfix"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+{% block jscrpt %}
+
+{% endblock jscrpt %}

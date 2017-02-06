@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+
+<form class="navbar-form" method="post" action="">{% csrf_token %}
+  <div class="form-group  is-empty">
+
+    <div class="row">
+      <div class="col-md-3">
+        <a href="{% url 'crear_historial_clinico' %}" class="btn btn-primary"><i class="material-icons">playlist_add</i> Nuevo</a>
+      </div>
+
+      <div class="col-md-4">
+        <a href="{% url 'historial_clinico' %}" class="btn btn-primary"><i class="material-icons">person_outline</i> Ver activos</a>
+      </div>
+
+      <div class="col-md-5">
+        <input type="text" id="busca" name="busca" class="form-control" placeholder="Nombre del paciente...">
+        <button type="submit" class="btn btn-white btn-round btn-just-icon">
+          <i class="material-icons">search</i><div class="ripple-container"></div>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</form>
+
+<div class="card">
+  <div class="card-header" data-background-color="purple">
+    <h4 class="title">Historiales clinicos</h4>
+    <p class="category">Listado de historiales clinicos</p>
+  </div>
+  <div class="card-content table-responsive table-full-width">
+    <table class="table table-hover">
+      <thead class="text-danger">
+        <th>ID</th>
+        <th>NOMBRES</th>
+        <th>EDAD</th>
+        <th>FECHA DE REGISTRO</th>
+        <th>ESTADO</th>
+        <th>DOCTOR</th>
+        <th>OPCIONES</th>
+      </thead>
+      <tbody>
+        {% for hist in historial %}
+        <tr>
+          <td>{{ hist.hc_id }}</td>
+          <td>{{ hist.hc_nombre }} {{ hist.hc_apellido }}</td>
+          <td>{{ hist.hc_edad }}</td>
+          <td>{{ hist.hc_fecha }}</td>
+          <td>{{ hist.hc_estado }}</td>
+          <td>{{ hist.cedula }}</td>
+          <td>
+            <a href="{% url 'restaurar_historial_clinico' hist.hc_id %}" class="btn btn-info btn-just-icon" data-toggle="tooltip" data-placement="top" title="Restaurar"><i class="material-icons">undo</i></a>
+            <a href="{% url 'editar_historial_clinico' hist.hc_id %}" class="btn btn-success btn-just-icon" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
+{% endblock content %}
+{% block jscrpt %}
+<script type="text/javascript">
+$('[data-toggle="tooltip"]').tooltip();
+</script>
+{% endblock jscrpt %}

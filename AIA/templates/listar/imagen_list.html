@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+
+<form class="navbar-form" method="post" action="">{% csrf_token %}
+  <div class="form-group  is-empty">
+
+<div class="row">
+      <div class="col-md-5">
+        <a href="{% url 'crear_imagen' %}" class="btn btn-primary"><i class="material-icons">playlist_add</i> Nuevo</a>
+      </div>
+      <div class="col-md-7">
+        <input type="text" id="busca" name="busca" class="form-control" placeholder="Nombre de la imagen...">
+        <button type="submit" class="btn btn-white btn-round btn-just-icon">
+          <i class="material-icons">search</i><div class="ripple-container"></div>
+        </button>
+      </div>
+</div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="card-header" data-background-color="purple">
+    <h4 class="title">Imagenes</h4>
+    <p class="category">Listado de imagenes de los pacientes</p>
+  </div>
+  <div class="card-content table-responsive table-full-width">
+    <table class="table table-hover">
+      <thead class="text-danger">
+        <th>ID</th>
+        <th>RUTA</th>
+        <th>DESCRIPCION</th>
+        <th>ESTADO</th>
+        <th>VALIDEZ</th>
+        <th>FECHA</th>
+        <th>PACIENTE</th>
+        <th>OPCIONES</th>
+      </thead>
+      <tbody>
+        {% for im in img %}
+        <tr>
+          <td>{{ im.img_id }}</td>
+          <td>{{ im.img_ruta }}</td>
+          <td>{{ im.img_descripcion }}</td>
+          <td>{{ im.img_estado }}</td>
+          <td>{{ im.img_validez }}</td>
+          <td>{{ im.img_fecha }}</td>
+          <td>{{ im.hc_id }}</td>
+          <td>
+            <a href="#" class="btn btn-info btn-just-icon" data-toggle="tooltip" data-placement="top" title="Seleccionar area"><i class="material-icons">tab_unselected</i></a>
+            <a href="{% url 'borrar_imagen' im.img_id %}" class="btn btn-danger btn-just-icon" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
+            <a href="{% url 'editar_imagen' im.img_id %}" class="btn btn-success btn-just-icon" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
+{% endblock content %}
+{% block jscrpt %}
+<script type="text/javascript">
+$('[data-toggle="tooltip"]').tooltip();
+</script>
+{% endblock jscrpt %}

@@ -24,6 +24,12 @@ class ImagenForm(forms.ModelForm):
             'img_descripcion':forms.Textarea(attrs={
                 'class':'form-control',
             }),
+            'img_estado':forms.Select(attrs={
+                'class':'datepicker form-control'
+            }),
+            'img_validez':forms.Select(attrs={
+                'class':'datepicker form-control'
+            }),
             'img_fecha':forms.DateInput(attrs={
                 'class':'form-control',
                 'type':'date'

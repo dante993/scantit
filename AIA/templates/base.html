@@ -49,16 +49,16 @@
 
 	    	<div class="sidebar-wrapper">
 	            <ul class="nav">
-	                <li class="{{crear_hc_activacion}}">
-	                    <a href="{% url 'crear_historial_clinico' %}">
-	                        <i class="material-icons">image</i>
-	                        <p>Crear historial clinico</p>
+	                <li class="{{hc_activacion}}">
+	                    <a href="{% url 'historial_clinico' %}">
+	                        <i class="material-icons">assignment</i>
+	                        <p>Historial clinico</p>
 	                    </a>
 	                </li>
-	                <li class="{{cargar_img_activacion}}">
-	                    <a href="{% url 'crear_imagen' %}">
+	                <li class="{{img_activacion}}">
+	                    <a href="{% url 'imagen' %}">
                         <i class="material-icons">image</i>
-                        <p>Cargar imagen</p>
+                        <p>Imagen</p>
 	                    </a>
 	                </li>
 	                <li>
@@ -111,7 +111,7 @@
   							<span class="icon-bar"></span>
   							<span class="icon-bar"></span>
   						</button>
-  						<a class="navbar-brand" href="#">Pagina Principal</a>
+  						<a class="navbar-brand" href="#">Bienvenido {{usuario.nombres}} {{usuario.apellidos}}</a>
   					</div>
   					<div class="collapse navbar-collapse">
   						<ul class="nav navbar-nav navbar-right">

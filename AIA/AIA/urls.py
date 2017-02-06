@@ -24,9 +24,24 @@ urlpatterns = [
     url(r'^$', loginView, name='login'),
     url(r'^logout/$', logoutView, name='logout'),
     url(r'^inicio/$', v_inicio, name='inicio'),
-    url(r'^cargar_imagen/$', ImagenCreate, name='crear_imagen'),
+
+    # ------------------------------Historial_clinico-----------------------------------
+    url(r'^historial_clinico/$', Historial_clinicoList, name='historial_clinico'),
+    url(r'^historial_clinico/inactivos/$', Historial_clinicoListin, name='historial_clinicoin'),
+    url(r'^historial_clinico/crear_historial_clinico/$', Historial_clinicoCreate, name='crear_historial_clinico'),
+    url(r'^historial_clinico/editar/(?P<pk>.*)/$', Historial_clinicoUpdate, name='editar_historial_clinico'),
+    url(r'^historial_clinico/borrar/(?P<pk>.*)/$', Historial_clinicoDelete, name='borrar_historial_clinico'),
+    url(r'^historial_clinico/restaurar/(?P<pk>.*)/$', Historial_clinicoRestore, name='restaurar_historial_clinico'),
+
+    # ------------------------------imagen-----------------------------------
+    url(r'^imagen/$', ImagenList, name='imagen'),
+    # url(r'^imagen/inactivos/$', Historial_clinicoListin, name='historial_clinicoin'),
+    url(r'^imagen/crear_imagen/$', ImagenCreate, name='crear_imagen'),
+    url(r'^imagen/editar/(?P<pk>.*)/$', ImagenUpdate, name='editar_imagen'),
+    url(r'^imagen/borrar/(?P<pk>.*)/$', ImagenDelete, name='borrar_imagen'),
+
     url(r'^area_imagen/$', v_area_img, name='area_img'),
-    url(r'^crear_historial_clinico/$', Historial_clinicoCreate, name='crear_historial_clinico'),
+
 
 
     # url(r'^login/$', auth_views.login, name='login'),
