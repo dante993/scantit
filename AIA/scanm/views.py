@@ -105,6 +105,7 @@ def ImagenList(request):
 
 @login_required(login_url='/')
 def ImagenCreate(request, template_name='agregar/imagen_create.html'):
+    usuario=get_object_or_404(Usuario,cedula=request.user)
     form = ImagenForm(request.POST or None,request.FILES or None)
     img_activacion='active'
     if form.is_valid():
@@ -122,7 +123,7 @@ def ImagenCreate(request, template_name='agregar/imagen_create.html'):
     #     obj = Imagen(img_ruta=ruta,img_descripcion=descripcion,img_estado=estado,img_validez=validez,img_fecha=fecha,hc_id=hc_obj)
     #     obj.save()
     #     return redirect("inicio")
-    return render(request,template_name,{'form':form,"img_activacion":img_activacion})
+    return render(request,template_name,{'usuario':usuario,'form':form,"img_activacion":img_activacion})
 
 @login_required(login_url='/')
 def ImagenUpdate(request,pk,template_name='editar/imagen_update.html'):
@@ -141,5 +142,26 @@ def ImagenDelete(request,pk):
     obj.img_validez='no valida'
     obj.save()
     return redirect("imagen")
+
+# ------------------------------------------Area_Imagen-----------------------------------------
+@login_required(login_url='/')
+def Area_imagenCreate(request,pk, template_name='agregar/area_imagen_create.html'):
+    usuario=get_object_or_404(Usuario,cedula=request.user)
+    img=get_object_or_404(Imagen, pk=pk)
+    img_activacion='active'
+    if request.method == 'POST':
+        # ruta=request.POST["img_ruta"]
+        # print(ruta)
+        # descripcion=request.POST["img_descripcion"]
+        # estado='no analizada'
+        # validez='no definido'
+        # fecha=str(time.strftime("%d/%m/%y"))
+        # hc=request.POST["hc_id"]
+        # hc_obj=get_object_or_404(Historial_clinico, hc_id=hc)
+        # obj = Imagen(img_ruta=ruta,img_descripcion=descripcion,img_estado=estado,img_validez=validez,img_fecha=fecha,hc_id=hc_obj)
+        # obj.save()
+        return redirect("imagen")
+    return render(request,template_name,{'usuario':usuario,'img':img,"img_activacion":img_activacion})
+
 
 # .............

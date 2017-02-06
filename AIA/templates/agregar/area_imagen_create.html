@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% block content %}
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-  <h1 class="page-header">Cargar imagen</h1>
+  <h1 class="page-header">Seleccionar areas sospechosas de imagen</h1>
   <br>
 <!--..................................................canvas ..................................................................  -->
   <!-- <div align="center">
@@ -10,7 +9,7 @@
     <button type="button" name="button" onclick="pantalla()">ok</button>
     <img style="display:none" id="my_image">
   </div> -->
-  <img src="../static/img/A_0482_1.LEFT_CC.LJPEG.1_highpass.gif" style="display:none" id="imgp">
+  <img src="{{img.img_ruta.url}}" id="imgp">
   <div align="center">
     <canvas id="canvas" width="1200" height="500" style="display:none"></canvas>
   </div>
@@ -39,7 +38,6 @@
     </div>
 
   </div>
-</div>
 
 {% endblock content %}
 {% block jscrpt %}

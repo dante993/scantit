@@ -43,7 +43,8 @@ urlpatterns = [
     url(r'^area_imagen/$', v_area_img, name='area_img'),
 
 
-
+    # ------------------------------area_imagen-----------------------------------
+    url(r'^imagen/area_imagen/(?P<pk>.*)/$', Area_imagenCreate, name='crear_area_imagen'),
     # url(r'^login/$', auth_views.login, name='login'),
     # url(r'^cerrar/$', auth_views.logout, name='logout'),
     # url(r'^cerrar/$','django.contrib.auth.views.logout_then_login',name='logout'),

@@ -47,7 +47,8 @@
           <td>{{ im.img_fecha }}</td>
           <td>{{ im.hc_id }}</td>
           <td>
-            <a href="#" class="btn btn-info btn-just-icon" data-toggle="tooltip" data-placement="top" title="Seleccionar area"><i class="material-icons">tab_unselected</i></a>
+            <a href="#" class="btn btn-primary btn-just-icon" data-toggle="tooltip" data-placement="top" title="Ver areas seleccionadas"><i class="material-icons">picture_in_picture</i></a>
+            <a href="{% url 'crear_area_imagen' im.img_id %}" class="btn btn-info btn-just-icon" data-toggle="tooltip" data-placement="top" title="Seleccionar area"><i class="material-icons">tab_unselected</i></a><br>
             <a href="{% url 'borrar_imagen' im.img_id %}" class="btn btn-danger btn-just-icon" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
             <a href="{% url 'editar_imagen' im.img_id %}" class="btn btn-success btn-just-icon" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
           </td>
