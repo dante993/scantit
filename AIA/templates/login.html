@@ -1,116 +1,136 @@
 <!DOCTYPE html>
 <html>
 <head lang="es">
-    {% load staticfiles %}
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>Deteccion de Cancer</title>
-    <link type="image/x-icon" href="../static/img/logob.png" rel="shortcut icon"/>
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"/> -->
-    {% block fuentes_iconos %}
-      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-      <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" />
-	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
-    {% endblock fuentes_iconos %}
-    {% block css %}
-        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static 'css/material-kit.css' %}">
-        <!-- <link rel="stylesheet" href="{% static 'css/estiloss.css' %}"> -->
-    {% endblock css %}
-    {% block js %}
-        <script src="{% static 'js/jquery-3.1.0.min.js' %}" ></script>
-        <script src="{% static 'js/bootstrap.min.js' %}" ></script>
-        <script src="{% static 'js/material.min.js' %}" ></script>
-        <script src="{% static 'js/nouislider.min.js' %}" ></script>
-        <script src="{% static 'js/bootstrap-datepicker.js' %}" ></script>
-        <script src="{% static 'js/material-kit.js' %}" ></script>
-    {% endblock js %}
+  {% load staticfiles %}
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>Deteccion de Cancer</title>
+  <link type="image/x-icon" href="../static/img/logob.png" rel="shortcut icon"/>
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"/> -->
+  {% block fuentes_iconos %}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+  {% endblock fuentes_iconos %}
+  {% block css %}
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/material-kit.css' %}">
+  <!-- <link rel="stylesheet" href="{% static 'css/estiloss.css' %}"> -->
+  {% endblock css %}
+  {% block js %}
+  <script src="{% static 'js/jquery-3.1.0.min.js' %}" ></script>
+  <script src="{% static 'js/bootstrap.min.js' %}" ></script>
+  <script src="{% static 'js/material.min.js' %}" ></script>
+  <script src="{% static 'js/nouislider.min.js' %}" ></script>
+  <script src="{% static 'js/bootstrap-datepicker.js' %}" ></script>
+  <script src="{% static 'js/material-kit.js' %}" ></script>
+  {% endblock js %}
 </head>
 <body class="signup-page">
-	<div class="wrapper">
-		<div class="header header-filter" style="background-image: url('../static/img/fondo.jpg'); background-size: cover; background-position: top center;">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
-						<div class="card card-signup">
-							<form class="form" method="post">{% csrf_token %}
-								<div class="header header-primary text-center">
-									<h4>SCANM</h4>
+  <div class="wrapper">
+    <div class="header header-filter" style="background-image: url('../static/img/fondo.jpg'); background-size: cover; background-position: top center;">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+            <div class="card card-signup">
+              <form class="form" method="post">{% csrf_token %}
+                <div class="header header-primary text-center">
+                  <h4>SCANM</h4>
                   <img src="../static/img/logow.png" alt="" width="15%">
-								</div>
-								<p class="text-divider">Credenciales de usuario</p>
-								<div class="content">
+                </div>
+                <div class="content">
 
-									<div class="input-group">
-										<span class="input-group-addon">
-											<i class="material-icons">face</i>
-										</span>
-										{{ form.cedula }}
-									</div>
+                  <div class="input-group">
+                    <span class="input-group-addon">
+                      <i class="material-icons">face</i>
+                    </span>
+                    {{ form.cedula }}
+                  </div>
 
-									<div class="input-group">
-										<span class="input-group-addon">
-											<i class="material-icons">lock_outline</i>
-										</span>
-										{{ form.password }}
-									</div>
+                  <div class="input-group">
+                    <span class="input-group-addon">
+                      <i class="material-icons">lock_outline</i>
+                    </span>
+                    {{ form.password }}
+                  </div>
 
-									<!-- If you want to add a checkbox to this form, uncomment this code
+                  <!-- If you want to add a checkbox to this form, uncomment this code
 
-									<div class="checkbox">
-										<label>
-											<input type="checkbox" name="optionsCheckboxes" checked>
-											Subscribe to newsletter
-										</label>
-									</div> -->
-								</div>
-								<div class="footer text-center">
-									<button class="btn btn-primary" type="submit">Ingresar</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-<br>
-			<footer class="footer">
-		        <div class="container">
-		            <nav class="pull-left">
-						<ul>
-							<li>
-								<a href="https://www.utmachala.edu.ec/portalwp/">
-									UTMACH
-								</a>
-							</li>
-							<li>
-								<a href="#">
-								   Acerca de nosotros
-								</a>
-							</li>
-							<li>
-								<a href="#">
-								   Participantes
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									Lideres del proyecto
-								</a>
-							</li>
-						</ul>
-		            </nav>
-		            <div class="copyright pull-right">
-		                &copy; 2016, made with <i class="fa fa-heart heart"></i> by <a href="https://www.utmachala.edu.ec/portalwp/" target="_blank">UTMACH</a>
-		            </div>
-		        </div>
-		    </footer>
+                  <div class="checkbox">
+                  <label>
+                  <input type="checkbox" name="optionsCheckboxes" checked>
+                  Subscribe to newsletter
+                </label>
+              </div> -->
+            </div>
+            {% if mensaje != 'nada' %}
+            <div class="text-center">
+              <div class="alert alert-danger">
+                <div class="container-fluid">
+                  <div class="alert-icon">
+                    <i class="material-icons">error_outline</i>
+                  </div>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                  </button>
+                  {{mensaje}}
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            <div class="footer text-center">
+              <button class="btn btn-primary" type="submit">Ingresar</button><br>
 
-		</div>
+              <!-- <div class="stats">
+              <i class="material-icons text-danger">warning</i> <a href="#pablo">Get More Space...</a>
+            </div> -->
+          </div>
+          <div class="stats text-center">
+            ¿No tiene una cuenta? <a href="#">Registrate</a>
+          </div><br>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <nav class="pull-left">
+      <ul>
+        <li>
+          <a href="https://www.utmachala.edu.ec/portalwp/">
+            UTMACH
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            Acerca de nosotros
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            Participantes
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            Lideres del proyecto
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="copyright pull-right">
+      &copy; 2016, made with <i class="fa fa-heart heart"></i> by <a href="https://www.utmachala.edu.ec/portalwp/" target="_blank">UTMACH</a>
+    </div>
+  </div>
+</footer>
 
- </div>
-  {% block content %}
-  {% endblock content %}
+</div>
+
+</div>
+{% block content %}
+{% endblock content %}
 </body>
-  {% block jscrpt %}
-  {% endblock jscrpt %}
+{% block jscrpt %}
+{% endblock jscrpt %}
 </html>

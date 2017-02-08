@@ -85,7 +85,7 @@ class Historial_clinico(models.Model):
 
 class Imagen(models.Model):
     img_id=models.AutoField(primary_key=True)
-    img_ruta = models.ImageField(upload_to='media')
+    img_ruta = models.ImageField(upload_to='user_media')
     img_descripcion=models.TextField(verbose_name="Descripcion de la imagen",blank=True,default="sin comentarios...")
     ESTADO_CHOICES =((u'analizada',u'Analizada'),
                     (u'no analizada',u'No Analizada'),)
@@ -99,16 +99,6 @@ class Imagen(models.Model):
     def __unicode__(self):
         return self.img_ruta
 
-class Area_imagen(models.Model):
-    arim_id=models.AutoField(primary_key=True)
-    arim_pos_x = models.DecimalField(max_digits=19, decimal_places=3)
-    arim_pos_y = models.DecimalField(max_digits=19, decimal_places=3)
-    arim_ancho = models.DecimalField(max_digits=19, decimal_places=3)
-    arim_alto = models.DecimalField(max_digits=19, decimal_places=3)
-    img_id=models.ForeignKey(Imagen,verbose_name="imagen")
-    def __unicode__(self):
-        return self.arim_id
-
 class Tipo_cancer(models.Model):
     tc_id = models.AutoField(primary_key=True)
     tc_nombre = models.CharField(max_length = 25)
@@ -119,13 +109,34 @@ class Tipo_cancer(models.Model):
     def __unicode__(self):
         return self.tc_nombre
 
-
 class Resultados_analisis(models.Model):
     resan_id=models.AutoField(primary_key=True)
     resan_fecha=models.DateField(auto_now_add=True)
     resan_descripcion=models.TextField()
     img_id=models.ForeignKey(Imagen,verbose_name="imagen")
     tc_id=models.ForeignKey(Tipo_cancer,verbose_name="tipo_cancer")
+
+# -----------------------------------admin--------------------------------------
+class Imagen_adm(models.Model):
+    imgad_id=models.AutoField(primary_key=True)
+    imgad_ruta = models.ImageField(upload_to='admin_media')
+    imgad_descripcion=models.TextField(verbose_name="Descripcion de la imagen",blank=True,default="sin comentarios...")
+    imgad_fecha=models.DateField(auto_now_add=True,blank=True)
+    imgad_ancho=models.CharField(max_length = 100)
+    imgad_alto=models.CharField(max_length = 100)
+    tc_id=models.ForeignKey(Tipo_cancer,verbose_name="Tipo de cancer")
+    def __unicode__(self):
+        return self.imgad_ruta
+
+class Area_imagen(models.Model):
+    arim_id=models.AutoField(primary_key=True)
+    arim_pos_x = models.DecimalField(max_digits=19, decimal_places=3)
+    arim_pos_y = models.DecimalField(max_digits=19, decimal_places=3)
+    arim_ancho = models.DecimalField(max_digits=19, decimal_places=3)
+    arim_alto = models.DecimalField(max_digits=19, decimal_places=3)
+    imgad_id=models.ForeignKey(Imagen_adm,verbose_name="imagen")
+    def __unicode__(self):
+        return self.arim_id
 
 
 

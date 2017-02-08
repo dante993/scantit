@@ -1,44 +1,49 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% block content %}
-  <h1 class="page-header">Seleccionar areas sospechosas de imagen</h1>
-  <br>
-<!--..................................................canvas ..................................................................  -->
-  <!-- <div align="center">
-    <input name="btnCargar" id="btnCargar" type="file" />
-    <button type="button" name="button" onclick="pantalla()">ok</button>
-    <img style="display:none" id="my_image">
-  </div> -->
-  <img src="{{img.img_ruta.url}}" id="imgp">
-  <div align="center">
-    <canvas id="canvas" width="1200" height="500" style="display:none"></canvas>
+<input type="text" name="contador" id="contador" style="display:none" value="">
+<div class="card">
+  <div class="card-header" data-background-color="purple">
+    <h4 class="title">Seleccionar areas sospechosas de imagen</h4>
+    <p class="category">Marque las areas que considere sospechosas de cancer</p>
   </div>
-<!--..................................................canvas ..................................................................  -->
-<br><br>
+  <div class="card-content">
+    <div class="row">
+      <div class="col-md-6">
+        <img src="{{ img.img_ruta.url }}" id="imgp" style="display:none">
+        <div align="center">
+          <canvas id="canvas" width="1200" height="500" style="display:none"></canvas>
+        </div>
+      </div>
 
-  <h2 class="sub-header">Areas seleccionadas</h2>
-  <div class="table-responsive">
-    <table class="table table-striped" id="tablaR">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Posicion en X</th>
-          <th>Posicion en Y</th>
-          <th>Ancho</th>
-          <th>Alto</th>
-          <th>Eliminar</th>
-        </tr>
-      </thead>
-      <tbody>
+      <!--..................................................canvas ..................................................................  -->
+      <br>
+      <div class="col-md-5" >
+        <div class="table-responsive">
+          <table class="table table-striped" id="tablaR" height="200px">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Posicion en X</th>
+                <th>Posicion en Y</th>
+                <th>Ancho</th>
+                <th>Alto</th>
+                <th>Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
 
-      </tbody>
-    </table>
-    <div align="center">
-      <button class="btn btn-primary" type="button" name="button">Enviar</button>
+            </tbody>
+          </table>
+          <div align="center">
+            <button class="btn btn-primary" type="button" name="button">Enviar</button>
+          </div>
+
+        </div>
+      </div>
     </div>
-
   </div>
-
+</div>
 {% endblock content %}
 {% block jscrpt %}
 <script type="text/javascript">
@@ -68,117 +73,117 @@ var mend; // info de mi cuadro (width,height)
 var contRegistros=0;
 
 $(document).on('click', '.borrar', function (event) {
-    event.preventDefault();
-    conrec-=1;
-    $(this).closest('tr').remove();
+  event.preventDefault();
+  conrec-=1;
+  $(this).closest('tr').remove();
 });
 
 function leerarray(){
-      var recc=recuadros[recuadros.length-1];
-      // alert("*"+recc[0]+" | "+recc[1]+" | "+recc[2]+" | "+recc[3]+" | "+recc[4]);
-      $('#tablaR tr:last').after(
-              '<tr>'
-              +'<td>'+recc[0]+'</td>'
-              +'<td>'+recc[1]+'</td>'
-              +'<td>'+recc[2]+'</td>'
-              +'<td>'+recc[3]+'</td>'
-              +'<td>'+recc[4]+'</td>'
-              +'<td><button type="button" class="borrar btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></button></td>'
-              +'</tr>');
-}
-function prepareCanvas(){
-  miLienzo=document.getElementById("canvas");
+  var recc=recuadros[recuadros.length-1];
+  // alert("*"+recc[0]+" | "+recc[1]+" | "+recc[2]+" | "+recc[3]+" | "+recc[4]);
+  $('#tablaR tr:last').after(
+    '<tr>'
+    +'<td>'+recc[0]+'</td>'
+    +'<td>'+recc[1]+'</td>'
+    +'<td>'+recc[2]+'</td>'
+    +'<td>'+recc[3]+'</td>'
+    +'<td>'+recc[4]+'</td>'
+    +'<td><button type="button" class="borrar btn btn-danger btn-just-icon"><i class="material-icons">delete</i></button></td>'
+    +'</tr>');
+  }
+  function prepareCanvas(){
+    miLienzo=document.getElementById("canvas");
 
-  //tamanio del lienzo
-  // alert(document.getElementById("imgp").width+" x "+document.getElementById("imgp").height);
-  miLienzo.width=document.getElementById("imgp").width;
-  miLienzo.height=document.getElementById("imgp").height;
-  miLienzo.style="border:1px solid;background: url(../static/img/A_0482_1.LEFT_CC.LJPEG.1_highpass.gif) no-repeat;";
+    //tamanio del lienzo
+    // alert(document.getElementById("imgp").width+" x "+document.getElementById("imgp").height);
+    miLienzo.width=document.getElementById("imgp").width;
+    miLienzo.height=document.getElementById("imgp").height;
+    miLienzo.style="border:1px solid;background: url({{ img.img_ruta.url }}) no-repeat;";
 
-  contexto= miLienzo.getContext("2d"); // obtenemos el contexto ( dibujar en 2d)
-  canvasLimites=miLienzo.getBoundingClientRect(); // obtenemos los limites del canvas
-  miLienzo.addEventListener('mousedown',down,false);
-  miLienzo.addEventListener('mouseup',up,false);
-  miLienzo.addEventListener('mousemove',pintarCuadro,false);
-  miLienzo.style.cursor="pointer";
-}
+    contexto= miLienzo.getContext("2d"); // obtenemos el contexto ( dibujar en 2d)
+    canvasLimites=miLienzo.getBoundingClientRect(); // obtenemos los limites del canvas
+    miLienzo.addEventListener('mousedown',down,false);
+    miLienzo.addEventListener('mouseup',up,false);
+    miLienzo.addEventListener('mousemove',pintarCuadro,false);
+    miLienzo.style.cursor="pointer";
+  }
 
-function down(e) {
-  mbegin=obtenerCoordenadas(e);
-  paint= true;
-}
+  function down(e) {
+    mbegin=obtenerCoordenadas(e);
+    paint= true;
+  }
 
-function up(e) {
-  paint= false;
-  mend=obtenerBounds(e);
-  recuadro.push(mend.w);
-  recuadro.push(mend.h);
-  recuadros.push(recuadro);
-  leerarray();
-
-}
-
-function pintarCuadro(e) {
-  if(paint){
+  function up(e) {
+    paint= false;
     mend=obtenerBounds(e);
-    contexto.clearRect(0,0,miLienzo.width,miLienzo.height);
-    dibujarCuadro();
-  }
-}
+    recuadro.push(mend.w);
+    recuadro.push(mend.h);
+    recuadros.push(recuadro);
+    leerarray();
 
-function obtenerCoordenadas(event){
-  var posX;
-  var posY;
-
-  if (event.pageX || event.pageY) {
-    posX = event.pageX- canvasLimites.left;
-    posY = event.pageY- canvasLimites.top;
-
-    conrec+=1;
-    recuadro=new Array();
-    recuadro.push(conrec);
-    recuadro.push(posX);
-    recuadro.push(posY);
-  }
-  else {
-    posX = event.clientX - canvasLimites.left;
-    posY = event.clientY - canvasLimites.top;
   }
 
-  return {
-    x:posX,
-    y:posY
-  };
-}
-
-function obtenerBounds(event){
-  var width;
-  var height;
-
-  if (event.pageX || event.pageY) {
-    width= (event.pageX- canvasLimites.left)-mbegin.x;
-    height= (event.pageY- canvasLimites.top)-mbegin.y;
-    // if (contam==0) {
-    //   contam=1;
-    //   recuadro.push(width+"|"+height);
-    //   recuadros.push(recuadro);
-    // }
-  }
-  else {
-    width= (event.clientX - canvasLimites.left)-mbegin.x;
-    height= (event.clientY - canvasLimites.top)-mbegin.y;
+  function pintarCuadro(e) {
+    if(paint){
+      mend=obtenerBounds(e);
+      contexto.clearRect(0,0,miLienzo.width,miLienzo.height);
+      dibujarCuadro();
+    }
   }
 
-  return {
-    w:width,
-    h:height
-  };
-}
+  function obtenerCoordenadas(event){
+    var posX;
+    var posY;
 
-function dibujarCuadro(){
-  contexto.fillStyle="rgba(22,87,122,0.7)";
-  contexto.fillRect(mbegin.x, mbegin.y,mend.w,mend.h);
-}
-prepareCanvas();
-</script>
-{% endblock jscrpt %}
+    if (event.pageX || event.pageY) {
+      posX = event.pageX- canvasLimites.left;
+      posY = event.pageY- canvasLimites.top;
+
+      conrec+=1;
+      recuadro=new Array();
+      recuadro.push(conrec);
+      recuadro.push(posX);
+      recuadro.push(posY);
+    }
+    else {
+      posX = event.clientX - canvasLimites.left;
+      posY = event.clientY - canvasLimites.top;
+    }
+
+    return {
+      x:posX,
+      y:posY
+    };
+  }
+
+  function obtenerBounds(event){
+    var width;
+    var height;
+
+    if (event.pageX || event.pageY) {
+      width= (event.pageX- canvasLimites.left)-mbegin.x;
+      height= (event.pageY- canvasLimites.top)-mbegin.y;
+      // if (contam==0) {
+      //   contam=1;
+      //   recuadro.push(width+"|"+height);
+      //   recuadros.push(recuadro);
+      // }
+    }
+    else {
+      width= (event.clientX - canvasLimites.left)-mbegin.x;
+      height= (event.clientY - canvasLimites.top)-mbegin.y;
+    }
+
+    return {
+      w:width,
+      h:height
+    };
+  }
+
+  function dibujarCuadro(){
+    contexto.fillStyle="rgba(22,87,122,0.7)";
+    contexto.fillRect(mbegin.x, mbegin.y,mend.w,mend.h);
+  }
+  prepareCanvas();
+  </script>
+  {% endblock jscrpt %}

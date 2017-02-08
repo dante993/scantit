@@ -13,6 +13,7 @@ class LoginForm(Form):
                                                            "type": "password",
                                                            "placeholder": "Password..."}))
 
+# ---------------------------------------imagenes subidas por usuarios--------------------------------------------------------
 class ImagenForm(forms.ModelForm):
     class Meta:
         model = Imagen
@@ -40,6 +41,7 @@ class ImagenForm(forms.ModelForm):
         }
         fields = '__all__'
 
+# ---------------------------------------Historial clinico--------------------------------------------------------
 class Historial_clinicoForm(forms.ModelForm):
     class Meta:
         model = Historial_clinico
@@ -67,5 +69,53 @@ class Historial_clinicoForm(forms.ModelForm):
                 'class':'form-control',
                 'placeholder':'cedula...'
             })
+        }
+        fields = '__all__'
+
+# ---------------------------------------tipos de cancer--------------------------------------------------------
+class Tipo_cancerForm(forms.ModelForm):
+    class Meta:
+        model = Tipo_cancer
+        widgets={
+            'tc_nombre':forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder':'Nombre del tipo de cancer...'
+            }),
+            'tc_descripcion':forms.Textarea(attrs={
+                'class':'form-control',
+            }),
+            'tc_estado':forms.Select(attrs={
+                'class':'form-control'
+            })
+        }
+        fields = '__all__'
+
+# ---------------------------------------imagenes para aprendizaje--------------------------------------------------------
+class Imagen_admForm(forms.ModelForm):
+    class Meta:
+        model = Imagen_adm
+        widgets={
+            'imgad_ruta':forms.FileInput(attrs={
+                'class':'form-control',
+                'accept':'image/jpg,image/png,image/jepg'
+            }),
+            'imgad_descripcion':forms.Textarea(attrs={
+                'class':'form-control',
+            }),
+            'imgad_fecha':forms.DateInput(attrs={
+                'class':'form-control',
+                'type':'date'
+            }),
+            'imgad_ancho':forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder':'ancho...'
+            }),
+            'imgad_alto':forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder':'alto...'
+            }),
+            'tc_id':forms.Select(attrs={
+                'class':'datepicker form-control'
+            }),
         }
         fields = '__all__'

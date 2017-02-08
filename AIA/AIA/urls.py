@@ -16,7 +16,8 @@ Including another URLconf
 from django.conf.urls import url
 # from django.contrib import admin
 from scanm.views import *
-
+from django.conf import settings
+from django.views.static import serve
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
@@ -42,10 +43,23 @@ urlpatterns = [
 
     url(r'^area_imagen/$', v_area_img, name='area_img'),
 
-
     # ------------------------------area_imagen-----------------------------------
     url(r'^imagen/area_imagen/(?P<pk>.*)/$', Area_imagenCreate, name='crear_area_imagen'),
     # url(r'^login/$', auth_views.login, name='login'),
     # url(r'^cerrar/$', auth_views.logout, name='logout'),
     # url(r'^cerrar/$','django.contrib.auth.views.logout_then_login',name='logout'),
+
+# -----------------------------------------------admin-----------------------------------------------------
+    url(r'^admin/imagen/$', Imagen_admList, name='adm_imagen'),
+
+    # ------------------------------tipos de cancer-----------------------------------
+    url(r'^admin/tipo_de_cancer/$', Tipo_cancerList, name='tipo_cancer'),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += [
+        url(r'^media/(?P<path>.*)$', serve, {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+    ]

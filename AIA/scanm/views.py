@@ -23,6 +23,8 @@ def logoutView(request):
     return redirect("/")
 
 def loginView(request):
+    mensaje="nada"
+    form = LoginForm()
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -32,10 +34,9 @@ def loginView(request):
                 login(request, user)
                 return redirect(request.POST.get('next', '/inicio/'))
             else:
-                messages.error(request, "Nombre de Usuario o clave Incorrecto")
-                return redirect("/login/")
-    form = LoginForm()
-    return render(request, "login.html", {"form": form})
+                mensaje="Nombre de Usuario o clave Incorrecto"
+                return render(request, "login.html", {"form": form,"mensaje":mensaje})
+    return render(request, "login.html", {"form": form,"mensaje":mensaje})
 
 # ------------------------------------------historial clinico-----------------------------------------
 @login_required(login_url='/')
@@ -147,8 +148,8 @@ def ImagenDelete(request,pk):
 @login_required(login_url='/')
 def Area_imagenCreate(request,pk, template_name='agregar/area_imagen_create.html'):
     usuario=get_object_or_404(Usuario,cedula=request.user)
-    img=get_object_or_404(Imagen, pk=pk)
-    img_activacion='active'
+    img=get_object_or_404(Imagen_adm, pk=pk)
+    ad_img_activacion='active'
     if request.method == 'POST':
         # ruta=request.POST["img_ruta"]
         # print(ruta)
@@ -161,7 +162,84 @@ def Area_imagenCreate(request,pk, template_name='agregar/area_imagen_create.html
         # obj = Imagen(img_ruta=ruta,img_descripcion=descripcion,img_estado=estado,img_validez=validez,img_fecha=fecha,hc_id=hc_obj)
         # obj.save()
         return redirect("imagen")
-    return render(request,template_name,{'usuario':usuario,'img':img,"img_activacion":img_activacion})
+    return render(request,template_name,{'usuario':usuario,'img':img,"ad_img_activacion":ad_img_activacion})
 
+# ------------------------------------------Imagen-----------------------------------------
+@login_required(login_url='/')
+def Imagen_admList(request):
+    usuario=get_object_or_404(Usuario,cedula=request.user)
+    ad_img_activacion='active'
+    if request.method=='POST':
+        img = Imagen_adm.objects.order_by("imgad_fecha").filter(imgad_ruta__contains=request.POST["busca"])
+        return render_to_response('listar/adm_imagen_list.html',{'img':img,'usuario':usuario})
+    img = Imagen_adm.objects.order_by("imgad_fecha")
+    return render_to_response('listar/adm_imagen_list.html',{'img':img,'usuario':usuario,'ad_img_activacion':ad_img_activacion})
+
+@login_required(login_url='/')
+def Imagen_admCreate(request, template_name='agregar/imagen_create.html'):
+    usuario=get_object_or_404(Usuario,cedula=request.user)
+    form = Imagen_admForm(request.POST or None,request.FILES or None)
+    ad_img_activacion='active'
+    if form.is_valid():
+        form.save()
+        return redirect("imagen")
+    return render(request,template_name,{'usuario':usuario,'form':form,"ad_img_activacion":ad_img_activacion})
+
+@login_required(login_url='/')
+def Imagen_admUpdate(request,pk,template_name='editar/imagen_update.html'):
+    usuario=get_object_or_404(Usuario,cedula=request.user)
+    obj = get_object_or_404(Imagen, pk=pk)
+    form = Imagen_admForm(request.POST or None, instance=obj)
+    ad_img_activacion='active'
+    if form.is_valid():
+        form.save()
+        return redirect("imagen")
+    return render(request,template_name,{'form':form,'usuario':usuario,'ad_img_activacion':ad_img_activacion})
+
+@login_required(login_url='/')
+def Imagen_admDelete(request,pk):
+    obj = get_object_or_404(Imagen, pk=pk)
+    obj.img_validez='no valida'
+    obj.save()
+    return redirect("imagen")
+
+# ------------------------------------------tipo de cancer-----------------------------------------
+@login_required(login_url='/')
+def Tipo_cancerList(request):
+    usuario=get_object_or_404(Usuario,cedula=request.user)
+    tipo_c_activacion='active'
+    if request.method=='POST':
+        tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_nombre__contains=request.POST["busca"])
+        return render_to_response('listar/adm_imagen_list.html',{'img':img,'usuario':usuario})
+    tip = Tipo_cancer.objects.order_by("tc_nombre")
+    return render_to_response('listar/tipo_cancer_list.html',{'tip':tip,'usuario':usuario,'tipo_c_activacion':tipo_c_activacion})
+
+@login_required(login_url='/')
+def Tipo_cancerCreate(request, template_name='agregar/imagen_create.html'):
+    usuario=get_object_or_404(Usuario,cedula=request.user)
+    form = Imagen_admForm(request.POST or None,request.FILES or None)
+    ad_img_activacion='active'
+    if form.is_valid():
+        form.save()
+        return redirect("imagen")
+    return render(request,template_name,{'usuario':usuario,'form':form,"ad_img_activacion":ad_img_activacion})
+
+@login_required(login_url='/')
+def Tipo_cancerUpdate(request,pk,template_name='editar/imagen_update.html'):
+    usuario=get_object_or_404(Usuario,cedula=request.user)
+    obj = get_object_or_404(Imagen, pk=pk)
+    form = Imagen_admForm(request.POST or None, instance=obj)
+    ad_img_activacion='active'
+    if form.is_valid():
+        form.save()
+        return redirect("imagen")
+    return render(request,template_name,{'form':form,'usuario':usuario,'ad_img_activacion':ad_img_activacion})
+
+@login_required(login_url='/')
+def Tipo_cancerDelete(request,pk):
+    obj = get_object_or_404(Imagen, pk=pk)
+    obj.img_validez='no valida'
+    obj.save()
+    return redirect("imagen")
 
 # .............
