@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header" data-background-color="purple">
+          <h4 class="title">Nuevo Tipo de Cancer</h4>
+          <p class="category">Datos del tipo de cancer</p>
+        </div>
+        <div class="card-content">
+          <form method="post" action="">{% csrf_token %}
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group label-floating">
+                  {{ form.tc_nombre.label_tag }}
+                  {{ form.tc_nombre }}
+                  {{ form.tc_nombre.errors }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Descripcion del tipo de cancer:</label>
+                  {{ form.tc_descripcion }}
+                  {{ form.tc_descripcion.errors }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  {{ form.tc_estado.label_tag }}
+                  {{ form.tc_estado }}
+                  {{ form.tc_estado.errors }}
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-success pull-right">Guardar</button><a href="{% url 'tipo_cancer' %}" class="btn btn-danger pull-right">Cancelar</a>
+            <div class="clearfix"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+{% block jscrpt %}
+<script type="text/javascript">
+$( document ).ready(function() {
+  $("#id_cedula").val("{{usuario.cedula}}");
+  $(".ocul").hide();
+
+
+});
+
+</script>
+{% endblock jscrpt %}

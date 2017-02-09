@@ -12,7 +12,15 @@
         </div>
         <div class="card-content">
           <form method="post" action="" ENCTYPE="multipart/form-data">{% csrf_token %}
-
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group label-floating">
+                  {{ form.hc_cedula.label_tag }}
+                  {{ form.hc_cedula }}
+                  {{ form.hc_cedula.errors }}
+                </div>
+              </div>
+            </div>
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group label-floating">

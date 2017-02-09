@@ -7,10 +7,10 @@
 
 <div class="row">
       <div class="col-md-3">
-        <a href="{% url 'crear_imagen' %}" class="btn btn-primary"><i class="material-icons">playlist_add</i> Nuevo</a>
+        <a href="{% url 'crear_adm_imagen' %}" class="btn btn-primary"><i class="material-icons">playlist_add</i> Nuevo</a>
       </div>
       <div class="col-md-4">
-        <a href="{% url 'crear_imagen' %}" class="btn btn-primary"><i class="material-icons">playlist_add</i> ver inactivos</a>
+        <a href="{% url 'crear_adm_imagen' %}" class="btn btn-primary"><i class="material-icons">playlist_add</i> ver inactivos</a>
       </div>
       <div class="col-md-5">
         <input type="text" id="busca" name="busca" class="form-control" placeholder="Nombre de la imagen...">
@@ -25,7 +25,7 @@
 <div class="card">
   <div class="card-header" data-background-color="purple">
     <h4 class="title">Imagenes</h4>
-    <p class="category">Listado para aprendizaje</p>
+    <p class="category">Listado de imagenes para aprendizaje</p>
   </div>
   <div class="card-content table-responsive table-full-width">
     <table class="table table-hover">
@@ -45,8 +45,7 @@
           <td><img src="{{ im.imgad_ruta.url }}" style="max-width: 90%"></td>
           <td><textarea name="txar" rows="6" disabled>{{ im.imgad_descripcion }}</textarea></td>
           <td>{{ im.imgad_fecha }}</td>
-          <td>{{ im.imgad_ancho }}</td>
-          <td>{{ im.imgad_alto }}</td>
+          <td>{{ im.imgad_ancho }} x {{ im.imgad_alto }}</td>
           <td>{{ im.tc_id }}</td>
           <td>
             <a href="#" class="btn btn-primary btn-just-icon" data-toggle="tooltip" data-placement="top" title="Ver areas seleccionadas"><i class="material-icons">picture_in_picture</i></a>

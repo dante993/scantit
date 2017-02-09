@@ -35,7 +35,7 @@ class ImagenForm(forms.ModelForm):
                 'class':'form-control',
                 'type':'date'
             }),
-            'hc_id':forms.Select(attrs={
+            'hc_cedula':forms.Select(attrs={
                 'class':'datepicker form-control'
             }),
         }
@@ -46,6 +46,10 @@ class Historial_clinicoForm(forms.ModelForm):
     class Meta:
         model = Historial_clinico
         widgets={
+            'hc_cedula':forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder':'Nombre del paciente...'
+            }),
             'hc_nombre':forms.TextInput(attrs={
                 'class':'form-control',
                 'placeholder':'Nombre del paciente...'
@@ -97,7 +101,7 @@ class Imagen_admForm(forms.ModelForm):
         widgets={
             'imgad_ruta':forms.FileInput(attrs={
                 'class':'form-control',
-                'accept':'image/jpg,image/png,image/jepg'
+                'accept':'image/jpg,image/png,image/jepg,image/gif'
             }),
             'imgad_descripcion':forms.Textarea(attrs={
                 'class':'form-control',

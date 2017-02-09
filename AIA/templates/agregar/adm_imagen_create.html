@@ -9,7 +9,7 @@
       <div class="card">
         <div class="card-header" data-background-color="purple">
           <h4 class="title">Agregar imagen</h4>
-          <p class="category">Mamografia del paciente</p>
+          <p class="category">Imagen para aprendizaje</p>
         </div>
         <div class="card-content">
           <form method="post" action="" ENCTYPE="multipart/form-data">{% csrf_token %}
@@ -17,9 +17,9 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group label-floating">
-                  {{ form.hc_cedula.label_tag }}
-                  {{ form.hc_cedula }}
-                  {{ form.hc_cedula.errors }}
+                  {{ form.tc_id.label_tag }}
+                  {{ form.tc_id }}
+                  {{ form.tc_id.errors }}
                 </div>
               </div>
             </div>
@@ -29,13 +29,13 @@
                 <div class="form-group label-floating">
                   <button type="button" name="button" class="btn btn-primary">
                     Seleccionar archivo
-                    {{ form.img_ruta }}
+                    {{ form.imgad_ruta }}
                   </button>
                 </div>
               </div>
               <div class="col-md-4" style="margin-top:2%" >
                 <input id="ver_ruta" type="text" value="" placeholder="Imagen de mamografia..." class="form-control" disabled/>
-                {{ form.img_ruta.errors }}
+                {{ form.imgad_ruta.errors }}
               </div>
             </div>
 
@@ -43,22 +43,35 @@
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Descripcion de la imagen:</label>
-                  {{ form.img_descripcion }}
-                  {{ form.img_descripcion.errors }}
+                  {{ form.imgad_descripcion }}
+                  {{ form.imgad_descripcion.errors }}
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  {{ form.img_fecha.label_tag }}
-                  {{ form.img_fecha }}
-                  {{ form.img_fecha.errors }}
+                  {{ form.imgad_fecha.label_tag }}
+                  {{ form.imgad_fecha }}
+                  {{ form.imgad_fecha.errors }}
                 </div>
               </div>
             </div>
-
-            <button type="submit" class="btn btn-success pull-right">Guardar</button><a href="{% url 'imagen' %}" class="btn btn-danger pull-right">Cancelar</a>
+            <div class="row oculto">
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  {{ form.imgad_ancho }}
+                </div>
+              </div>
+            </div>
+            <div class="row oculto">
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  {{ form.imgad_alto }}
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-success pull-right">Guardar</button><a href="{% url 'adm_imagen' %}" class="btn btn-danger pull-right">Cancelar</a>
             <div class="clearfix"></div>
           </form>
         </div>
@@ -66,10 +79,13 @@
     </div>
   </div>
 </div>
-
+<img src=""  id="mifoto" class="oculto">
 {% endblock content %}
 {% block jscrpt %}
 <script type="text/javascript">
+$( document ).ready(function() {
+  $(".oculto").hide();
+});
 //-----------------------------funcion apara vista previa-------------------------------------------
 function archivo(evt) {
   var files = evt.target.files; // FileList object
@@ -88,7 +104,12 @@ function archivo(evt) {
         // Insertamos la imagen
         // document.getElementById("list").innerHTML = ['<img class="thumb" src="', e.target.result,'" title="', escape(theFile.name), '"/>'].join('');
         // alert('ruta:'+e.target.result+'');
-
+        $("#mifoto").attr('src', ''+e.target.result+'');
+        $("#mifoto").removeAttr('width');
+        $("#mifoto").removeAttr('height');
+        var imagen = $('#mifoto');
+        $("#id_imgad_ancho").val(''+imagen.width());
+        $("#id_imgad_alto").val(''+imagen.height());
         // $('#ver_ruta').val('ruta:'+e.target.result+'');
         // $('#canvas').css('background', 'url('+e.target.result+') ');
         // $('#canvas').css('background-size', '100% 100%');
@@ -100,10 +121,10 @@ function archivo(evt) {
   }
 }
 
-document.getElementById('id_img_ruta').addEventListener('change', archivo, false);
+document.getElementById('id_imgad_ruta').addEventListener('change', archivo, false);
 //-------------------------------------------------------------------------------------------------
-$("#id_img_ruta").change(function(e) {
-  var x = document.getElementById("id_img_ruta");
+$("#id_imgad_ruta").change(function(e) {
+  var x = document.getElementById("id_imgad_ruta");
   if ('files' in x) {
     if (x.files.length == 0) {
     } else {

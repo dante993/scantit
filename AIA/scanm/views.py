@@ -5,6 +5,8 @@ from forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import time
+import ftplib
+import os
 
 # Create your views here.
 @login_required(login_url='/')
@@ -164,7 +166,7 @@ def Area_imagenCreate(request,pk, template_name='agregar/area_imagen_create.html
         return redirect("imagen")
     return render(request,template_name,{'usuario':usuario,'img':img,"ad_img_activacion":ad_img_activacion})
 
-# ------------------------------------------Imagen-----------------------------------------
+# ------------------------------------------Imagen de aprendizaje-----------------------------------------
 @login_required(login_url='/')
 def Imagen_admList(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
@@ -176,13 +178,35 @@ def Imagen_admList(request):
     return render_to_response('listar/adm_imagen_list.html',{'img':img,'usuario':usuario,'ad_img_activacion':ad_img_activacion})
 
 @login_required(login_url='/')
-def Imagen_admCreate(request, template_name='agregar/imagen_create.html'):
+def Imagen_admCreate(request, template_name='agregar/adm_imagen_create.html'):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     form = Imagen_admForm(request.POST or None,request.FILES or None)
     ad_img_activacion='active'
     if form.is_valid():
+        # Datos FTP
+        ftp_servidor = 'ftp://127.0.0.1/'
+        ftp_usuario  = 'anonymous'
+        ftp_clave    = ''
+        ftp_raiz     = '/admin_learning' # Carpeta del servidor donde queremos subir el fichero
+
+        # Datos del fichero a subir
+        fichero_origen = request.FILES['imgad_ruta'] # Ruta al fichero que vamos a subir
+        fichero_destino = 'image.gif' # Nombre que tendra el fichero en el servidor
+        # Conectamos con el servidor
+        try:
+        	s = ftplib.FTP(ftp_servidor, ftp_usuario, ftp_clave)
+        	try:
+        		f = open(fichero_origen, 'rb')
+        		s.cwd(ftp_raiz)
+        		s.storbinary('STOR ' + fichero_destino, f)
+        		f.close()
+        		s.quit()
+        	except Exception,e2:
+        		print "No se ha podido encontrar el fichero " + fichero_origen+" - "+str(e2)
+        except Exception,e:
+        	print "No se ha podido conectar al servidor " + ftp_servidor+" - "+str(e)
         form.save()
-        return redirect("imagen")
+        return redirect("adm_imagen")
     return render(request,template_name,{'usuario':usuario,'form':form,"ad_img_activacion":ad_img_activacion})
 
 @login_required(login_url='/')
@@ -209,37 +233,62 @@ def Tipo_cancerList(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     tipo_c_activacion='active'
     if request.method=='POST':
-        tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_nombre__contains=request.POST["busca"])
-        return render_to_response('listar/adm_imagen_list.html',{'img':img,'usuario':usuario})
-    tip = Tipo_cancer.objects.order_by("tc_nombre")
+        tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_nombre__contains=request.POST["busca"],tc_estado='activo')
+        return render_to_response('listar/tipo_cancer_list.html',{'img':img,'usuario':usuario})
+    tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_estado='activo')
     return render_to_response('listar/tipo_cancer_list.html',{'tip':tip,'usuario':usuario,'tipo_c_activacion':tipo_c_activacion})
 
 @login_required(login_url='/')
-def Tipo_cancerCreate(request, template_name='agregar/imagen_create.html'):
+def Tipo_cancerListin(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
-    form = Imagen_admForm(request.POST or None,request.FILES or None)
-    ad_img_activacion='active'
-    if form.is_valid():
-        form.save()
-        return redirect("imagen")
-    return render(request,template_name,{'usuario':usuario,'form':form,"ad_img_activacion":ad_img_activacion})
+    tipo_c_activacion='active'
+    if request.method=='POST':
+        tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_nombre__contains=request.POST["busca"],tc_estado='inactivo')
+        return render_to_response('listar/tipo_cancer_listin.html',{'img':img,'usuario':usuario})
+    tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_estado='inactivo')
+    return render_to_response('listar/tipo_cancer_listin.html',{'tip':tip,'usuario':usuario,'tipo_c_activacion':tipo_c_activacion})
 
 @login_required(login_url='/')
-def Tipo_cancerUpdate(request,pk,template_name='editar/imagen_update.html'):
+def Tipo_cancerCreate(request, template_name='agregar/tipo_cancern_create.html'):
     usuario=get_object_or_404(Usuario,cedula=request.user)
-    obj = get_object_or_404(Imagen, pk=pk)
-    form = Imagen_admForm(request.POST or None, instance=obj)
-    ad_img_activacion='active'
+    form = Tipo_cancerForm(request.POST or None)
+    tipo_c_activacion='active'
     if form.is_valid():
         form.save()
-        return redirect("imagen")
-    return render(request,template_name,{'form':form,'usuario':usuario,'ad_img_activacion':ad_img_activacion})
+        return redirect("tipo_cancer")
+    return render(request,template_name,{'usuario':usuario,'form':form,"tipo_c_activacion":tipo_c_activacion})
+
+@login_required(login_url='/')
+def Tipo_cancerUpdate(request,pk,template_name='agregar/tipo_cancern_create.html'):
+    usuario=get_object_or_404(Usuario,cedula=request.user)
+    obj = get_object_or_404(Tipo_cancer, pk=pk)
+    form = Tipo_cancerForm(request.POST or None, instance=obj)
+    tipo_c_activacion='active'
+    if form.is_valid():
+        form.save()
+        return redirect("tipo_cancer")
+    return render(request,template_name,{'form':form,'usuario':usuario,'tipo_c_activacion':tipo_c_activacion})
 
 @login_required(login_url='/')
 def Tipo_cancerDelete(request,pk):
-    obj = get_object_or_404(Imagen, pk=pk)
-    obj.img_validez='no valida'
+    obj = get_object_or_404(Tipo_cancer, pk=pk)
+    obj.tc_estado='inactivo'
     obj.save()
-    return redirect("imagen")
+    return redirect("tipo_cancer")
+
+@login_required(login_url='/')
+def Tipo_cancerDeleteP(request,pk):
+    obj = get_object_or_404(Tipo_cancer, pk=pk)
+    obj.delete()
+    return redirect("tipo_cancer_in")
+
+@login_required(login_url='/')
+def Tipo_cancerRestore(request,pk):
+    obj = get_object_or_404(Tipo_cancer, pk=pk)
+    obj.tc_estado='activo'
+    obj.save()
+    return redirect("tipo_cancer_in")
+
+
 
 # .............

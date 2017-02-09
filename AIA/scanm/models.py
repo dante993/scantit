@@ -70,7 +70,7 @@ admin.site.register(Usuario)
 # ..........................................................
 
 class Historial_clinico(models.Model):
-    hc_id=models.AutoField(primary_key=True)
+    hc_cedula = models.CharField(primary_key=True,max_length = 10,validators=[validar_cedula],verbose_name="Cedula")
     hc_nombre = models.CharField(max_length = 25,verbose_name="Nombre")
     hc_apellido = models.CharField(max_length = 25,verbose_name="Apellido")
     hc_edad = models.IntegerField(verbose_name="Edad")
@@ -85,7 +85,7 @@ class Historial_clinico(models.Model):
 
 class Imagen(models.Model):
     img_id=models.AutoField(primary_key=True)
-    img_ruta = models.ImageField(upload_to='user_media')
+    img_ruta = models.CharField(max_length = 500,verbose_name="Ruta del archivo")
     img_descripcion=models.TextField(verbose_name="Descripcion de la imagen",blank=True,default="sin comentarios...")
     ESTADO_CHOICES =((u'analizada',u'Analizada'),
                     (u'no analizada',u'No Analizada'),)
@@ -95,17 +95,17 @@ class Imagen(models.Model):
                     (u'no valida',u'No Valida'),)
     img_validez = models.CharField(max_length = 25,choices=VALIDEZ_CHOICES, default='no definido',blank=True)
     img_fecha=models.DateField(auto_now_add=True,blank=True)
-    hc_id=models.ForeignKey(Historial_clinico,verbose_name="Historial clinico")
+    hc_cedula=models.ForeignKey(Historial_clinico,verbose_name="Historial clinico")
     def __unicode__(self):
         return self.img_ruta
 
 class Tipo_cancer(models.Model):
     tc_id = models.AutoField(primary_key=True)
-    tc_nombre = models.CharField(max_length = 25)
+    tc_nombre = models.CharField(max_length = 25,verbose_name="Nombre")
     tc_descripcion=models.TextField()
     ESTADO_CHOICES =((u'activo',u'Activo'),
                     (u'inactivo',u'Inactivo'),)
-    tc_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES, default='activo')
+    tc_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES, default='activo',verbose_name="Estado")
     def __unicode__(self):
         return self.tc_nombre
 
@@ -119,7 +119,7 @@ class Resultados_analisis(models.Model):
 # -----------------------------------admin--------------------------------------
 class Imagen_adm(models.Model):
     imgad_id=models.AutoField(primary_key=True)
-    imgad_ruta = models.ImageField(upload_to='admin_media')
+    imgad_ruta = models.CharField(max_length = 500)
     imgad_descripcion=models.TextField(verbose_name="Descripcion de la imagen",blank=True,default="sin comentarios...")
     imgad_fecha=models.DateField(auto_now_add=True,blank=True)
     imgad_ancho=models.CharField(max_length = 100)

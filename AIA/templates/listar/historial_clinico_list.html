@@ -33,7 +33,7 @@
   <div class="card-content table-responsive table-full-width">
     <table class="table table-hover">
       <thead class="text-danger">
-        <th>ID</th>
+        <th>CEDULA</th>
         <th>NOMBRES</th>
         <th>EDAD</th>
         <th>FECHA DE REGISTRO</th>
@@ -44,15 +44,15 @@
       <tbody>
         {% for hist in historial %}
         <tr>
-          <td>{{ hist.hc_id }}</td>
+          <td>{{ hist.hc_cedula }}</td>
           <td>{{ hist.hc_nombre }} {{ hist.hc_apellido }}</td>
           <td>{{ hist.hc_edad }}</td>
           <td>{{ hist.hc_fecha }}</td>
           <td>{{ hist.hc_estado }}</td>
           <td>{{ hist.cedula }}</td>
           <td>
-            <a href="{% url 'borrar_historial_clinico' hist.hc_id %}" class="btn btn-danger btn-just-icon" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
-            <a href="{% url 'editar_historial_clinico' hist.hc_id %}" class="btn btn-success btn-just-icon" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
+            <a href="{% url 'borrar_historial_clinico' hist.hc_cedula %}" class="btn btn-danger btn-just-icon" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
+            <a href="{% url 'editar_historial_clinico' hist.hc_cedula %}" class="btn btn-success btn-just-icon" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
           </td>
         </tr>
         {% endfor %}

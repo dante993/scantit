@@ -16,8 +16,8 @@ Including another URLconf
 from django.conf.urls import url
 # from django.contrib import admin
 from scanm.views import *
-from django.conf import settings
-from django.views.static import serve
+# from django.conf import settings
+# from django.views.static import serve
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
@@ -51,15 +51,24 @@ urlpatterns = [
 
 # -----------------------------------------------admin-----------------------------------------------------
     url(r'^admin/imagen/$', Imagen_admList, name='adm_imagen'),
+    url(r'^admin/imagen/crear/$', Imagen_admCreate, name='crear_adm_imagen'),
 
     # ------------------------------tipos de cancer-----------------------------------
     url(r'^admin/tipo_de_cancer/$', Tipo_cancerList, name='tipo_cancer'),
+    url(r'^admin/tipo_de_cancer/inactivos/$', Tipo_cancerListin, name='tipo_cancer_in'),
+    url(r'^admin/tipo_de_cancer/crear/$', Tipo_cancerCreate, name='crear_tipo_cancer'),
+    url(r'^admin/tipo_de_cancer/crear/$', Tipo_cancerCreate, name='crear_tipo_cancer'),
+    url(r'^admin/tipo_de_cancer/editar/(?P<pk>.*)/$', Tipo_cancerUpdate, name='editar_tipo_cancer'),
+    url(r'^admin/tipo_de_cancer/borrar/(?P<pk>.*)/$', Tipo_cancerDelete, name='borrar_tipo_cancer'),
+    url(r'^admin/tipo_de_cancer/borrar_permanente/(?P<pk>.*)/$', Tipo_cancerDeleteP, name='borrar_p_tipo_cancer'),
+    url(r'^admin/tipo_de_cancer/restaurar/(?P<pk>.*)/$', Tipo_cancerRestore, name='restaurar_tipo_cancer'),
+
 ]
 
 
-if settings.DEBUG:
-    urlpatterns += [
-        url(r'^media/(?P<path>.*)$', serve, {
-            'document_root': settings.MEDIA_ROOT,
-        }),
-    ]
+# if settings.DEBUG:
+#     urlpatterns += [
+#         url(r'^media/(?P<path>.*)$', serve, {
+#             'document_root': settings.MEDIA_ROOT,
+#         }),
+#     ]
