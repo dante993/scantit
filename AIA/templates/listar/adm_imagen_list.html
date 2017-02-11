@@ -42,7 +42,7 @@
         {% for im in img %}
         <tr>
           <td>{{ im.imgad_id }}</td>
-          <td><img src="{{ im.imgad_ruta.url }}" style="max-width: 90%"></td>
+          <td><img src="{{ im.imgad_ruta }}" style="max-width: 90%"></td>
           <td><textarea name="txar" rows="6" disabled>{{ im.imgad_descripcion }}</textarea></td>
           <td>{{ im.imgad_fecha }}</td>
           <td>{{ im.imgad_ancho }} x {{ im.imgad_alto }}</td>

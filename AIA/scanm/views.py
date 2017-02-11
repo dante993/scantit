@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 import time
 import ftplib
 import os
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
 
 # Create your views here.
 @login_required(login_url='/')
@@ -153,6 +156,7 @@ def Area_imagenCreate(request,pk, template_name='agregar/area_imagen_create.html
     img=get_object_or_404(Imagen_adm, pk=pk)
     ad_img_activacion='active'
     if request.method == 'POST':
+        
         # ruta=request.POST["img_ruta"]
         # print(ruta)
         # descripcion=request.POST["img_descripcion"]
@@ -183,29 +187,37 @@ def Imagen_admCreate(request, template_name='agregar/adm_imagen_create.html'):
     form = Imagen_admForm(request.POST or None,request.FILES or None)
     ad_img_activacion='active'
     if form.is_valid():
-        # Datos FTP
-        ftp_servidor = 'ftp://127.0.0.1/'
-        ftp_usuario  = 'anonymous'
-        ftp_clave    = ''
-        ftp_raiz     = '/admin_learning' # Carpeta del servidor donde queremos subir el fichero
-
-        # Datos del fichero a subir
-        fichero_origen = request.FILES['imgad_ruta'] # Ruta al fichero que vamos a subir
-        fichero_destino = 'image.gif' # Nombre que tendra el fichero en el servidor
-        # Conectamos con el servidor
+        id_ped=Imagen_adm.objects.all().count()
+        ftp_servidor = '127.0.0.1'
+        ftp_usuario  = 'scanm'
+        ftp_clave    = 'scanm'
+        ftp_raiz     = 'admin_learning' # Carpeta del servidor donde queremos subir el fichero
+        fichero_destino = str(id_ped)+'.gif' # Nombre que tendra el fichero en el servidor
+        data = request.FILES['imgad_ruta'] # or self.files['image'] in your form
+        path = default_storage.save('tmp/tmp.gif', ContentFile(data.read()))
+        tmp_file = os.path.join(settings.MEDIA_ROOT)+"\\tmp\\tmp.gif"
         try:
         	s = ftplib.FTP(ftp_servidor, ftp_usuario, ftp_clave)
         	try:
-        		f = open(fichero_origen, 'rb')
+        		f = open(tmp_file, 'rb')
         		s.cwd(ftp_raiz)
         		s.storbinary('STOR ' + fichero_destino, f)
         		f.close()
         		s.quit()
         	except Exception,e2:
-        		print "No se ha podido encontrar el fichero " + fichero_origen+" - "+str(e2)
+        		print "No se ha podido encontrar el fichero " + tmp_file+" - "+str(e2)
         except Exception,e:
         	print "No se ha podido conectar al servidor " + ftp_servidor+" - "+str(e)
-        form.save()
+        ruta='ftp://127.0.0.1/admin_learning/'+fichero_destino
+        descripcion=request.POST["imgad_descripcion"]
+        fecha=str(time.strftime("%d/%m/%y"))
+        ancho=request.POST["imgad_ancho"]
+        alto=request.POST["imgad_alto"]
+        tip=request.POST["tc_id"]
+        tip_obj=get_object_or_404(Tipo_cancer, tc_id=tip)
+        obj = Imagen_adm(imgad_ruta=ruta,imgad_descripcion=descripcion,imgad_fecha=fecha,imgad_ancho=ancho,imgad_alto=alto,tc_id=tip_obj)
+        obj.save()
+        os.remove(tmp_file)
         return redirect("adm_imagen")
     return render(request,template_name,{'usuario':usuario,'form':form,"ad_img_activacion":ad_img_activacion})
 
