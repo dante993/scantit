@@ -5,7 +5,7 @@
 <form class="navbar-form" method="post" action="">{% csrf_token %}
   <div class="form-group  is-empty">
 
-<div class="row">
+    <div class="row">
       <div class="col-md-3">
         <a href="{% url 'crear_adm_imagen' %}" class="btn btn-primary"><i class="material-icons">playlist_add</i> Nuevo</a>
       </div>
@@ -18,7 +18,7 @@
           <i class="material-icons">search</i><div class="ripple-container"></div>
         </button>
       </div>
-</div>
+    </div>
   </div>
 </form>
 
@@ -63,6 +63,10 @@
 {% endblock content %}
 {% block jscrpt %}
 <script type="text/javascript">
+$(document).on('click', '.borrar', function (event) {
+
+});
+
 $('[data-toggle="tooltip"]').tooltip();
 </script>
 {% endblock jscrpt %}

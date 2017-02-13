@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect, get_object_or_404,render_to_response
 from django.template import loader, context,RequestContext
 from django.http import *
@@ -10,6 +11,13 @@ import os
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.conf import settings
+import numpy as np
+import cv2
+from math import pow,sqrt
+import sys
+ftp_servidor = '127.0.0.1'
+ftp_usuario = 'scanm'
+ftp_clave = 'scanm'
 
 # Create your views here.
 @login_required(login_url='/')
@@ -156,18 +164,8 @@ def Area_imagenCreate(request,pk, template_name='agregar/area_imagen_create.html
     img=get_object_or_404(Imagen_adm, pk=pk)
     ad_img_activacion='active'
     if request.method == 'POST':
-        
-        # ruta=request.POST["img_ruta"]
-        # print(ruta)
-        # descripcion=request.POST["img_descripcion"]
-        # estado='no analizada'
-        # validez='no definido'
-        # fecha=str(time.strftime("%d/%m/%y"))
-        # hc=request.POST["hc_id"]
-        # hc_obj=get_object_or_404(Historial_clinico, hc_id=hc)
-        # obj = Imagen(img_ruta=ruta,img_descripcion=descripcion,img_estado=estado,img_validez=validez,img_fecha=fecha,hc_id=hc_obj)
-        # obj.save()
-        return redirect("imagen")
+        vc_aprendizaje(str(img.imgad_id))
+        return redirect("adm_imagen")
     return render(request,template_name,{'usuario':usuario,'img':img,"ad_img_activacion":ad_img_activacion})
 
 # ------------------------------------------Imagen de aprendizaje-----------------------------------------
@@ -187,28 +185,31 @@ def Imagen_admCreate(request, template_name='agregar/adm_imagen_create.html'):
     form = Imagen_admForm(request.POST or None,request.FILES or None)
     ad_img_activacion='active'
     if form.is_valid():
-        id_ped=Imagen_adm.objects.all().count()
-        ftp_servidor = '127.0.0.1'
-        ftp_usuario  = 'scanm'
-        ftp_clave    = 'scanm'
-        ftp_raiz     = 'admin_learning' # Carpeta del servidor donde queremos subir el fichero
-        fichero_destino = str(id_ped)+'.gif' # Nombre que tendra el fichero en el servidor
+        id_im=int(Imagen_adm.objects.all().count())
+        id_im=id_im+1
+        ftp_raiz = 'admin_learning' # Carpeta del servidor donde queremos subir el fichero
+        fichero_destino = str(id_im)+'.gif' # Nombre que tendra el fichero en el servidor
         data = request.FILES['imgad_ruta'] # or self.files['image'] in your form
         path = default_storage.save('tmp/tmp.gif', ContentFile(data.read()))
         tmp_file = os.path.join(settings.MEDIA_ROOT)+"\\tmp\\tmp.gif"
         try:
-        	s = ftplib.FTP(ftp_servidor, ftp_usuario, ftp_clave)
-        	try:
-        		f = open(tmp_file, 'rb')
-        		s.cwd(ftp_raiz)
-        		s.storbinary('STOR ' + fichero_destino, f)
-        		f.close()
-        		s.quit()
-        	except Exception,e2:
+            ftp = ftplib.FTP(ftp_servidor, ftp_usuario, ftp_clave)
+            ftp.cwd(ftp_raiz)
+            ftp.mkd(str(id_im))
+            ftp.cwd(str(id_im))
+            ftp.mkd("media")
+            ftp.mkd("desviacion_estandar")
+            ftp.mkd("gabor")
+            try:
+                f = open(tmp_file, 'rb')
+                ftp.storbinary('STOR ' + fichero_destino, f)
+                f.close()
+                ftp.quit()
+            except Exception,e2:
         		print "No se ha podido encontrar el fichero " + tmp_file+" - "+str(e2)
         except Exception,e:
         	print "No se ha podido conectar al servidor " + ftp_servidor+" - "+str(e)
-        ruta='ftp://127.0.0.1/admin_learning/'+fichero_destino
+        ruta='ftp://127.0.0.1/admin_learning/'+str(id_im)+'/'+fichero_destino
         descripcion=request.POST["imgad_descripcion"]
         fecha=str(time.strftime("%d/%m/%y"))
         ancho=request.POST["imgad_ancho"]
@@ -303,4 +304,53 @@ def Tipo_cancerRestore(request,pk):
 
 
 
-# .............
+# ...............................................................................................
+from os import listdir
+from os.path import isfile, join
+import numpy
+from PIL import Image
+def vc_aprendizaje(id_r):
+    import sys
+    print("-----------------------------llego----------------------------")
+    # ftp.retrbinary('RETR imagen.png', open('imagen2.png', 'wb').write)
+    # path = default_storage.save('tmp/tmp.gif', ContentFile(data.read()))
+    # tmp_file = os.path.join(settings.MEDIA_ROOT)+"\\tmp_dw\\tmp.gif"
+    try:
+        ftp = ftplib.FTP(ftp_servidor, ftp_usuario, ftp_clave)
+        try:
+            ftp.cwd('admin_learning')
+            ftp.cwd(str(id_r))
+
+            ftp.retrbinary('RETR '+id_r+'.gif', open(''+id_r+'.gif', 'wb').write)
+            tmp_file=os.path.join(settings.BASE_DIR)+"\\"+id_r+".gif"
+            path=os.path.join(settings.MEDIA_ROOT)+"\\tmp_dw\\"+id_r+".gif"
+            os.rename(tmp_file, path)
+
+            convertBMP(os.path.join(settings.MEDIA_ROOT)+"\\tmp_dw\\",id_r)
+            os.remove(path)
+            os.remove(tmp_file)
+            ftp.quit()
+        except Exception,e2:
+            print "No se ha podido encontrar el fichero  - "+str(e2)
+    except Exception,e:
+        print "No se ha podido conectar al servidor  - "
+
+    # try:
+    #     img_fn = sys.argv[1]
+    # except:
+	# 	img_fn = cv2.imread(ruta_img)
+	# 	img_gris=cv2.cvtColor(img_fn, cv2.COLOR_BGR2GRAY)
+	# 	new_imgGris=preProccess(img_gris)
+	# 	if img_gris is None:
+	# 		print 'Failed to load image file:', img_fn
+	# 		sys.exit(1)
+
+def convertBMP(ruta,id_r):
+    mypath=ruta
+    onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
+    images = numpy.empty(len(onlyfiles), dtype=object)
+    for n in range(0, len(onlyfiles)):
+      images[n] = Image.open( join(mypath,onlyfiles[n]))
+
+    for i, face in enumerate(images):
+        face.save(ruta+"\\" + id_r + ".bmp")
