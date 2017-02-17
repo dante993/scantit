@@ -13,6 +13,48 @@ class LoginForm(Form):
                                                            "type": "password",
                                                            "placeholder": "Password..."}))
 
+# ----------------------------------------------------------usuario----------------------------------------------------
+class UsuarioForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        widgets={
+            'cedula':forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder':'Escriba su cedula...'
+            }),
+            'nombres':forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder':'Escriba sus nombres...'
+            }),
+            'apellidos':forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder':'Escriba sus apellidos...'
+            }),
+            'e_mail':forms.EmailInput(attrs={
+                'class':'form-control',
+                'placeholder':'Escriba su correo...'
+            }),
+            'telefono':forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder':'Escriba su telefono...'
+            }),
+            'direccion':forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder':'Escriba su direccion...'
+            }),
+            'sexo':forms.Select(attrs={
+                'class':'form-control',
+                'value':'sksk'
+            }),
+            'fecha_de_nacimiento':forms.TextInput(attrs={
+                'class':'datepicker form-control',
+                'type':'text',
+                'readonly':'',
+                'value':'dd/mm/aaaa'
+            }),
+        }
+        fields = ('cedula','nombres','apellidos','e_mail','telefono','direccion','sexo','fecha_de_nacimiento',)
+
 # ---------------------------------------imagenes subidas por usuarios--------------------------------------------------------
 class ImagenForm(forms.ModelForm):
     class Meta:
@@ -37,7 +79,7 @@ class ImagenForm(forms.ModelForm):
             }),
             'hc_cedula':forms.Select(attrs={
                 'class':'datepicker form-control'
-            }),
+            })
         }
         fields = '__all__'
 
@@ -117,6 +159,9 @@ class Imagen_admForm(forms.ModelForm):
             'imgad_alto':forms.TextInput(attrs={
                 'class':'form-control',
                 'placeholder':'alto...'
+            }),
+            'imgad_estado':forms.Select(attrs={
+                'class':'datepicker form-control'
             }),
             'tc_id':forms.Select(attrs={
                 'class':'datepicker form-control'

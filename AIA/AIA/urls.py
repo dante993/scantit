@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^$', loginView, name='login'),
     url(r'^logout/$', logoutView, name='logout'),
     url(r'^inicio/$', v_inicio, name='inicio'),
+    url(r'^registro/$', UsuaioCreate, name='registro'),
 
     # ------------------------------Historial_clinico-----------------------------------
     url(r'^historial_clinico/$', Historial_clinicoList, name='historial_clinico'),

@@ -25,6 +25,23 @@ def v_inicio(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     return render(request, "inicio.html", {"usuario": usuario})
 
+def UsuaioCreate(request, template_name='agregar/usuario_create.html'):
+    form = UsuarioForm(request.POST or None)
+    if form.is_valid():
+        cedula=request.POST.get("cedula")
+        nombre=request.POST.get("nombres")
+        apellido=request.POST.get("apellidos")
+        e_mail=request.POST.get("e_mail")
+        telefono=request.POST.get("telefono")
+        direccion=request.POST.get("direccion")
+        sexo=request.POST.get("sexo")
+        fecha_de_nacimiento=request.POST.get("fecha_de_nacimiento")
+        contra=request.POST.get("contra")
+
+        Usuario.object.create_user(cedula,nombre,apellido,e_mail,contra,telefono,direccion,sexo,fecha_de_nacimiento)
+        return redirect("login")
+    return render(request,template_name,{'form':form})
+
 @login_required(login_url='/')
 def v_area_img(request):
     cargar_img_activacion='active'
@@ -58,9 +75,9 @@ def Historial_clinicoList(request):
     hc_activacion='active'
     if request.method=='POST':
         hist_c = Historial_clinico.objects.order_by("hc_apellido").filter(hc_id__contains=request.POST["busca"])
-        return render_to_response('listar/historial_clinico_list.html',{'historial':hist_c,'usuario':usuario})
+        return render_to_response('listar/historial_clinico_list.html',{'historial':hist_c,'user':usuario})
     hist_c = Historial_clinico.objects.order_by("hc_apellido")
-    return render_to_response('listar/historial_clinico_list.html',{'historial':hist_c,'usuario':usuario,'hc_activacion':hc_activacion})
+    return render_to_response('listar/historial_clinico_list.html',{'historial':hist_c,'user':usuario,'hc_activacion':hc_activacion})
 
 @login_required(login_url='/')
 def Historial_clinicoListin(request):
@@ -68,9 +85,9 @@ def Historial_clinicoListin(request):
     hc_activacion='active'
     if request.method=='POST':
         hist_c = Historial_clinico.objects.order_by("hc_apellido").filter(hc_id__contains=request.POST["busca"],hc_estado='inactivo')
-        return render_to_response('listar/historial_clinico_list.html',{'historial':hist_c,'usuario':usuario})
+        return render_to_response('listar/historial_clinico_list.html',{'historial':hist_c,'user':usuario})
     hist_c = Historial_clinico.objects.order_by("hc_apellido").filter(hc_estado='inactivo')
-    return render_to_response('listar/historial_clinico_listin.html',{'historial':hist_c,'usuario':usuario,'hc_activacion':hc_activacion})
+    return render_to_response('listar/historial_clinico_listin.html',{'historial':hist_c,'user':usuario,'hc_activacion':hc_activacion})
 
 @login_required(login_url='/')
 def Historial_clinicoCreate(request, template_name='agregar/Historial_clinico_create.html'):
@@ -80,7 +97,7 @@ def Historial_clinicoCreate(request, template_name='agregar/Historial_clinico_cr
     if form.is_valid():
         form.save()
         return redirect("historial_clinico")
-    return render(request,template_name,{'form':form,'usuario':usuario,'hc_activacion':hc_activacion})
+    return render(request,template_name,{'form':form,'user':usuario,'hc_activacion':hc_activacion})
 
 @login_required(login_url='/')
 def Historial_clinicoUpdate(request,pk,template_name='agregar/Historial_clinico_create.html'):
@@ -91,7 +108,7 @@ def Historial_clinicoUpdate(request,pk,template_name='agregar/Historial_clinico_
     if form.is_valid():
         form.save()
         return redirect("historial_clinico")
-    return render(request,template_name,{'form':form,'usuario':usuario,'hc_activacion':hc_activacion})
+    return render(request,template_name,{'form':form,'user':usuario,'hc_activacion':hc_activacion})
 
 @login_required(login_url='/')
 def Historial_clinicoDelete(request,pk):
@@ -113,9 +130,9 @@ def ImagenList(request):
     img_activacion='active'
     if request.method=='POST':
         img = Imagen.objects.order_by("img_fecha").filter(img_ruta__contains=request.POST["busca"])
-        return render_to_response('listar/imagen_list.html',{'img':img,'usuario':usuario})
+        return render_to_response('listar/imagen_list.html',{'img':img,'user':usuario})
     img = Imagen.objects.order_by("img_fecha")
-    return render_to_response('listar/imagen_list.html',{'img':img,'usuario':usuario,'img_activacion':img_activacion})
+    return render_to_response('listar/imagen_list.html',{'img':img,'user':usuario,'img_activacion':img_activacion})
 
 @login_required(login_url='/')
 def ImagenCreate(request, template_name='agregar/imagen_create.html'):
@@ -137,7 +154,7 @@ def ImagenCreate(request, template_name='agregar/imagen_create.html'):
     #     obj = Imagen(img_ruta=ruta,img_descripcion=descripcion,img_estado=estado,img_validez=validez,img_fecha=fecha,hc_id=hc_obj)
     #     obj.save()
     #     return redirect("inicio")
-    return render(request,template_name,{'usuario':usuario,'form':form,"img_activacion":img_activacion})
+    return render(request,template_name,{'user':usuario,'form':form,"img_activacion":img_activacion})
 
 @login_required(login_url='/')
 def ImagenUpdate(request,pk,template_name='editar/imagen_update.html'):
@@ -148,7 +165,7 @@ def ImagenUpdate(request,pk,template_name='editar/imagen_update.html'):
     if form.is_valid():
         form.save()
         return redirect("imagen")
-    return render(request,template_name,{'form':form,'usuario':usuario,'img_activacion':img_activacion})
+    return render(request,template_name,{'form':form,'user':usuario,'img_activacion':img_activacion})
 
 @login_required(login_url='/')
 def ImagenDelete(request,pk):
@@ -164,20 +181,25 @@ def Area_imagenCreate(request,pk, template_name='agregar/area_imagen_create.html
     img=get_object_or_404(Imagen_adm, pk=pk)
     ad_img_activacion='active'
     if request.method == 'POST':
-        vc_aprendizaje(str(img.imgad_id))
+        contador=int(request.POST["contar"])
+        for i in range(contador-1):
+            x=int(request.POST.get("x"+str(i+1)))
+            y=int(request.POST.get("y"+str(i+1)))
+            ancho=int(request.POST.get("ancho"+str(i+1)))
+            alto=int(request.POST.get("alto"+str(i+1)))
+            arobj = Area_imagen(arim_pos_x=x,arim_pos_y=y,arim_ancho=ancho,arim_alto=alto,imgad_id=img)
+            arobj.save()
+        # vc_aprendizaje(str(img.imgad_id))
         return redirect("adm_imagen")
-    return render(request,template_name,{'usuario':usuario,'img':img,"ad_img_activacion":ad_img_activacion})
+    return render(request,template_name,{'user':usuario,'img':img,"ad_img_activacion":ad_img_activacion})
 
 # ------------------------------------------Imagen de aprendizaje-----------------------------------------
 @login_required(login_url='/')
 def Imagen_admList(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     ad_img_activacion='active'
-    if request.method=='POST':
-        img = Imagen_adm.objects.order_by("imgad_fecha").filter(imgad_ruta__contains=request.POST["busca"])
-        return render_to_response('listar/adm_imagen_list.html',{'img':img,'usuario':usuario})
     img = Imagen_adm.objects.order_by("imgad_fecha")
-    return render_to_response('listar/adm_imagen_list.html',{'img':img,'usuario':usuario,'ad_img_activacion':ad_img_activacion})
+    return render_to_response('listar/adm_imagen_list.html',{'img':img,'user':usuario,'ad_img_activacion':ad_img_activacion})
 
 @login_required(login_url='/')
 def Imagen_admCreate(request, template_name='agregar/adm_imagen_create.html'):
@@ -209,18 +231,18 @@ def Imagen_admCreate(request, template_name='agregar/adm_imagen_create.html'):
         		print "No se ha podido encontrar el fichero " + tmp_file+" - "+str(e2)
         except Exception,e:
         	print "No se ha podido conectar al servidor " + ftp_servidor+" - "+str(e)
-        ruta='ftp://127.0.0.1/admin_learning/'+str(id_im)+'/'+fichero_destino
+        ruta='ftp://'+ftp_usuario+':'+ftp_clave+'@127.0.0.1/admin_learning/'+str(id_im)+'/'+fichero_destino
         descripcion=request.POST["imgad_descripcion"]
         fecha=str(time.strftime("%d/%m/%y"))
         ancho=request.POST["imgad_ancho"]
         alto=request.POST["imgad_alto"]
         tip=request.POST["tc_id"]
         tip_obj=get_object_or_404(Tipo_cancer, tc_id=tip)
-        obj = Imagen_adm(imgad_ruta=ruta,imgad_descripcion=descripcion,imgad_fecha=fecha,imgad_ancho=ancho,imgad_alto=alto,tc_id=tip_obj)
+        obj = Imagen_adm(imgad_ruta=ruta,imgad_descripcion=descripcion,imgad_fecha=fecha,imgad_ancho=ancho,imgad_alto=alto,imgad_estado='no aprendida',tc_id=tip_obj)
         obj.save()
         os.remove(tmp_file)
         return redirect("adm_imagen")
-    return render(request,template_name,{'usuario':usuario,'form':form,"ad_img_activacion":ad_img_activacion})
+    return render(request,template_name,{'user':usuario,'form':form,"ad_img_activacion":ad_img_activacion})
 
 @login_required(login_url='/')
 def Imagen_admUpdate(request,pk,template_name='editar/imagen_update.html'):
@@ -231,7 +253,7 @@ def Imagen_admUpdate(request,pk,template_name='editar/imagen_update.html'):
     if form.is_valid():
         form.save()
         return redirect("imagen")
-    return render(request,template_name,{'form':form,'usuario':usuario,'ad_img_activacion':ad_img_activacion})
+    return render(request,template_name,{'form':form,'user':usuario,'ad_img_activacion':ad_img_activacion})
 
 @login_required(login_url='/')
 def Imagen_admDelete(request,pk):
@@ -247,9 +269,9 @@ def Tipo_cancerList(request):
     tipo_c_activacion='active'
     if request.method=='POST':
         tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_nombre__contains=request.POST["busca"],tc_estado='activo')
-        return render_to_response('listar/tipo_cancer_list.html',{'img':img,'usuario':usuario})
+        return render_to_response('listar/tipo_cancer_list.html',{'img':img,'user':usuario})
     tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_estado='activo')
-    return render_to_response('listar/tipo_cancer_list.html',{'tip':tip,'usuario':usuario,'tipo_c_activacion':tipo_c_activacion})
+    return render_to_response('listar/tipo_cancer_list.html',{'tip':tip,'user':usuario,'tipo_c_activacion':tipo_c_activacion})
 
 @login_required(login_url='/')
 def Tipo_cancerListin(request):
@@ -257,9 +279,9 @@ def Tipo_cancerListin(request):
     tipo_c_activacion='active'
     if request.method=='POST':
         tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_nombre__contains=request.POST["busca"],tc_estado='inactivo')
-        return render_to_response('listar/tipo_cancer_listin.html',{'img':img,'usuario':usuario})
+        return render_to_response('listar/tipo_cancer_listin.html',{'img':img,'user':usuario})
     tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_estado='inactivo')
-    return render_to_response('listar/tipo_cancer_listin.html',{'tip':tip,'usuario':usuario,'tipo_c_activacion':tipo_c_activacion})
+    return render_to_response('listar/tipo_cancer_listin.html',{'tip':tip,'user':usuario,'tipo_c_activacion':tipo_c_activacion})
 
 @login_required(login_url='/')
 def Tipo_cancerCreate(request, template_name='agregar/tipo_cancern_create.html'):
@@ -269,7 +291,7 @@ def Tipo_cancerCreate(request, template_name='agregar/tipo_cancern_create.html')
     if form.is_valid():
         form.save()
         return redirect("tipo_cancer")
-    return render(request,template_name,{'usuario':usuario,'form':form,"tipo_c_activacion":tipo_c_activacion})
+    return render(request,template_name,{'user':usuario,'form':form,"tipo_c_activacion":tipo_c_activacion})
 
 @login_required(login_url='/')
 def Tipo_cancerUpdate(request,pk,template_name='agregar/tipo_cancern_create.html'):
@@ -280,7 +302,7 @@ def Tipo_cancerUpdate(request,pk,template_name='agregar/tipo_cancern_create.html
     if form.is_valid():
         form.save()
         return redirect("tipo_cancer")
-    return render(request,template_name,{'form':form,'usuario':usuario,'tipo_c_activacion':tipo_c_activacion})
+    return render(request,template_name,{'form':form,'user':usuario,'tipo_c_activacion':tipo_c_activacion})
 
 @login_required(login_url='/')
 def Tipo_cancerDelete(request,pk):

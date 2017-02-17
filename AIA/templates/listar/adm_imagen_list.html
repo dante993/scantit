@@ -6,17 +6,11 @@
   <div class="form-group  is-empty">
 
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-5">
         <a href="{% url 'crear_adm_imagen' %}" class="btn btn-primary"><i class="material-icons">playlist_add</i> Nuevo</a>
       </div>
-      <div class="col-md-4">
-        <a href="{% url 'crear_adm_imagen' %}" class="btn btn-primary"><i class="material-icons">playlist_add</i> ver inactivos</a>
-      </div>
       <div class="col-md-5">
-        <input type="text" id="busca" name="busca" class="form-control" placeholder="Nombre de la imagen...">
-        <button type="submit" class="btn btn-white btn-round btn-just-icon">
-          <i class="material-icons">search</i><div class="ripple-container"></div>
-        </button>
+        <a href="{% url 'crear_adm_imagen' %}" class="btn btn-primary"><i class="material-icons">playlist_add</i> ver aprendidas</a>
       </div>
     </div>
   </div>
@@ -24,8 +18,8 @@
 
 <div class="card">
   <div class="card-header" data-background-color="purple">
-    <h4 class="title">Imagenes</h4>
-    <p class="category">Listado de imagenes para aprendizaje</p>
+    <h4 class="title">Mamografías</h4>
+    <p class="category">Listado de Mamografías para aprendizaje</p>
   </div>
   <div class="card-content table-responsive table-full-width">
     <table class="table table-hover">
@@ -35,6 +29,7 @@
         <th>DESCRIPCION</th>
         <th>FECHA</th>
         <th>DIMENSIONES</th>
+        <th>ESTADO</th>
         <th>TIPO DE CANCER</th>
         <th>OPCIONES</th>
       </thead>
@@ -46,12 +41,12 @@
           <td><textarea name="txar" rows="6" disabled>{{ im.imgad_descripcion }}</textarea></td>
           <td>{{ im.imgad_fecha }}</td>
           <td>{{ im.imgad_ancho }} x {{ im.imgad_alto }}</td>
+          <td>{{ im.imgad_estado }}</td>
           <td>{{ im.tc_id }}</td>
           <td>
-            <a href="#" class="btn btn-primary btn-just-icon" data-toggle="tooltip" data-placement="top" title="Ver areas seleccionadas"><i class="material-icons">picture_in_picture</i></a>
-            <a href="{% url 'crear_area_imagen' im.imgad_id %}" class="btn btn-info btn-just-icon" data-toggle="tooltip" data-placement="top" title="Seleccionar area"><i class="material-icons">tab_unselected</i></a><br>
-            <a href="{% url 'borrar_imagen' im.imgad_id %}" class="btn btn-danger btn-just-icon" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
+            <a href="{% url 'crear_area_imagen' im.imgad_id %}" class="btn btn-info btn-just-icon" data-toggle="tooltip" data-placement="top" title="Aprender"><i class="material-icons">center_focus_strong</i></a>
             <a href="{% url 'editar_imagen' im.imgad_id %}" class="btn btn-success btn-just-icon" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
+            <a href="{% url 'borrar_imagen' im.imgad_id %}" class="btn btn-danger btn-just-icon" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
           </td>
         </tr>
         {% endfor %}
@@ -63,10 +58,9 @@
 {% endblock content %}
 {% block jscrpt %}
 <script type="text/javascript">
-$(document).on('click', '.borrar', function (event) {
-
-});
 
 $('[data-toggle="tooltip"]').tooltip();
+
+
 </script>
 {% endblock jscrpt %}

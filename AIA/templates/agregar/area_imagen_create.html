@@ -39,6 +39,7 @@
           <div align="center">
             <button class="btn btn-primary" type="submit" name="button">Enviar</button>
           </div>
+          <input type="number" id="contar" name="contar" style="display: none">
         </div>
       </div>
     </div>
@@ -76,7 +77,13 @@ $(document).on('click', '.borrar', function (event) {
   event.preventDefault();
   conrec-=1;
   $(this).closest('tr').remove();
+  guardarContador();
 });
+
+function guardarContador(){
+    var cont_vist = document.getElementById("contar");
+    cont_vist.value = ""+conrec;
+}
 
 function leerarray(){
   var recc=recuadros[recuadros.length-1];
@@ -84,10 +91,10 @@ function leerarray(){
   $('#tablaR tr:last').after(
     '<tr>'
     +'<td>'+recc[0]+'</td>'
-    +'<td>'+recc[1]+'<input type="text" id="x" value="" style="display:none"></td>'
-    +'<td>'+recc[2]+'<input type="text" id="y" value="" style="display:none"></td>'
-    +'<td>'+recc[3]+'<input type="text" id="ancho" value="" style="display:none"></td>'
-    +'<td>'+recc[4]+'<input type="text" id="alto" value="" style="display:none"></td>'
+    +'<td>'+Math.round(recc[1])+'<input type="text" id="x'+conrec+'" name="x'+conrec+'" value="'+Math.round(recc[1])+'" style="display:none"></td>'
+    +'<td>'+Math.round(recc[2])+'<input type="text" id="y'+conrec+'" name="y'+conrec+'" value="'+Math.round(recc[2])+'" style="display:none"></td>'
+    +'<td>'+Math.abs(Math.round(recc[3]))+'<input type="text" id="ancho'+conrec+'" name="ancho'+conrec+'" value="'+Math.abs(Math.round(recc[3]))+'" style="display:none"></td>'
+    +'<td>'+Math.abs(Math.round(recc[4]))+'<input type="text" id="alto'+conrec+'" name="alto'+conrec+'" value="'+Math.abs(Math.round(recc[3]))+'" style="display:none"></td>'
     +'<td><button type="button" class="borrar btn btn-danger btn-just-icon"><i class="material-icons">delete</i></button></td>'
     +'</tr>');
   }
@@ -144,6 +151,7 @@ function leerarray(){
       recuadro.push(conrec);
       recuadro.push(posX);
       recuadro.push(posY);
+      guardarContador();
     }
     else {
       posX = event.clientX - canvasLimites.left;

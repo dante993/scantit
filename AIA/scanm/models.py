@@ -53,7 +53,7 @@ class Usuario (AbstractBaseUser,PermissionsMixin):
         (u'f', u'Femenino'),
     )
     sexo=models.CharField(max_length = 2,choices=SEXO_CHOICES)
-    fecha_de_nacimiento=models.DateField(auto_now_add=True)
+    fecha_de_nacimiento=models.DateField()
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
@@ -124,16 +124,19 @@ class Imagen_adm(models.Model):
     imgad_fecha=models.DateField(auto_now_add=True,blank=True)
     imgad_ancho=models.CharField(max_length = 100)
     imgad_alto=models.CharField(max_length = 100)
+    ESTADO_CHOICES =((u'aprendida',u'Aprendida'),
+                    (u'no aprendida',u'No aprendida'),)
+    imgad_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES, default='no aprendida',blank=True,verbose_name="Estado")
     tc_id=models.ForeignKey(Tipo_cancer,verbose_name="Tipo de cancer")
     def __unicode__(self):
         return self.imgad_ruta
 
 class Area_imagen(models.Model):
     arim_id=models.AutoField(primary_key=True)
-    arim_pos_x = models.DecimalField(max_digits=19, decimal_places=3)
-    arim_pos_y = models.DecimalField(max_digits=19, decimal_places=3)
-    arim_ancho = models.DecimalField(max_digits=19, decimal_places=3)
-    arim_alto = models.DecimalField(max_digits=19, decimal_places=3)
+    arim_pos_x = models.IntegerField(verbose_name="Y")
+    arim_pos_y = models.IntegerField(verbose_name="X")
+    arim_ancho = models.IntegerField(verbose_name="Ancho")
+    arim_alto = models.IntegerField(verbose_name="Alto")
     imgad_id=models.ForeignKey(Imagen_adm,verbose_name="imagen")
     def __unicode__(self):
         return self.arim_id
