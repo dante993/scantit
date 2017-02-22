@@ -23,9 +23,16 @@ ftp_clave = 'scanm'
 @login_required(login_url='/')
 def v_inicio(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
-    return render(request, "inicio.html", {"usuario": usuario})
+    inicio_activacion='active'
+    img_c_apr=Imagen_adm.objects.count()
+    img_c_rec=Imagen.objects.count()
+    admins_c=Usuario.object.filter(is_superuser=True).count()
+    users_c=Usuario.object.filter(is_superuser=False).count()
+    hc_c=Historial_clinico.objects.count()
+    return render(request, "inicio.html",
+                  {"hc_c":hc_c,"users_c":users_c,"admins_c":admins_c,"img_c_rec":img_c_rec,"img_c_apr":img_c_apr,"usuario": usuario,"inicio_activacion":inicio_activacion})
 
-def UsuaioCreate(request, template_name='agregar/usuario_create.html'):
+def UsuaioC(request, template_name='agregar/usuario_create.html'):
     form = UsuarioForm(request.POST or None)
     if form.is_valid():
         cedula=request.POST.get("cedula")
@@ -38,8 +45,9 @@ def UsuaioCreate(request, template_name='agregar/usuario_create.html'):
         fecha_de_nacimiento=request.POST.get("fecha_de_nacimiento")
         contra=request.POST.get("contra")
 
-        Usuario.object.create_user(cedula,nombre,apellido,e_mail,contra,telefono,direccion,sexo,fecha_de_nacimiento)
+        Usuario.object.create_user(cedula,nombre,apellido,e_mail,contra,telefono=telefono,direccion=direccion,sexo=sexo,fecha_de_nacimiento=fecha_de_nacimiento)
         return redirect("login")
+
     return render(request,template_name,{'form':form})
 
 @login_required(login_url='/')

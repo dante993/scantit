@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 {% if user.is_authenticated %}
-    <script type="text/javascript">
-        setTimeout("window.location.href = '{%url 'inicio'%}'", 0,5);
-    </script>
+<script type="text/javascript">
+setTimeout("window.location.href = '{%url 'inicio'%}'", 0,5);
+</script>
 {% endif %}
 <head lang="es">
   {% load staticfiles %}

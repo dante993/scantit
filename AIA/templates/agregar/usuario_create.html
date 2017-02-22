@@ -19,16 +19,21 @@ setTimeout("window.location.href = '{%url 'inicio'%}'", 0,5);
   {% endblock fuentes_iconos %}
   {% block css %}
   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/material-dashboard.css' %}">
   <link rel="stylesheet" href="{% static 'css/material-kit.css' %}">
+
   <!-- <link rel="stylesheet" href="{% static 'css/estiloss.css' %}"> -->
   {% endblock css %}
   {% block js %}
   <script src="{% static 'js/jquery-3.1.0.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'js/material.min.js' %}" type="text/javascript"></script>
-  <script src="{% static 'js/nouislider.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/chartist.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/bootstrap-notify.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/material-dashboard.js' %}" type="text/javascript"></script>
   <script src="{% static 'js/bootstrap-datepicker.js' %}" type="text/javascript"></script>
-  <script src="{% static 'js/material-kit.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/demo.js' %}" type="text/javascript"></script>
+
   {% endblock js %}
 </head>
 <body class="signup-page">
@@ -37,8 +42,8 @@ setTimeout("window.location.href = '{%url 'inicio'%}'", 0,5);
       <div class="container">
         <div class="row">
           <div class="col-sm-10 col-sm-offset-1">
-            <div class="card card-signup" style="margin-top:7%;margin-bottom:1%">
-              <form class="form" method="post">{% csrf_token %}
+            <div class="card card-signup" style="margin-top:5%;">
+              <form class="form" method="post" onsubmit= "return validar_formulario()">{% csrf_token %}
                 <div class="row">
                   <div class="col-sm-8 col-sm-offset-2">
                     <div class="header header-primary text-center ">
@@ -49,84 +54,104 @@ setTimeout("window.location.href = '{%url 'inicio'%}'", 0,5);
                 <div class="content row">
                   <div class="col-sm-10 col-sm-offset-1">
                     <div class="row">
-                      <div class="col-sm-4">
-                        <div class="input-group">
-                          <span class="input-group-addon">
-                            <i class="material-icons">featured_video</i>
-                          </span>
-                          {{ form.cedula }}
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <div class="input-group">
+                            <span class="input-group-addon">
+                              <i class="material-icons">featured_video</i>
+                            </span>
+                            {{ form.cedula }}
+                            <span class="text-danger">{{ form.errors.cedula.as_text }}</span>
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="input-group">
+                            <span class="input-group-addon">
+                              <i class="material-icons">face</i>
+                            </span>
+                            {{ form.nombres }}
+                            <span class="text-danger">{{ form.errors.nombres.as_text }}</span>
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="input-group">
+                            <span class="input-group-addon">
+                              <i class="material-icons">face</i>
+                            </span>
+                            {{ form.apellidos }}
+                            <span class="text-danger">{{ form.errors.apellidos.as_text }}</span>
+                          </div>
                         </div>
                       </div>
-                      <div class="col-sm-4">
-                        <div class="input-group">
-                          <span class="input-group-addon">
-                            <i class="material-icons">face</i>
-                          </span>
-                          {{ form.nombres }}
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="input-group">
+                            <span class="input-group-addon">
+                              <i class="material-icons">person_pin</i>
+                            </span>
+                            {{ form.direccion }}
+                            <span class="text-danger">{{ form.errors.direccion.as_text }}</span>
+                          </div>
                         </div>
                       </div>
-                      <div class="col-sm-4">
-                        <div class="input-group">
-                          <span class="input-group-addon">
-                            <i class="material-icons">face</i>
-                          </span>
-                          {{ form.apellidos }}
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="input-group">
+                            <span class="input-group-addon">
+                              <i class="material-icons">email</i>
+                            </span>
+                            {{ form.e_mail }}
+                            <span class="text-danger">{{ form.errors.e_mail.as_text }}</span>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="input-group">
+                            <span class="input-group-addon">
+                              <i class="material-icons">phone</i>
+                            </span>
+                            {{ form.telefono }}
+                            <span class="text-danger">{{ form.errors.telefono.as_text }}</span>
+                          </div>
                         </div>
                       </div>
-                      <div class="col-sm-12">
-                        <div class="input-group">
-                          <span class="input-group-addon">
-                            <i class="material-icons">person_pin</i>
-                          </span>
-                          {{ form.direccion }}
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="input-group">
+                            <span class="input-group-addon">
+                              <i class="material-icons">face</i>
+                            </span>
+                            {{ form.sexo }}
+                            <span class="text-danger">{{ form.errors.sexo.as_text }}</span>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="input-group label-floating">
+                            <span class="input-group-addon">
+                              <i class="material-icons">date_range</i>
+                            </span>
+                            {{ form.fecha_de_nacimiento }}
+
+                            <span class="text-danger">{{ form.errors.fecha_de_nacimiento.as_text }}</span>
+                          </div>
                         </div>
                       </div>
-                      <div class="col-sm-6">
-                        <div class="input-group">
-                          <span class="input-group-addon">
-                            <i class="material-icons">email</i>
-                          </span>
-                          {{ form.e_mail }}
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="input-group">
+                            <span class="input-group-addon">
+                              <i class="material-icons">lock_outline</i>
+                            </span>
+                            <input class="form-control" type="password" name="contra" id="contra" value="" placeholder="Escriba su contrasenia">
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-sm-6">
-                        <div class="input-group">
-                          <span class="input-group-addon">
-                            <i class="material-icons">phone</i>
-                          </span>
-                          {{ form.telefono }}
-                        </div>
-                      </div>
-                      <div class="col-sm-6">
-                        <div class="input-group">
-                          <span class="input-group-addon">
-                            <i class="material-icons">face</i>
-                          </span>
-                          {{ form.sexo }}
-                        </div>
-                      </div>
-                      <div class="col-sm-6">
-                        <div class="input-group">
-                          <span class="input-group-addon">
-                            <i class="material-icons">date_range</i>
-                          </span>
-                          {{ form.fecha_de_nacimiento }}
-                        </div>
-                      </div>
-                      <div class="col-sm-6">
-                        <div class="input-group">
-                          <span class="input-group-addon">
-                            <i class="material-icons">lock_outline</i>
-                          </span>
-                          <input class="form-control" type="password" name="contra" id="contra" value="" placeholder="Escriba su contrasenia">
-                        </div>
-                      </div>
-                      <div class="col-sm-6">
-                        <div class="input-group">
-                          <span class="input-group-addon">
-                            <i class="material-icons">lock_outline</i>
-                          </span>
-                          <input class="form-control" type="password" name="contra" id="contra" value="" placeholder="Repita su contrasenia">
+                        <div class="col-sm-6">
+                          <div class="input-group">
+                            <span class="input-group-addon">
+                              <i class="material-icons">lock_outline</i>
+                            </span>
+                            <input class="form-control" type="password" name="contra_r" id="contra_r" value="" placeholder="Repita su contrasenia">
+                            <span class="text-danger" id="err_contra">* Las claves no coinciden</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -184,6 +209,40 @@ setTimeout("window.location.href = '{%url 'inicio'%}'", 0,5);
 
 </body>
 <script type="text/javascript">
-$('#id_fecha_de_nacimiento').datepicker();
+type = ['','info','success','warning','danger'];
+function validar_formulario() {
+  if ($('#contra_r').val()==$('#contra').val())
+  {
+    return true;
+    $("#err_contra").hide();
+  }else{
+    $("#err_contra").show();
+    return false;
+  }
+}
+
+$('#id_fecha_de_nacimiento').datepicker({
+	weekStart:1
+});
+
+$( document ).ready(function() {
+  $("#err_contra").hide();
+});
+// function notificar(from, align, mssg, tip){
+//     	color = tip;
+//     	$.notify({
+//         	icon: "error",
+//         	message: mssg
+//
+//         },{
+//             type: type[color],
+//             timer: 3000,
+//             placement: {
+//                 from: from,
+//                 align: align
+//             }
+//         });
+// 	}
+
 </script>
 </html>

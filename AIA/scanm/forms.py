@@ -22,6 +22,11 @@ class UsuarioForm(forms.ModelForm):
                 'class':'form-control',
                 'placeholder':'Escriba su cedula...'
             }),
+            'password':forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder':'Escriba su clave...',
+                'type':'password'
+            }),
             'nombres':forms.TextInput(attrs={
                 'class':'form-control',
                 'placeholder':'Escriba sus nombres...'
@@ -43,14 +48,14 @@ class UsuarioForm(forms.ModelForm):
                 'placeholder':'Escriba su direccion...'
             }),
             'sexo':forms.Select(attrs={
-                'class':'form-control',
-                'value':'sksk'
+                'class':'form-control'
             }),
             'fecha_de_nacimiento':forms.TextInput(attrs={
                 'class':'datepicker form-control',
                 'type':'text',
                 'readonly':'',
-                'value':'dd/mm/aaaa'
+                'data-date-format':'yyyy-mm-dd',
+                'value':'Fecha de nacimiento...'
             }),
         }
         fields = ('cedula','nombres','apellidos','e_mail','telefono','direccion','sexo','fecha_de_nacimiento',)
@@ -68,7 +73,7 @@ class ImagenForm(forms.ModelForm):
                 'class':'form-control',
             }),
             'img_estado':forms.Select(attrs={
-                'class':'datepicker form-control'
+                'class':'form-control'
             }),
             'img_validez':forms.Select(attrs={
                 'class':'datepicker form-control'
@@ -161,10 +166,10 @@ class Imagen_admForm(forms.ModelForm):
                 'placeholder':'alto...'
             }),
             'imgad_estado':forms.Select(attrs={
-                'class':'datepicker form-control'
+                'class':'form-control'
             }),
             'tc_id':forms.Select(attrs={
-                'class':'datepicker form-control'
+                'class':'form-control'
             }),
         }
         fields = '__all__'

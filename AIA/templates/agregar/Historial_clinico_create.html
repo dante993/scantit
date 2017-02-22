@@ -11,7 +11,7 @@
           <p class="category">Datos del paciente</p>
         </div>
         <div class="card-content">
-          <form method="post" action="" ENCTYPE="multipart/form-data">{% csrf_token %}
+          <form method="post" action="">{% csrf_token %}
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group label-floating">
@@ -91,7 +91,7 @@
 {% block jscrpt %}
 <script type="text/javascript">
 $( document ).ready(function() {
-  $("#id_cedula").val("{{usuario.cedula}}");
+  $("#id_cedula").val("{{user.cedula}}");
   $(".ocul").hide();
 
 

@@ -33,7 +33,7 @@
 </head>
 <body>
   <div class="wrapper">
-    <div class="sidebar" data-color="purple" data-image="../static/img/side.png">
+    <div class="sidebar" data-color="purple" data-image="{% static 'img/side.png' %}">
       <!--
       Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
 
@@ -49,6 +49,12 @@
 
     <div class="sidebar-wrapper">
       <ul class="nav">
+        <li class="{{inicio_activacion}}">
+          <a href="{% url 'inicio' %}">
+            <i class="material-icons">info</i>
+            <p>Reporte</p>
+          </a>
+        </li>
         <li class="{{hc_activacion}}">
           <a href="{% url 'historial_clinico' %}">
             <i class="material-icons">assignment</i>
@@ -61,6 +67,7 @@
             <p>Reconocimiento</p>
           </a>
         </li>
+
         {% if user.is_superuser == True%}
           <li class="{{ad_img_activacion}}">
             <a href="{% url 'adm_imagen' %}">
@@ -74,7 +81,14 @@
               <p>Tipos de cancer</p>
             </a>
           </li>
+          <li class="{{rep_activacion}}">
+            <a href="{% url 'inicio' %}">
+              <i class="material-icons">insert_chart</i>
+              <p>Reportes</p>
+            </a>
+          </li>
         {% endif%}
+
       </ul>
     </div>
   </div>

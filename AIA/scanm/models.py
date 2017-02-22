@@ -39,7 +39,7 @@ def validar_cedula(value):
                 else:
                     raise forms.ValidationError(msg)
             else:raise forms.ValidationError(msg)
-        else:raise forms.ValidationError("esto no es un numero de cedula")
+        else:raise forms.ValidationError("Esto no es un numero de cedula")
 
 class Usuario (AbstractBaseUser,PermissionsMixin):
     cedula = models.CharField(primary_key=True,max_length = 10,validators=[validar_cedula])
@@ -52,8 +52,8 @@ class Usuario (AbstractBaseUser,PermissionsMixin):
         (u'm', u'Malculino'),
         (u'f', u'Femenino'),
     )
-    sexo=models.CharField(max_length = 2,choices=SEXO_CHOICES)
-    fecha_de_nacimiento=models.DateField()
+    sexo=models.CharField(max_length = 2,choices=SEXO_CHOICES,default="m")
+    fecha_de_nacimiento=models.DateField(null=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
