@@ -89,11 +89,11 @@ class Imagen(models.Model):
     img_descripcion=models.TextField(verbose_name="Descripcion de la imagen",blank=True,default="sin comentarios...")
     ESTADO_CHOICES =((u'analizada',u'Analizada'),
                     (u'no analizada',u'No Analizada'),)
-    img_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES, default='no analizada',blank=True)
+    img_estado = models.CharField(verbose_name="Estado",max_length = 25,choices=ESTADO_CHOICES, default='no analizada',blank=True)
     VALIDEZ_CHOICES =((u'valida',u'Valida'),
                     (u'no definido',u'No definido'),
                     (u'no valida',u'No Valida'),)
-    img_validez = models.CharField(max_length = 25,choices=VALIDEZ_CHOICES, default='no definido',blank=True)
+    img_validez = models.CharField(verbose_name="Validez",max_length = 25,choices=VALIDEZ_CHOICES, default='no definido',blank=True)
     img_fecha=models.DateField(auto_now_add=True,blank=True)
     hc_cedula=models.ForeignKey(Historial_clinico,verbose_name="Historial clinico")
     def __unicode__(self):
