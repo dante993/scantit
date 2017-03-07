@@ -154,7 +154,7 @@ function initDashboardPageCharts(){
 
         low: 0,
         high: 5, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-        chartPadding: { top: 20, right: 20, bottom: 0, left: 0},
+        chartPadding: { top: 20, right: 0, bottom: 0, left: 0},
     }
 
     var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
@@ -178,7 +178,7 @@ function initDashboardPageCharts(){
         }),
         low: 0,
         high: 250, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-        chartPadding: { top: 20, right: 20, bottom: 0, left: 0}
+        chartPadding: { top: 20, right: 0, bottom: 0, left: 0}
     }
 
     var completedTasksChart = new Chartist.Line('#completedTasksChart', dataCompletedTasksChart, optionsCompletedTasksChart);
@@ -203,7 +203,7 @@ function initDashboardPageCharts(){
         },
         low: 0,
         high: 35,
-        chartPadding: { top: 20, right: 20, bottom: 0, left: 0}
+        chartPadding: { top: 20, right: 0, bottom: 0, left: 0}
     };
     var responsiveOptions = [
       ['screen and (max-width: 640px)', {
