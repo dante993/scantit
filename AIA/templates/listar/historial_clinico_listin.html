@@ -27,7 +27,7 @@
 
 <div class="card">
   <div class="card-header" data-background-color="purple">
-    <h4 class="title">Historiales clinicos</h4>
+    <h4 class="card-title">Historiales clinicos</h4>
     <p class="category">Listado de historiales clinicos</p>
   </div>
   <div class="card-content table-responsive table-full-width">
@@ -44,15 +44,15 @@
       <tbody>
         {% for hist in historial %}
         <tr>
-          <td>{{ hist.hc_id }}</td>
+          <td>{{ hist.hc_cedula }}</td>
           <td>{{ hist.hc_nombre }} {{ hist.hc_apellido }}</td>
           <td>{{ hist.hc_edad }}</td>
           <td>{{ hist.hc_fecha }}</td>
           <td>{{ hist.hc_estado }}</td>
           <td>{{ hist.cedula }}</td>
-          <td>
-            <a href="{% url 'restaurar_historial_clinico' hist.hc_id %}" class="btn btn-info btn-just-icon" data-toggle="tooltip" data-placement="top" title="Restaurar"><i class="material-icons">undo</i></a>
-            <a href="{% url 'editar_historial_clinico' hist.hc_id %}" class="btn btn-success btn-just-icon" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
+          <td class="td-actions">
+            <a href="{% url 'restaurar_historial_clinico' hist.hc_cedula %}" class="btn btn-info btn-just-icon" data-toggle="tooltip" data-placement="top" title="Restaurar"><i class="material-icons">undo</i></a>
+            <a href="{% url 'borrar_p_historial_clinico' hist.hc_cedula %}" class="btn btn-danger btn-just-icon" data-toggle="tooltip" data-placement="top" title="Eliminar permanentemente"><i class="material-icons">delete_forever</i></a>
           </td>
         </tr>
         {% endfor %}

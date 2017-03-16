@@ -7,26 +7,24 @@
     <div class="col-md-8">
       <div class="card">
         <div class="card-header" data-background-color="purple">
-          <h4 class="title">Nuevo historial clinico</h4>
+          <h4 class="card-title">Nuevo historial clinico</h4>
           <p class="category">Datos del paciente</p>
         </div>
-        <div class="card-content">
+        <div class="card-content text-center">
           <form method="post" action="">{% csrf_token %}
             <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <div class="form-group label-floating">
                   {{ form.hc_cedula.label_tag }}
                   {{ form.hc_cedula }}
                   {{ form.hc_cedula.errors }}
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <div class="form-group label-floating">
-                  {{ form.hc_nombre.label_tag }}
-                  {{ form.hc_nombre }}
-                  {{ form.hc_nombre.errors }}
+                  {{ form.hc_edad.label_tag }}
+                  {{ form.hc_edad }}
+                  {{ form.hc_edad.errors }}
                 </div>
               </div>
             </div>
@@ -38,18 +36,14 @@
                   {{ form.hc_apellido }}
                   {{ form.hc_apellido.errors }}
                 </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
                 <div class="form-group label-floating">
-                  {{ form.hc_edad.label_tag }}
-                  {{ form.hc_edad }}
-                  {{ form.hc_edad.errors }}
+                  {{ form.hc_nombre.label_tag }}
+                  {{ form.hc_nombre }}
+                  {{ form.hc_nombre.errors }}
                 </div>
               </div>
             </div>
+
             <div class="row ocul">
               <div class="col-md-6">
                 <div class="form-group label-floating">
@@ -77,8 +71,8 @@
                 </div>
               </div>
             </div>
-
-            <button type="submit" class="btn btn-success pull-right">Guardar</button><a href="{% url 'historial_clinico' %}" class="btn btn-danger pull-right">Cancelar</a>
+            <a href="{% url 'historial_clinico' %}" class="btn btn-danger">Cancelar</a>
+            <button type="submit" class="btn btn-success">Guardar</button>
             <div class="clearfix"></div>
           </form>
         </div>

@@ -27,7 +27,7 @@
 
 <div class="card">
   <div class="card-header" data-background-color="purple">
-    <h4 class="title">Historiales clinicos</h4>
+    <h4 class="card-title">Historiales clinicos</h4>
     <p class="category">Listado de historiales clinicos</p>
   </div>
   <div class="card-content table-responsive table-full-width">
@@ -46,7 +46,7 @@
           <td>{{ tipo.tc_nombre }}</td>
           <td><textarea name="txar" rows="3" cols="35" style="text-align:justify" disabled>{{ tipo.tc_descripcion }}</textarea></td>
           <td>{{ tipo.tc_estado }}</td>
-          <td>
+          <td class="td-actions">
             <a href="{% url 'restaurar_tipo_cancer' tipo.tc_id %}" class="btn btn-info btn-just-icon" data-toggle="tooltip" data-placement="top" title="Restaurar"><i class="material-icons">undo</i></a>
             <a href="{% url 'borrar_p_tipo_cancer' tipo.tc_id %}" class="btn btn-danger btn-just-icon" data-toggle="tooltip" data-placement="top" title="Eliminar permanentemente"><i class="material-icons">delete_forever</i></a>
           </td>

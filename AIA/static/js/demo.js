@@ -242,7 +242,6 @@ demo = {
                 inline: true
             }
          });
-
          $('.datepicker').datetimepicker({
             format: 'MM/DD/YYYY',
             icons: {
@@ -792,8 +791,8 @@ demo = {
 
     	}else if(type == 'success-message'){
         	swal({
-                title: "Good job!",
-                text: "You clicked the button!",
+                title: "Completado!",
+                text: "Mamografía aprendida con exito!",
                 buttonsStyling: false,
                 confirmButtonClass: "btn btn-success",
                 type: "success"

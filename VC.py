@@ -7,13 +7,13 @@ from math import pow,sqrt
 #Tamaño del kernel
 ksize = 31
 
-#Valores del recuadro 
+#Valores del recuadro
 xR=4
 yR=4
 altoR=20
 anchoR=20
 dimR= altoR*anchoR
-#dimensiones de la imagen 
+#dimensiones de la imagen
 altoI=360
 anchoI=220
 dim =altoI*anchoI
@@ -25,7 +25,7 @@ c=1
 rutaIn=''
 rutaOut='Z:/Google Drive/ltobar_est/Decimo/AIA/tratoDeImagenes'
 
-tipo=-1 #tipo de cancer o normal 
+tipo=-1 #tipo de cancer o normal
 
 etiquetas=np.empty((dimR,1))
 vecC=np.zeros((dimR,70))
@@ -38,7 +38,7 @@ def build_filters(theta, gamma):
     kern /= 1.5*kern.sum()
     filters.append(kern)
     return filters
- 
+
 def process(img, filters):
     accum = np.zeros_like(img)
     for kern in filters:
@@ -47,7 +47,7 @@ def process(img, filters):
     return accum
 
 #Aplicacion del filtro Gaussiano para obtener la Media
-def GaussianFilter(img): 
+def GaussianFilter(img):
     blur = cv2.GaussianBlur(img,(ksize,ksize),0)
     return blur
 
@@ -63,17 +63,17 @@ def preProccess(img):
 	for x in np.arange(0,altoI):
 		for y in np.arange(0,anchoI):
 			new[x,y]=float(img[x,y])/255
-	
-	return new 
-	
+
+	return new
+
 def llenarVC(res,index):
 	#creartxt()
 	#Array de vectores caracteristicos, inicializados en zero
 	count=0
 	for x in np.arange(0,altoI):
 		for y in np.arange(0,anchoI):
-			if(x>=xR and x<(xR+anchoR) and y>=yR and y<(yR+altoR)):	
-				vecC[count,index]=res[x,y]		
+			if(x>=xR and x<(xR+anchoR) and y>=yR and y<(yR+altoR)):
+				vecC[count,index]=res[x,y]
 				if (index == 0):
 				#print (str(x)+" >= "+str(xR)+" --- "+str(x)+" <= "+str(xR+anchoR)+" and "+str(y)+" >= "+str(yR)+" --- "+str(y)+" <= "+str(yR+anchoR))
 					#print (str(x)+'-'+str(y))
@@ -83,7 +83,7 @@ def llenarVC(res,index):
 						etiquetas[count,0]=1
 					if(tipo==-1):#benigno
 						etiquetas[count,0]=-1
-				count=count+1	
+				count=count+1
 
 def grabarTxt(vec,etiquetas):
     archi=open('VC.txt','a')
@@ -92,7 +92,7 @@ def grabarTxt(vec,etiquetas):
     archi=open('VCEtiqueta.txt','a')
     archi.write(str(etiquetas)+'\n')
     archi.close()
-				
+
 if __name__ == '__main__':
     import sys
     try:
@@ -105,7 +105,7 @@ if __name__ == '__main__':
 			print 'Failed to load image file:', img_fn
 			sys.exit(1)
 
-			
+
 countIndex = 0
 for theta in np.arange(1,8):
     for gamma in np.arange(0.1,0.6, 0.1):
@@ -123,11 +123,11 @@ for theta in np.arange(1,8):
 		countIndex+=1
 		#cv2.imshow('result', new_imgGris)
 		#k = cv2.waitKey(0)
-		cv2.imwrite(rutaOut+'/GaborWavelet/case4548/GaborWavelet-'+str(c)+'.bmp',res1)
-		cv2.imwrite(rutaOut+'/Gaussian/case4548/Gaussian-'+str(c)+'.bmp',res2)
-		cv2.imwrite(rutaOut+'/DesviacionEstandar/case4548/DesviacionEstandar-'+str(c)+'.bmp',res3)
-		c+=1
-		cv2.destroyAllWindows()
+		# cv2.imwrite(rutaOut+'/GaborWavelet/case4548/GaborWavelet-'+str(c)+'.bmp',res1)
+		# cv2.imwrite(rutaOut+'/Gaussian/case4548/Gaussian-'+str(c)+'.bmp',res2)
+		# cv2.imwrite(rutaOut+'/DesviacionEstandar/case4548/DesviacionEstandar-'+str(c)+'.bmp',res3)
+		# c+=1
+		# cv2.destroyAllWindows()
 
 
 for x in np.arange(0,dimR):

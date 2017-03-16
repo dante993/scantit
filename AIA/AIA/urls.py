@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^historial_clinico/crear_historial_clinico/$', Historial_clinicoCreate, name='crear_historial_clinico'),
     url(r'^historial_clinico/editar/(?P<pk>.*)/$', Historial_clinicoUpdate, name='editar_historial_clinico'),
     url(r'^historial_clinico/borrar/(?P<pk>.*)/$', Historial_clinicoDelete, name='borrar_historial_clinico'),
+    url(r'^historial_clinico/borrar_permanente/(?P<pk>.*)/$', Historial_clinicoDeleteP, name='borrar_p_historial_clinico'),
     url(r'^historial_clinico/restaurar/(?P<pk>.*)/$', Historial_clinicoRestore, name='restaurar_historial_clinico'),
 
     # ------------------------------imagen-----------------------------------
@@ -52,6 +53,7 @@ urlpatterns = [
 
 # -----------------------------------------------admin-----------------------------------------------------
     url(r'^admin/imagen/$', Imagen_admList, name='adm_imagen'),
+    url(r'^admin/imagen/aprendidas$', Imagen_admListap, name='adm_imagen_ap'),
     url(r'^admin/imagen/crear/$', Imagen_admCreate, name='crear_adm_imagen'),
 
     # ------------------------------tipos de cancer-----------------------------------

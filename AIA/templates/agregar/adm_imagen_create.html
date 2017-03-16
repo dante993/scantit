@@ -5,73 +5,67 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-8">
+    <div class="">
       <div class="card">
         <div class="card-header" data-background-color="purple">
-          <h4 class="title">Agregar imagen</h4>
+          <h4 class="card-title">Agregar imagen</h4>
           <p class="category">Imagen para aprendizaje</p>
         </div>
-        <div class="card-content">
-          <form method="post" action="" ENCTYPE="multipart/form-data">{% csrf_token %}
-
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group label-floating">
-                  {{ form.tc_id.label_tag }}
-                  {{ form.tc_id }}
-                  {{ form.tc_id.errors }}
+        <div class="card-content text-center">
+          <form method="post" class="form-horizontal" action="" ENCTYPE="multipart/form-data">{% csrf_token %}
+            <div class="row col-sm-offset-2">
+              <div class="col-sm-4">
+                <legend>Seleccione una mamografía</legend>
+                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                  <div class="fileinput-new thumbnail">
+                    <img src="{% static 'img/image_placeholder.jpg' %}" alt="...">
+                  </div>
+                  <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                  <div>
+                    <span class="btn btn-primary btn-round btn-file">
+                      <span class="fileinput-new">Seleccionar imagen</span>
+                      <span class="fileinput-exists">Cambiar</span>
+                      {{ form.imgad_ruta }}
+                      <span class="text-danger">{{ form.errors.imgad_ruta.as_text }}</span>
+                    </span>
+                    <a href="#" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Quitar</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="row">
+                  <div class="form-group label-floating">
+                    {{ form.tc_id.label_tag }}
+                    {{ form.tc_id }}
+                    <span class="text-danger">{{ form.errors.tc_id.as_text }}</span>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="form-group label-floating">
+                    <label class="control-label">Descripcion de la imagen:</label>
+                    {{ form.imgad_descripcion }}
+                    <span class="text-danger">{{ form.errors.imgad_descripcion.as_text }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row oculto">
+                <div class="col-md-6">
+                  <div class="form-group label-floating">
+                    {{ form.imgad_ancho }}
+                  </div>
+                </div>
+              </div>
+              <div class="row oculto">
+                <div class="col-md-6">
+                  <div class="form-group label-floating">
+                    {{ form.imgad_alto }}
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group label-floating">
-                  <button type="button" name="button" class="btn btn-primary">
-                    Seleccionar archivo
-                    {{ form.imgad_ruta }}
-                  </button>
-                </div>
-              </div>
-              <div class="col-md-4" style="margin-top:2%" >
-                <input id="ver_ruta" type="text" value="" placeholder="Imagen de mamografia..." class="form-control" disabled/>
-                {{ form.imgad_ruta.errors }}
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label">Descripcion de la imagen:</label>
-                  {{ form.imgad_descripcion }}
-                  {{ form.imgad_descripcion.errors }}
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  {{ form.imgad_fecha.label_tag }}
-                  {{ form.imgad_fecha }}
-                  {{ form.imgad_fecha.errors }}
-                </div>
-              </div>
-            </div>
-            <div class="row oculto">
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  {{ form.imgad_ancho }}
-                </div>
-              </div>
-            </div>
-            <div class="row oculto">
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  {{ form.imgad_alto }}
-                </div>
-              </div>
-            </div>
-            <button type="submit" class="btn btn-success pull-right">Guardar</button><a href="{% url 'adm_imagen' %}" class="btn btn-danger pull-right">Cancelar</a>
+            <a href="{% url 'imagen' %}" class="btn btn-danger pull-center">Cancelar</a>
+            <button type="submit" class="btn btn-success pull-center">Guardar</button>
             <div class="clearfix"></div>
           </form>
         </div>

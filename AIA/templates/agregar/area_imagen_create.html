@@ -1,25 +1,42 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% block content %}
-<form method="post">{% csrf_token %}
+<form method="post" onsubmit= "ejecutarBP()">{% csrf_token %}
 <input type="text" name="contador" id="contador" style="display:none" value="">
 <div class="card">
   <div class="card-header" data-background-color="purple">
-    <h4 class="title">Seleccionar areas sospechosas de imagen</h4>
+    <h4 class="card-title">Seleccionar areas sospechosas de la imagen para el tipo de Cancer <span class="label label-info">{{ img.tc_id }}</span></h4>
     <p class="category">Marque las areas que considere sospechosas de cancer</p>
   </div>
   <div class="card-content">
-    <div class="row">
-      <div class="col-md-6">
+    <legend class="text-primary" id="t_prog">Aprendiendo Mamografía</legend>
+    <div class="progress progress-line-primary">
+      <div id="progreso" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="">
+      </div>
+    </div>
+    <div class="row" align="center">
+      <div class="col-md-6" id="canvas_img">
         <img src="{{ img.imgad_ruta }}" id="imgp" style="display:none">
         <div align="center">
           <canvas id="canvas" width="1200" height="500" style="display:none"></canvas>
         </div>
       </div>
+      <div class="col-md-5 col-md-offset-1" id="img_img" align="center">
+        <img src="{{ img.imgad_ruta }}" id="img_or" style="max-width:50%;">
+      </div>
 
       <!--..................................................canvas ..................................................................  -->
       <br>
-      <div class="col-md-5" >
+      <div class="col-md-3" id="aprendido">
+        <br>
+        <div class="card">
+          <div class="card-content text-center">
+            <h5>Mamografía aprendida</h5>
+            <a class="btn btn-success btn-fill" onclick="window.location.href='{% url 'adm_imagen' %}'">Continuar!</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-5" id="datos_img">
         <div class="table-responsive">
           <table class="table table-striped" id="tablaR" height="200px">
             <thead>
@@ -37,7 +54,7 @@
             </tbody>
           </table>
           <div align="center">
-            <button class="btn btn-primary" type="submit" name="button">Enviar</button>
+            <button class="btn btn-primary" type="submit" name="button">Aprender</button>
           </div>
           <input type="number" id="contar" name="contar" style="display: none">
         </div>
@@ -49,17 +66,38 @@
 {% endblock content %}
 {% block jscrpt %}
 <script type="text/javascript">
-// function quitar(){
-//     if (contN > 1) {
-//         $('#tablaR tr:last').remove()
-//         contN--;
-//     }
-// }
+if ('{{img.imgad_estado}}'=='aprendida') {
+  $("#aprendido").show();
+  $("#img_img").show();
+  $("#datos_img").hide();
+  $("#canvas_img").hide();
+  $("#t_prog").hide();
+  swal({
+        title: "Completado!",
+        text: "Mamografía aprendida con exito!",
+        buttonsStyling: false,
+        confirmButtonClass: "btn btn-success",
+        type: "success"
+    });
+}else {
+  $("#aprendido").hide();
+  $("#img_img").hide();
+  $("#datos_img").show();
+  $("#canvas_img").show();
+  $("#t_prog").hide();
+}
 
-// function pantalla(){
-//       alert($('input[type=file]').val());
-//       $("#my_image").attr("src",$('input[type=file]').val());
-// }
+var cprog=0;
+
+function Bprogreso(){
+  $("#t_prog").show();
+  $("#progreso").attr("style","width: "+cprog+"%;");
+  cprog=cprog+1;
+  // width: 10%; progreso
+}
+function ejecutarBP(){
+  var intervalo=setInterval('Bprogreso()', 140);
+}
 
 
 var conrec=0;

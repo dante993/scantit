@@ -24,7 +24,7 @@
 
 <div class="card">
   <div class="card-header" data-background-color="purple">
-    <h4 class="title">Imagenes</h4>
+    <h4 class="card-title">Imagenes</h4>
     <p class="category">Listado de imagenes de los pacientes</p>
   </div>
   <div class="card-content table-responsive table-full-width">
@@ -43,13 +43,13 @@
         {% for im in img %}
         <tr>
           <td>{{ im.img_id }}</td>
-          <td><img src="{{ im.img_ruta.url }}" style="max-width: 90%"></td>
+          <td><img src="{{ im.img_ruta }}" style="max-width: 90%"></td>
           <td><textarea name="txar" rows="6" disabled>{{ im.img_descripcion }}</textarea></td>
           <td>{{ im.img_estado }}</td>
           <td>{{ im.img_validez }}</td>
           <td>{{ im.img_fecha }}</td>
           <td>{{ im.hc_cedula }}</td>
-          <td>
+          <td class="td-actions">
             <a href="{% url 'editar_imagen' im.img_id %}" class="btn btn-success btn-just-icon" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
             <a href="{% url 'borrar_imagen' im.img_id %}" class="btn btn-danger btn-just-icon" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
           </td>

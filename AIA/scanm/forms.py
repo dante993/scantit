@@ -19,43 +19,34 @@ class UsuarioForm(forms.ModelForm):
         model = Usuario
         widgets={
             'cedula':forms.TextInput(attrs={
-                'class':'form-control',
-                'placeholder':'Escriba su cedula...'
+                'class':'form-control'
             }),
             'password':forms.TextInput(attrs={
                 'class':'form-control',
-                'placeholder':'Escriba su clave...',
                 'type':'password'
             }),
             'nombres':forms.TextInput(attrs={
-                'class':'form-control',
-                'placeholder':'Escriba sus nombres...'
+                'class':'form-control'
             }),
             'apellidos':forms.TextInput(attrs={
-                'class':'form-control',
-                'placeholder':'Escriba sus apellidos...'
+                'class':'form-control'
             }),
             'e_mail':forms.EmailInput(attrs={
-                'class':'form-control',
-                'placeholder':'Escriba su correo...'
+                'class':'form-control'
             }),
             'telefono':forms.TextInput(attrs={
-                'class':'form-control',
-                'placeholder':'Escriba su telefono...'
+                'class':'form-control'
             }),
             'direccion':forms.TextInput(attrs={
-                'class':'form-control',
-                'placeholder':'Escriba su direccion...'
+                'class':'form-control'
             }),
             'sexo':forms.Select(attrs={
                 'class':'form-control'
             }),
             'fecha_de_nacimiento':forms.TextInput(attrs={
-                'class':'datepicker form-control',
+                'class':'form-control datepicker',
                 'type':'text',
-                'readonly':'',
-                'data-date-format':'yyyy-mm-dd',
-                'value':'Fecha de nacimiento...'
+                'value':'2016/10/10'
             }),
         }
         fields = ('cedula','nombres','apellidos','e_mail','telefono','direccion','sexo','fecha_de_nacimiento',)
@@ -66,8 +57,7 @@ class ImagenForm(forms.ModelForm):
         model = Imagen
         widgets={
             'img_ruta':forms.FileInput(attrs={
-                'class':'form-control',
-                'accept':'image/jpg,image/png,image/jepg'
+                'accept':'image/jpg,image/png,image/jepg,image/gif,image/bmp'
             }),
             'img_descripcion':forms.Textarea(attrs={
                 'class':'form-control',
@@ -78,12 +68,9 @@ class ImagenForm(forms.ModelForm):
             'img_validez':forms.Select(attrs={
                 'class':'datepicker form-control'
             }),
-            'img_fecha':forms.DateInput(attrs={
-                'class':'form-control',
-                'type':'date'
-            }),
             'hc_cedula':forms.Select(attrs={
-                'class':'datepicker form-control'
+                'class':'selectpicker',
+                'data-style':'btn btn-primary btn-round'
             })
         }
         fields = '__all__'
@@ -94,8 +81,7 @@ class Historial_clinicoForm(forms.ModelForm):
         model = Historial_clinico
         widgets={
             'hc_cedula':forms.TextInput(attrs={
-                'class':'form-control',
-                'placeholder':'Nombre del paciente...'
+                'class':'form-control'
             }),
             'hc_nombre':forms.TextInput(attrs={
                 'class':'form-control',
@@ -118,7 +104,6 @@ class Historial_clinicoForm(forms.ModelForm):
             }),
             'cedula':forms.TextInput(attrs={
                 'class':'form-control',
-                'placeholder':'cedula...'
             })
         }
         fields = '__all__'
@@ -147,15 +132,10 @@ class Imagen_admForm(forms.ModelForm):
         model = Imagen_adm
         widgets={
             'imgad_ruta':forms.FileInput(attrs={
-                'class':'form-control',
                 'accept':'image/jpg,image/png,image/jepg,image/gif'
             }),
             'imgad_descripcion':forms.Textarea(attrs={
                 'class':'form-control',
-            }),
-            'imgad_fecha':forms.DateInput(attrs={
-                'class':'form-control',
-                'type':'date'
             }),
             'imgad_ancho':forms.TextInput(attrs={
                 'class':'form-control',
@@ -169,7 +149,8 @@ class Imagen_admForm(forms.ModelForm):
                 'class':'form-control'
             }),
             'tc_id':forms.Select(attrs={
-                'class':'form-control'
+                'class':'selectpicker',
+                'data-style':'btn btn-primary btn-round'
             }),
         }
         fields = '__all__'
