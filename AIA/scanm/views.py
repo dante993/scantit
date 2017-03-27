@@ -476,7 +476,6 @@ def vc_aprendizaje(id_img,cedula,tip_cancer):
                 if(x>=xR and x<(xR+anchoR) and y>=yR and y<(yR+altoR)):
                     vecC[count,index]=res[x,y]
                     if (index == 0):
-                        print("----------entro en llenar vc------------")
                         if(tipo==0):#normal
                             etiquetas[count,0]=0
                         if(tipo==1):#cancer

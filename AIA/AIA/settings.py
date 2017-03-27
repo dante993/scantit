@@ -25,7 +25,7 @@ SECRET_KEY = '!du-$aduj3el81v4nxkv+$^z7^835@gm@li8ak!zq#xujbjec='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.107','127.0.0.1']
+ALLOWED_HOSTS = ['192.168.0.106','127.0.0.1']
 AUTH_USER_MODEL = 'scanm.Usuario'
 
 # Application definition
