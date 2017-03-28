@@ -5,7 +5,6 @@ from math import pow,sqrt
 from django.shortcuts import render, redirect, get_object_or_404,render_to_response
 from django.template import loader, context,RequestContext
 from django.http import *
-from forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import time
@@ -15,6 +14,7 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.conf import settings
 import sys
+from scanm.forms import *
 ftp_servidor = '127.0.0.1'
 ftp_usuario = 'scanm'
 ftp_clave = 'scanm'
@@ -167,8 +167,8 @@ def ImagenCreate(request, template_name='agregar/imagen_create.html'):
             ftp.cwd(ftp_raiz)
             ftp.mkd(str(usuario.cedula))
             ftp.quit()
-        except Exception,e:
-        	print "---------error-------" + ftp_servidor+" - "+str(e)
+        except e:
+        	print ("---------error-------" + ftp_servidor+" - "+str(e))
         try:
             ftp = ftplib.FTP(ftp_servidor, ftp_usuario, ftp_clave)
             ftp.cwd(ftp_raiz)
@@ -178,10 +178,10 @@ def ImagenCreate(request, template_name='agregar/imagen_create.html'):
                 ftp.storbinary('STOR ' + fichero_destino, f)
                 f.close()
                 ftp.quit()
-            except Exception,e2:
-        		print "No se ha podido encontrar el fichero " + tmp_file+" - "+str(e2)
-        except Exception,e:
-        	print "No se ha podido conectar al servidor " + ftp_servidor+" - "+str(e)
+            except e2:
+                print ("No se ha podido encontrar el fichero "+tmp_file+" - "+str(e2))
+        except e:
+        	print ("No se ha podido conectar al servidor " + ftp_servidor+" - "+str(e))
         ruta='ftp://'+ftp_usuario+':'+ftp_clave+'@127.0.0.1/user_detection/'+str(usuario.cedula)+'/'+fichero_destino
         descripcion=request.POST["img_descripcion"]
         fecha=str(time.strftime("%d/%m/%y"))
@@ -271,8 +271,8 @@ def Imagen_admCreate(request, template_name='agregar/adm_imagen_create.html'):
             ftp.cwd(ftp_raiz)
             ftp.mkd(str(usuario.cedula))
             ftp.quit()
-        except Exception,e:
-        	print "---------error-------" + ftp_servidor+" - "+str(e)
+        except e:
+        	print ("---------error-------" + ftp_servidor+" - "+str(e))
 
         # guardamos los archivos en el ftp
         try:
@@ -289,10 +289,10 @@ def Imagen_admCreate(request, template_name='agregar/adm_imagen_create.html'):
                 f1.close()
                 f2.close()
                 ftp.quit()
-            except Exception,e2:
-        		print "No se ha podido encontrar el fichero " + tmp_file1+" - "+tmp_file2+" - "+str(e2)
-        except Exception,e:
-        	print "No se ha podido conectar al servidor " + ftp_servidor+" - "+str(e)
+            except e2:
+                print ("No se ha podido encontrar el fichero " + tmp_file1+" - "+tmp_file2+" - "+str(e2))
+        except e:
+        	print ("No se ha podido conectar al servidor " + ftp_servidor+" - "+str(e))
         ruta='ftp://'+ftp_usuario+':'+ftp_clave+'@127.0.0.1/admin_learning/'+str(usuario.cedula)+'/'+str(id_im)+'/'+fichero_destino1
         descripcion=request.POST["imgad_descripcion"]
         fecha=str(time.strftime("%d/%m/%y"))
@@ -395,10 +395,11 @@ from os.path import isfile, join
 from PIL import Image
 import shutil
 def vc_aprendizaje(id_img,cedula,tip_cancer):
+    new_imgGris=None
     #-------------descargando archivos del ftp---------------
     try:
         os.mkdir(os.path.join(settings.MEDIA_ROOT)+"\\tmp_dw\\"+cedula+"\\")
-    except Exception,e_f:
+    except e_f:
         print("Error - "+str(e_f))
     path_tmp = os.path.join(settings.MEDIA_ROOT)+"\\tmp_dw\\"+cedula+"\\"
     tmp_file =''
@@ -413,10 +414,10 @@ def vc_aprendizaje(id_img,cedula,tip_cancer):
             shutil.move(tm_file, os.path.join(settings.MEDIA_ROOT)+"\\tmp_dw\\"+cedula+"\\"+id_img+".bmp")
             tmp_file=os.path.join(settings.MEDIA_ROOT)+"\\tmp_dw\\"+cedula+"\\"+id_img+".bmp"
             ftp.quit()
-        except Exception,e2:
-            print "No se ha podido encontrar el fichero  - "+str(e2)
-    except Exception,e:
-        print "No se ha podido conectar al servidor  - "
+        except e2:
+            print ("No se ha podido encontrar el fichero  - "+str(e2))
+    except e:
+        print ("No se ha podido conectar al servidor  - ")
     #Tamaño del kernel
     ksize = 31
     areas=Area_imagen.objects.filter(imgad_id=id_img)
@@ -498,9 +499,9 @@ def vc_aprendizaje(id_img,cedula,tip_cancer):
         img_gris=cv2.cvtColor(img_fn, cv2.COLOR_BGR2GRAY)
         new_imgGris=preProccess(img_gris)
         if img_gris is None:
-            print 'Failed to load image file:', img_fn
+            print ('Failed to load image file:', img_fn)
             sys.exit(1)
-    except Exception,err_in:
+    except err_in:
         print('Error - '+str(err_in))
 
     countIndex = 0
@@ -542,10 +543,10 @@ def vc_aprendizaje(id_img,cedula,tip_cancer):
             f1.close()
             f2.close()
             ftp.quit()
-        except Exception,e2:
-            print "No se ha podido encontrar el fichero " + tmp_file1+" - "+tmp_file2+" - "+str(e2)
-    except Exception,e:
-        print "No se ha podido conectar al servidor " + ftp_servidor+" - "+str(e)
+        except e2:
+            print ("No se ha podido encontrar el fichero " + tmp_file1+" - "+tmp_file2+" - "+str(e2))
+    except e:
+        print ("No se ha podido conectar al servidor " + ftp_servidor+" - "+str(e))
     os.remove(tmp_file)
     os.remove(path_tmp+'VC-'+id_img+'.txt')
     os.remove(path_tmp+'VCEtiqueta-'+id_img+'.txt')
