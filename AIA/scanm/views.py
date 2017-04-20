@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
+import tensorflow as tf
 import cv2
 from math import pow,sqrt
 from django.shortcuts import render, redirect, get_object_or_404,render_to_response
@@ -15,6 +16,12 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 import sys
 from scanm.forms import *
+from os import listdir
+from os.path import isfile, join
+from PIL import Image
+import shutil
+
+# variables con las credenciales para la conexion con el servidor ftp
 ftp_servidor = '127.0.0.1'
 ftp_usuario = 'scanm'
 ftp_clave = 'scanm'
@@ -154,14 +161,14 @@ def ImagenCreate(request, template_name='agregar/imagen_create.html'):
     form = ImagenForm(request.POST or None,request.FILES or None)
     img_activacion='active'
     if form.is_valid():
-
-        id_im=int(Imagen.objects.all().count())
-        id_im=id_im+1
+        # id_im = Producto.objects.latest('img_id')+1
+        id_im=int(Imagen.objects.all().count())+1
         ftp_raiz = 'user_detection' # Carpeta del servidor donde queremos subir el fichero
-        fichero_destino = str(id_im)+'.gif' # Nombre que tendra el fichero en el servidor
+        fichero_destino = str(id_im)+'.jpg' # Nombre que tendra el fichero en el servidor
         data = request.FILES['img_ruta'] # or self.files['image'] in your form
-        path = default_storage.save('tmp/'+str(id_im)+'.gif', ContentFile(data.read()))
-        tmp_file = os.path.join(settings.MEDIA_ROOT)+"\\tmp\\"+str(id_im)+".gif"
+        path = default_storage.save('tmp/'+str(usuario.cedula)+'/'+str(id_im)+'.jpg', ContentFile(data.read()))
+        tmp_file = os.path.join(settings.MEDIA_ROOT)+"\\tmp\\"+str(usuario.cedula)+'\\'+str(id_im)+".jpg"
+        convertir_a_jpg(tmp_file)
         try:
             ftp = ftplib.FTP(ftp_servidor, ftp_usuario, ftp_clave)
             ftp.cwd(ftp_raiz)
@@ -192,6 +199,36 @@ def ImagenCreate(request, template_name='agregar/imagen_create.html'):
         os.remove(tmp_file)
         return redirect("imagen")
     return render(request,template_name,{'user':usuario,'form':form,"img_activacion":img_activacion})
+
+@login_required(login_url='/')
+def ImagenEvaluate(request,pk,template_name='editar/imagen_update.html'):
+    usuario=get_object_or_404(Usuario,cedula=request.user)
+    img_activacion='active'
+
+    try:
+        os.mkdir(os.path.join(settings.MEDIA_ROOT)+"\\reco\\"+str(usuario.cedula)+"\\")
+    except:
+        print("Error - ")
+    path_tmp = os.path.join(settings.MEDIA_ROOT)+"\\reco\\"+str(usuario.cedula)+"\\"
+    tmp_file =''
+    try:
+        ftp = ftplib.FTP(ftp_servidor, ftp_usuario, ftp_clave)
+        try:
+            ftp.cwd('user_detection')
+            ftp.cwd(cedula)
+            ftp.retrbinary('RETR '+str(pk)+'.jpg', open(''+str(pk)+'.jpg', 'wb').write)
+            tm_file=os.path.join(settings.BASE_DIR)+"\\"+str(pk)+".jpg"
+            shutil.move(tm_file, os.path.join(settings.MEDIA_ROOT)+"\\reco\\"+str(usuario.cedula)+"\\"+str(pk)+".jpg")
+            tmp_file=os.path.join(settings.MEDIA_ROOT)+"\\reco\\"+cedula+"\\"+id_img+".jpg"
+            ftp.quit()
+        except e2:
+            print ("No se ha podido encontrar el fichero  - "+str(e2))
+    except e:
+        print ("No se ha podido conectar al servidor  - ")
+    reconocimiento(tmp_file)
+    os.remove(tmp_file)
+    return render(request,template_name,{'form':form,'user':usuario,'img_activacion':img_activacion})
+
 
 @login_required(login_url='/')
 def ImagenUpdate(request,pk,template_name='editar/imagen_update.html'):
@@ -271,8 +308,8 @@ def Imagen_admCreate(request, template_name='agregar/adm_imagen_create.html'):
             ftp.cwd(ftp_raiz)
             ftp.mkd(str(usuario.cedula))
             ftp.quit()
-        except e:
-        	print ("---------error-------" + ftp_servidor+" - "+str(e))
+        except Exception:
+        	print ("---------error-------" + ftp_servidor+" - ")
 
         # guardamos los archivos en el ftp
         try:
@@ -390,17 +427,14 @@ def Tipo_cancerRestore(request,pk):
 
 
 # ...............................................................................................
-from os import listdir
-from os.path import isfile, join
-from PIL import Image
-import shutil
+
 def vc_aprendizaje(id_img,cedula,tip_cancer):
     new_imgGris=None
     #-------------descargando archivos del ftp---------------
     try:
         os.mkdir(os.path.join(settings.MEDIA_ROOT)+"\\tmp_dw\\"+cedula+"\\")
-    except e_f:
-        print("Error - "+str(e_f))
+    except:
+        print("Error - ")
     path_tmp = os.path.join(settings.MEDIA_ROOT)+"\\tmp_dw\\"+cedula+"\\"
     tmp_file =''
     try:
@@ -559,3 +593,40 @@ def convertBMP(ruta,id_r):
         images[n] = Image.open( join(mypath,onlyfiles[n]))
     for i, face in enumerate(images):
         face.save(ruta+"\\" + id_r + ".bmp")
+
+def reconocimiento(image_path):
+    # Read in the image_data
+    image_data = tf.gfile.FastGFile(image_path, 'rb').read()
+
+    # Loads label file, strips off carriage return
+    label_lines = [line.rstrip() for line
+                       in tf.gfile.GFile("./img/retrained_labels.txt")]
+
+    # Unpersists graph from file
+    with tf.gfile.FastGFile("./img/retrained_graph.pb", 'rb') as f:
+        graph_def = tf.GraphDef()
+        graph_def.ParseFromString(f.read())
+        _ = tf.import_graph_def(graph_def, name='')
+
+    with tf.Session() as sess:
+        # Feed the image_data as input to the graph and get first prediction
+        softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
+
+        predictions = sess.run(softmax_tensor, \
+                 {'DecodeJpeg/contents:0': image_data})
+
+        # Sort to show labels of first prediction in order of confidence
+        top_k = predictions[0].argsort()[-len(predictions[0]):][::-1]
+
+        for node_id in top_k:
+            human_string = label_lines[node_id]
+            score = predictions[0][node_id]
+            print('%s (score = %.5f)' % (human_string, score))
+
+def convertir_a_jpg(archivo):
+    cadena=str(archivo).split(".")
+    Image.open(archivo).convert('RGB').save(str(cadena[0])+'.jpg', quality=95)
+
+
+
+#

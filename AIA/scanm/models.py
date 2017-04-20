@@ -62,7 +62,7 @@ class Usuario (AbstractBaseUser,PermissionsMixin):
 
     USERNAME_FIELD = 'cedula'
     REQUIRED_FIELDS = ['e_mail','nombres','apellidos']
-    def __unicode__(self):
+    def __str__(self):
         strgn=self.cedula
         return strgn
 admin.site.register(Usuario)
@@ -79,7 +79,7 @@ class Historial_clinico(models.Model):
                     (u'inactivo',u'Inactivo'),)
     hc_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES,verbose_name="Estado", default='activo',blank=True)
     cedula=models.ForeignKey(Usuario,verbose_name="Usuario")
-    def __unicode__(self):
+    def __str__(self):
         strgn=self.hc_nombre+' '+self.hc_apellido
         return strgn
 
@@ -96,7 +96,7 @@ class Imagen(models.Model):
     img_validez = models.CharField(verbose_name="Validez",max_length = 25,choices=VALIDEZ_CHOICES, default='no definido',blank=True)
     img_fecha=models.DateField(auto_now_add=True,blank=True)
     hc_cedula=models.ForeignKey(Historial_clinico,verbose_name="Historial clinico")
-    def __unicode__(self):
+    def __str__(self):
         return self.img_ruta
 
 class Tipo_cancer(models.Model):
@@ -106,8 +106,9 @@ class Tipo_cancer(models.Model):
     ESTADO_CHOICES =((u'activo',u'Activo'),
                     (u'inactivo',u'Inactivo'),)
     tc_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES, default='activo',verbose_name="Estado")
-    def __unicode__(self):
+    def __str__(self):
         return self.tc_nombre
+
 
 class Resultados_analisis(models.Model):
     resan_id=models.AutoField(primary_key=True)
@@ -128,7 +129,7 @@ class Imagen_adm(models.Model):
                     (u'no aprendida',u'No aprendida'),)
     imgad_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES, default='no aprendida',blank=True,verbose_name="Estado")
     tc_id=models.ForeignKey(Tipo_cancer,verbose_name="Tipo de cancer")
-    def __unicode__(self):
+    def __str__(self):
         return self.imgad_ruta
 
 class Area_imagen(models.Model):
@@ -138,7 +139,7 @@ class Area_imagen(models.Model):
     arim_ancho = models.IntegerField(verbose_name="Ancho")
     arim_alto = models.IntegerField(verbose_name="Alto")
     imgad_id=models.ForeignKey(Imagen_adm,verbose_name="imagen")
-    def __unicode__(self):
+    def __str__(self):
         return self.arim_id
 
 

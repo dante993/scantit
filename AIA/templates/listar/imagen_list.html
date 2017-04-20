@@ -50,6 +50,7 @@
           <td>{{ im.img_fecha }}</td>
           <td>{{ im.hc_cedula }}</td>
           <td class="td-actions">
+            <a href="{% url 'evaluar_imagen' im.img_id %}" class="btn btn-info btn-just-icon" data-toggle="tooltip" data-placement="top" title="Evaluar"><i class="material-icons">center_focus_strong</i></a>
             <a href="{% url 'editar_imagen' im.img_id %}" class="btn btn-success btn-just-icon" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
             <a href="{% url 'borrar_imagen' im.img_id %}" class="btn btn-danger btn-just-icon" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
           </td>
