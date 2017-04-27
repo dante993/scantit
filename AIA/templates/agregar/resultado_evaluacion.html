@@ -1,35 +1,149 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-
 {% block content %}
 <div class="card">
   <div class="card-header" data-background-color="rose">
     <h4 class="card-title">Resultado</h4>
-    <p class="category">Resultado de la evaluacion de mamografia</p>
+    <p class="category">Resultado de la evaluacion de mamografía</p>
   </div>
   <div class="card-content">
-    <div class="text-center col-md-offset-4">
+    <div class="col-md-offset-4">
       <div class="row">
-        <div class="col-md-2">
+        <select class="hidden" name="seti" id="seti">
+          {% for et in etiqueta %}
+            <option value="{{et}}">{{et}}</option>
+          {% endfor %}
+        </select>
+        <select class="hidden" name="sepr" id="sepr">
+          {% for pr in porcentaje %}
+            <option value="{{pr}}">{{pr}}</option>
+          {% endfor %}
+        </select>
+        <div class="col-md-5">
+          <div class="table-responsive">
+            <table class="table table-hover" id="tabres">
+              <thead>
+                <th class="text-primary" style="text-align:center;">Etiqueta</th>
+                <th class="text-primary" style="text-align:center;">Porcentaje</th>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- <div class="col-md-3">
+          <select class="hidden" name="seti" id="seti">
+            {% for et in etiqueta %}
+              <option value="{{et}}">{{et}}</option>
+            {% endfor %}
+          </select>
           <h4 class="text-primary">Etiqueta</h4>
           {% for et in etiqueta %}
             {{et}}<br>
           {% endfor %}
         </div>
         <div class="col-md-2">
+          <select class="hidden" name="sepr" id="sepr">
+            {% for pr in porcentaje %}
+              <option value="{{pr}}">{{pr}}</option>
+            {% endfor %}
+          </select>
           <h4 class="text-primary">Porcentaje</h4>
           {% for pr in porcentaje %}
             {{pr}} %<br>
           {% endfor %}
+        </div> -->
+      </div>
+    </div>
+    <div class="col-md-offset-4">
+      <div class="col-md-5">
+        <div class="card card-chart">
+          <div class="card-header" data-background-color="orange">
+            <div id="simpleBarChart" class="ct-chart"></div>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Grafica de resultados</h4>
+            <p class="category">Grafico de barras</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 {% endblock content %}
 
 {% block jscrpt %}
 <script type="text/javascript">
+$( document ).ready(function() {
+  var selet = document.getElementById('seti');
+  var selpr = document.getElementById('sepr');
+  var vals = [];
+  var vals2 = [];
+  for (var i = 0; i < selet.children.length; ++i) {
+    var child = selet.children[i];
+    var child2 = selpr.children[i];
+    if (child.tagName == 'OPTION') vals.push(child.value);
+    if (child2.tagName == 'OPTION') vals2.push(child2.value);
+  }
 
+  for (var i = 0; i < vals2.length; i++) {
+    if (i==0) {
+      $('#tabres tr:last').after(
+        '<tr class="success">'
+        +'<td style="text-align:center;">'+vals[i]+'</td>'
+        +'<td style="text-align:center;">'+vals2[i]+'</td>'
+        +'</tr>');
+    }else {
+      $('#tabres tr:last').after(
+        '<tr>'
+        +'<td style="text-align:center;">'+vals[i]+'</td>'
+        +'<td style="text-align:center;">'+vals2[i]+'</td>'
+        +'</tr>');
+    }
+  }
+
+
+  var valstr=[]
+  for (var i = 0; i < vals2.length; i++) {
+    valstr.push(""+vals2[i]+"%")
+  }
+  var valint=[]
+  for (var i = 0; i < vals2.length; i++) {
+    valint.push(parseInt(vals2[i]))
+  }
+  var dataSimpleBarChart = {
+          labels: vals,
+          series: [
+            valint
+          ]
+        };
+
+        var optionsSimpleBarChart = {
+          seriesBarDistance: 10,
+          axisX: {
+            showGrid: false
+          }
+        };
+
+        var responsiveOptionsSimpleBarChart = [
+          ['screen and (max-width: 640px)', {
+            seriesBarDistance: 5,
+            axisX: {
+              labelInterpolationFnc: function (value) {
+                return value[0];
+              }
+            }
+          }]
+        ];
+
+        var simpleBarChart = Chartist.Bar('#simpleBarChart', dataSimpleBarChart, optionsSimpleBarChart, responsiveOptionsSimpleBarChart);
+
+        //start animation for the Emails Subscription Chart
+        md.startAnimationForBarChart(simpleBarChart);
+  // $("#leg").addClass("rojo");
+
+});
 </script>
 {% endblock jscrpt %}

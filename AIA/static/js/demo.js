@@ -776,7 +776,7 @@ demo = {
 
         if(type == 'basic'){
         	swal({
-                title: "Here's a message!",
+                title: "Evaluando Mamografía!",
                 buttonsStyling: false,
                 confirmButtonClass: "btn btn-success"
             });
@@ -861,8 +861,7 @@ demo = {
                 });
 
     	}else if(type == 'auto-close'){
-        	swal({ title: "Auto close alert!",
-            	   text: "I will close in 2 seconds.",
+        	swal({ title: "Evaluando mamografía ...",
             	   timer: 2000,
             	   showConfirmButton: false
                 });
