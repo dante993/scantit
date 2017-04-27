@@ -84,16 +84,13 @@ class Historial_clinicoForm(forms.ModelForm):
                 'class':'form-control'
             }),
             'hc_nombre':forms.TextInput(attrs={
-                'class':'form-control',
-                'placeholder':'Nombre del paciente...'
+                'class':'form-control'
             }),
             'hc_apellido':forms.TextInput(attrs={
-                'class':'form-control',
-                'placeholder':'Apellidos del paciente...'
+                'class':'form-control'
             }),
             'hc_edad':forms.NumberInput(attrs={
-                'class':'form-control',
-                'placeholder':'Edad del paciente...'
+                'class':'form-control'
             }),
             'hc_fecha':forms.DateInput(attrs={
                 'class':'form-control',

@@ -174,8 +174,8 @@ def ImagenCreate(request, template_name='agregar/imagen_create.html'):
             ftp.cwd(ftp_raiz)
             ftp.mkd(str(usuario.cedula))
             ftp.quit()
-        except e:
-        	print ("---------error-------" + ftp_servidor+" - "+str(e))
+        except:
+        	print ("---------error-------" + ftp_servidor+" - ")
         try:
             ftp = ftplib.FTP(ftp_servidor, ftp_usuario, ftp_clave)
             ftp.cwd(ftp_raiz)
@@ -185,10 +185,10 @@ def ImagenCreate(request, template_name='agregar/imagen_create.html'):
                 ftp.storbinary('STOR ' + fichero_destino, f)
                 f.close()
                 ftp.quit()
-            except e2:
-                print ("No se ha podido encontrar el fichero "+tmp_file+" - "+str(e2))
-        except e:
-        	print ("No se ha podido conectar al servidor " + ftp_servidor+" - "+str(e))
+            except:
+                print ("No se ha podido encontrar el fichero "+tmp_file+" - ")
+        except:
+        	print ("No se ha podido conectar al servidor " + ftp_servidor+" - ")
         ruta='ftp://'+ftp_usuario+':'+ftp_clave+'@127.0.0.1/user_detection/'+str(usuario.cedula)+'/'+fichero_destino
         descripcion=request.POST["img_descripcion"]
         fecha=str(time.strftime("%d/%m/%y"))
@@ -201,33 +201,32 @@ def ImagenCreate(request, template_name='agregar/imagen_create.html'):
     return render(request,template_name,{'user':usuario,'form':form,"img_activacion":img_activacion})
 
 @login_required(login_url='/')
-def ImagenEvaluate(request,pk,template_name='editar/imagen_update.html'):
+def ImagenEvaluate(request,pk,template_name='agregar/resultado_evaluacion.html'):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     img_activacion='active'
-
     try:
         os.mkdir(os.path.join(settings.MEDIA_ROOT)+"\\reco\\"+str(usuario.cedula)+"\\")
     except:
         print("Error - ")
-    path_tmp = os.path.join(settings.MEDIA_ROOT)+"\\reco\\"+str(usuario.cedula)+"\\"
     tmp_file =''
     try:
         ftp = ftplib.FTP(ftp_servidor, ftp_usuario, ftp_clave)
         try:
             ftp.cwd('user_detection')
-            ftp.cwd(cedula)
+            ftp.cwd(str(usuario.cedula))
             ftp.retrbinary('RETR '+str(pk)+'.jpg', open(''+str(pk)+'.jpg', 'wb').write)
-            tm_file=os.path.join(settings.BASE_DIR)+"\\"+str(pk)+".jpg"
+            tm_file=settings.BASE_DIR+"\\"+str(pk)+".jpg"
             shutil.move(tm_file, os.path.join(settings.MEDIA_ROOT)+"\\reco\\"+str(usuario.cedula)+"\\"+str(pk)+".jpg")
-            tmp_file=os.path.join(settings.MEDIA_ROOT)+"\\reco\\"+cedula+"\\"+id_img+".jpg"
+            tmp_file=os.path.join(settings.MEDIA_ROOT)+"\\reco\\"+str(usuario.cedula)+"\\"+str(pk)+".jpg"
             ftp.quit()
-        except e2:
-            print ("No se ha podido encontrar el fichero  - "+str(e2))
-    except e:
+        except:
+            print ("No se ha podido encontrar el fichero  - ")
+    except :
         print ("No se ha podido conectar al servidor  - ")
-    reconocimiento(tmp_file)
+    etiqueta,porcentaje=reconocimiento(tmp_file)
+    obj=etiqueta,porcentaje
     os.remove(tmp_file)
-    return render(request,template_name,{'form':form,'user':usuario,'img_activacion':img_activacion})
+    return render(request,template_name,{'obj':obj,'etiqueta':etiqueta,'porcentaje':porcentaje,'user':usuario,'img_activacion':img_activacion})
 
 
 @login_required(login_url='/')
@@ -254,20 +253,6 @@ def Area_imagenCreate(request,pk, template_name='agregar/area_imagen_create.html
     usuario=get_object_or_404(Usuario,cedula=request.user)
     img=get_object_or_404(Imagen_adm, pk=pk)
     ad_img_activacion='active'
-
-    if request.method == 'POST':
-        contador=int(request.POST["contar"])
-        for i in range(contador):
-            x=int(request.POST.get("x"+str(i+1)))
-            y=int(request.POST.get("y"+str(i+1)))
-            ancho=int(request.POST.get("ancho"+str(i+1)))
-            alto=int(request.POST.get("alto"+str(i+1)))
-            arobj = Area_imagen(arim_pos_x=x,arim_pos_y=y,arim_ancho=ancho,arim_alto=alto,imgad_id=img)
-            arobj.save()
-        vc_aprendizaje(str(img.imgad_id),str(usuario.cedula),str(img.tc_id))
-        img.imgad_estado='aprendida'
-        img.save()
-        return render_to_response(template_name,{'user':usuario,'img':img,"ad_img_activacion":ad_img_activacion})
     return render(request,template_name,{'user':usuario,'img':img,"ad_img_activacion":ad_img_activacion})
 
 # ------------------------------------------Imagen de aprendizaje-----------------------------------------
@@ -428,163 +413,6 @@ def Tipo_cancerRestore(request,pk):
 
 # ...............................................................................................
 
-def vc_aprendizaje(id_img,cedula,tip_cancer):
-    new_imgGris=None
-    #-------------descargando archivos del ftp---------------
-    try:
-        os.mkdir(os.path.join(settings.MEDIA_ROOT)+"\\tmp_dw\\"+cedula+"\\")
-    except:
-        print("Error - ")
-    path_tmp = os.path.join(settings.MEDIA_ROOT)+"\\tmp_dw\\"+cedula+"\\"
-    tmp_file =''
-    try:
-        ftp = ftplib.FTP(ftp_servidor, ftp_usuario, ftp_clave)
-        try:
-            ftp.cwd('admin_learning')
-            ftp.cwd(cedula)
-            ftp.cwd(str(id_img))
-            ftp.retrbinary('RETR '+id_img+'.bmp', open(''+id_img+'.bmp', 'wb').write)
-            tm_file=os.path.join(settings.BASE_DIR)+"\\"+id_img+".bmp"
-            shutil.move(tm_file, os.path.join(settings.MEDIA_ROOT)+"\\tmp_dw\\"+cedula+"\\"+id_img+".bmp")
-            tmp_file=os.path.join(settings.MEDIA_ROOT)+"\\tmp_dw\\"+cedula+"\\"+id_img+".bmp"
-            ftp.quit()
-        except e2:
-            print ("No se ha podido encontrar el fichero  - "+str(e2))
-    except e:
-        print ("No se ha podido conectar al servidor  - ")
-    #Tamaño del kernel
-    ksize = 31
-    areas=Area_imagen.objects.filter(imgad_id=id_img)
-    for row in areas:
-        xR=int(row.arim_pos_x)
-        yR=int(row.arim_pos_y)
-        altoR=int(row.arim_ancho)
-        anchoR=int(row.arim_alto)
-        dimR= altoR*anchoR
-    #metodo para extraer ancho y alto de la imagen original de la bdd
-    img_ad=Imagen_adm.objects.filter(imgad_id=id_img)
-    for row in img_ad:
-        altoI=int(row.imgad_alto)
-        anchoI=int(row.imgad_ancho)
-        dim =altoI*anchoI
-    #Contador etiquetar para imagenes salientes
-    c=1
-    tipo=0 #tipo de cancer o normal
-    etiquetas=np.empty((dimR,1))
-    vecC=np.zeros((dimR,70))
-    def build_filters(theta, gamma):
-        filters = []
-        kern = cv2.getGaborKernel((ksize, ksize), 4.0, theta, 10.0, gamma, 0, ktype=cv2.CV_32F)
-        kern /= 1.5*kern.sum()
-        filters.append(kern)
-        return filters
-
-    def process(img, filters):
-        accum = np.zeros_like(img)
-        for kern in filters:
-            fimg = cv2.filter2D(img, cv2.CV_8UC3, kern)
-            np.maximum(accum, fimg, accum)
-        return accum
-
-    #Aplicacion del filtro Gaussiano para obtener la Media
-    def GaussianFilter(img):
-        blur = cv2.GaussianBlur(img,(ksize,ksize),0)
-        return blur
-
-    def Desviacion_estandar(gaborWavelet,gaussiano):
-        res = gaborWavelet-gaussiano #convolucion entre resultantes de filtros
-        pot = res*res
-        res1=GaussianFilter(pot)
-        raiz=np.sqrt(res1)
-        return raiz
-
-    def preProccess(img):
-        new = np.zeros((altoI,anchoI))
-        for x in np.arange(0,altoI):
-            for y in np.arange(0,anchoI):
-                new[x,y]=float(img[x,y])/255
-        return new
-    def llenarVC(res,index):
-        count=0
-        for x in np.arange(0,altoI):
-            for y in np.arange(0,anchoI):
-                if(x>=xR and x<(xR+anchoR) and y>=yR and y<(yR+altoR)):
-                    vecC[count,index]=res[x,y]
-                    if (index == 0):
-                        if(tipo==0):#normal
-                            etiquetas[count,0]=0
-                        if(tipo==1):#cancer
-                            etiquetas[count,0]=1
-                        if(tipo==2):#benigno
-                            etiquetas[count,0]=2
-                    count=count+1
-
-    def grabarTxt(vec,etiquetas):
-        archi=open(''+path_tmp+'VC-'+id_img+'.txt','a')
-        archi.write(str(vec)+'\n')
-        archi.close()
-        archi=open(''+path_tmp+'VCEtiqueta-'+id_img+'.txt','a')
-        archi.write(str(etiquetas)+'\n')
-        archi.close()
-
-    try:
-        img_fn = sys.argv[1]
-        img_fn = cv2.imread( ''+tmp_file )
-        img_gris=cv2.cvtColor(img_fn, cv2.COLOR_BGR2GRAY)
-        new_imgGris=preProccess(img_gris)
-        if img_gris is None:
-            print ('Failed to load image file:', img_fn)
-            sys.exit(1)
-    except err_in:
-        print('Error - '+str(err_in))
-
-    countIndex = 0
-    for theta in np.arange(1,8):
-        for gamma in np.arange(0.1,0.6, 0.1):
-            filters = build_filters(theta, gamma) #Creamos el filtro gaborWavelet
-            res1 = process(new_imgGris, filters)#Aplicando filtro GaborWavelet a imagenes originales
-            res2=GaussianFilter(res1) #Aplicando Filtro Gaussiano a imagenes con filtro GaborWavelet
-            res3=Desviacion_estandar(res1,res2)
-            #print ("Res2 img "+str(countIndex))
-            #print res2
-            llenarVC(res2,countIndex)
-            countIndex+=1
-            #print ("Res3 img "+str(countIndex))
-            #print res3
-            llenarVC(res3,countIndex)
-            countIndex+=1
-            c+=1
-            cv2.destroyAllWindows()
-
-    for x in np.arange(0,dimR):
-        strI=''
-        for y in np.arange(0,70):
-            if(y==69):
-                strI=strI+str(vecC[x,y])+''
-            else:
-                strI=strI+str(vecC[x,y])+','
-        grabarTxt(strI,int(etiquetas[x]))
-    try:
-        ftp = ftplib.FTP(ftp_servidor, ftp_usuario, ftp_clave)
-        ftp.cwd('admin_learning')
-        ftp.cwd(cedula)
-        ftp.cwd(id_img)
-        try:
-            f1 = open(path_tmp+'VC-'+id_img+'.txt', 'rb')
-            f2 = open(path_tmp+'VCEtiqueta-'+id_img+'.txt', 'rb')
-            ftp.storbinary('STOR ' + 'VC-'+id_img+'.txt', f1)
-            ftp.storbinary('STOR ' + 'VCEtiqueta-'+id_img+'.txt', f2)
-            f1.close()
-            f2.close()
-            ftp.quit()
-        except e2:
-            print ("No se ha podido encontrar el fichero " + tmp_file1+" - "+tmp_file2+" - "+str(e2))
-    except e:
-        print ("No se ha podido conectar al servidor " + ftp_servidor+" - "+str(e))
-    os.remove(tmp_file)
-    os.remove(path_tmp+'VC-'+id_img+'.txt')
-    os.remove(path_tmp+'VCEtiqueta-'+id_img+'.txt')
-
 def convertBMP(ruta,id_r):
     mypath=ruta
     onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
@@ -595,15 +423,18 @@ def convertBMP(ruta,id_r):
         face.save(ruta+"\\" + id_r + ".bmp")
 
 def reconocimiento(image_path):
+    # definimos dos listas para almacenar los resultados
+    etiqueta=[]
+    porcentaje=[]
     # Read in the image_data
     image_data = tf.gfile.FastGFile(image_path, 'rb').read()
 
     # Loads label file, strips off carriage return
     label_lines = [line.rstrip() for line
-                       in tf.gfile.GFile("./img/retrained_labels.txt")]
+                       in tf.gfile.GFile(os.path.join(settings.MEDIA_ROOT)+"\\cnn\\"+"retrained_labels.txt")]
 
     # Unpersists graph from file
-    with tf.gfile.FastGFile("./img/retrained_graph.pb", 'rb') as f:
+    with tf.gfile.FastGFile(os.path.join(settings.MEDIA_ROOT)+"\\cnn\\"+"retrained_graph.pb", 'rb') as f:
         graph_def = tf.GraphDef()
         graph_def.ParseFromString(f.read())
         _ = tf.import_graph_def(graph_def, name='')
@@ -621,7 +452,10 @@ def reconocimiento(image_path):
         for node_id in top_k:
             human_string = label_lines[node_id]
             score = predictions[0][node_id]
+            etiqueta.append(human_string)
+            porcentaje.append(round(score*100,2))
             print('%s (score = %.5f)' % (human_string, score))
+    return etiqueta,porcentaje
 
 def convertir_a_jpg(archivo):
     cadena=str(archivo).split(".")

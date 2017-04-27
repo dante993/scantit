@@ -42,7 +42,7 @@ urlpatterns = [
     url(r'^imagen/crear_imagen/$', ImagenCreate, name='crear_imagen'),
     url(r'^imagen/editar/(?P<pk>.*)/$', ImagenUpdate, name='editar_imagen'),
     url(r'^imagen/borrar/(?P<pk>.*)/$', ImagenDelete, name='borrar_imagen'),
-    url(r'^imagen/evaluar_imagen/$', ImagenEvaluate, name='evaluar_imagen'),
+    url(r'^imagen/evaluar_imagen/(?P<pk>.*)/$', ImagenEvaluate, name='evaluar_imagen'),
 
     url(r'^area_imagen/$', v_area_img, name='area_img'),
 

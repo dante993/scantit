@@ -4,42 +4,47 @@
 {% block content %}
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-8">
+    <div class="">
       <div class="card">
-        <div class="card-header" data-background-color="purple">
+        <div class="card-header" data-background-color="rose">
           <h4 class="card-title">Nuevo historial clinico</h4>
           <p class="category">Datos del paciente</p>
         </div>
-        <div class="card-content text-center">
+        <div class="card-content">
           <form method="post" action="">{% csrf_token %}
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-sm-6 col-md-offset-3">
                 <div class="form-group label-floating">
-                  {{ form.hc_cedula.label_tag }}
+                  <label class="control-label">{{ form.hc_cedula.label_tag }}</label>
                   {{ form.hc_cedula }}
                   {{ form.hc_cedula.errors }}
                 </div>
               </div>
-              <div class="col-md-6">
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-md-offset-3">
                 <div class="form-group label-floating">
-                  {{ form.hc_edad.label_tag }}
-                  {{ form.hc_edad }}
-                  {{ form.hc_edad.errors }}
+                  <label class="control-label">{{ form.hc_nombre.label_tag }}</label>
+                  {{ form.hc_nombre }}
+                  {{ form.hc_nombre.errors }}
                 </div>
               </div>
             </div>
-
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-sm-6 col-md-offset-3">
                 <div class="form-group label-floating">
-                  {{ form.hc_apellido.label_tag }}
+                  <label class="control-label">{{ form.hc_apellido.label_tag }}</label>
                   {{ form.hc_apellido }}
                   {{ form.hc_apellido.errors }}
                 </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-md-offset-3">
                 <div class="form-group label-floating">
-                  {{ form.hc_nombre.label_tag }}
-                  {{ form.hc_nombre }}
-                  {{ form.hc_nombre.errors }}
+                  <label class="control-label">{{ form.hc_edad.label_tag }}</label>
+                  {{ form.hc_edad }}
+                  {{ form.hc_edad.errors }}
                 </div>
               </div>
             </div>
@@ -71,9 +76,11 @@
                 </div>
               </div>
             </div>
-            <a href="{% url 'historial_clinico' %}" class="btn btn-danger">Cancelar</a>
-            <button type="submit" class="btn btn-success">Guardar</button>
-            <div class="clearfix"></div>
+            <div class="text-center">
+              <a href="{% url 'historial_clinico' %}" class="btn btn-danger">Cancelar</a>
+              <button type="submit" class="btn btn-success">Guardar</button>
+              <div class="clearfix"></div>
+            </div>
           </form>
         </div>
       </div>
