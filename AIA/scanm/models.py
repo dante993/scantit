@@ -34,7 +34,7 @@ def validar_cedula(value):
                 valores = [ int(ced_cliente[x]) * (2 - x % 2) for x in range(9) ]
                 suma = sum(map(lambda x: x > 9 and x - 9 or x, valores))
                 veri = 10 - (suma - (10 * (suma / 10)))
-                if int(ced_cliente[9]) == int(str(veri)[-1:]):
+                if int(ced_cliente[9]) == 10 - int(str(suma)[-1:]):
                     return ced_cliente
                 else:
                     raise forms.ValidationError(msg)

@@ -70,7 +70,7 @@ class ImagenForm(forms.ModelForm):
             }),
             'hc_cedula':forms.Select(attrs={
                 'class':'selectpicker',
-                'data-style':'btn btn-primary btn-round'
+                'data-style':'btn btn-rose btn-round'
             })
         }
         fields = '__all__'
@@ -147,7 +147,7 @@ class Imagen_admForm(forms.ModelForm):
             }),
             'tc_id':forms.Select(attrs={
                 'class':'selectpicker',
-                'data-style':'btn btn-primary btn-round'
+                'data-style':'btn btn-rose btn-round'
             }),
         }
         fields = '__all__'

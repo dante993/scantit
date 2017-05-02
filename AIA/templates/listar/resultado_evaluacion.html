@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+<div class="card">
+  <div class="card-header" data-background-color="rose">
+    <h4 class="card-title">Resultado</h4>
+    <p class="category">Resultado de la evaluacion de mamografía</p>
+  </div>
+  <div class="card-content">
+    <div class="col-md-4" style="padding-left:15%">
+      <div style="margin-top:15%"></div>
+      <img src="{{ imagen.img_ruta }}" style="max-width:50%" alt="">
+    </div>
+    <div class="col-md-8">
+      <div class="row">
+          <select class="hidden" name="seti" id="seti">
+            {% for et in etiqueta %}
+              <option value="{{et}}">{{et}}</option>
+            {% endfor %}
+          </select>
+          <select class="hidden" name="sepr" id="sepr">
+            {% for pr in porcentaje %}
+              <option value="{{pr}}">{{pr}}</option>
+            {% endfor %}
+          </select>
+          <div class="col-md-5">
+            <div class="table-responsive">
+              <table class="table table-hover" id="tabres">
+                <thead>
+                  <th class="text-primary" style="text-align:center;">Etiqueta</th>
+                  <th class="text-primary" style="text-align:center;">Porcentaje</th>
+                </thead>
+                <tbody>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5">
+          <select class="selectpicker" name="slt_graf" id="slt_graf" data-style="btn btn-rose btn-round" style="direction: rtl;">
+            <option value="0">-- Seleccione un tipo de gráfico --</option>
+            <option value="1">Gráfico de barras</option>
+            <option value="2">Gráfico de Pastel</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" id="graf_barr">
+          <div class="col-md-5">
+            <div class="card card-chart">
+              <div class="card-header" data-background-color="orange">
+                <div id="simpleBarChart" class="ct-chart"></div>
+              </div>
+              <div class="card-content">
+                <h4 class="card-title">Grafica de resultados</h4>
+                <p class="category">Grafico de barras</p>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="row" id="graf_pie">
+          <div class="col-md-5">
+            <div class="card">
+              <div class="card-header card-header-icon" data-background-color="red">
+                <i class="material-icons">pie_chart</i>
+              </div>
+              <div class="card-content">
+                <h4 class="card-title">Grafica de resultados</h4>
+              </div>
+              <div id="chartPreferences" class="ct-chart"></div>
+              <div class="card-footer">
+                <h6>Leyenda</h6>
+                <i class="fa fa-circle text-info"></i> Cancer
+                <i class="fa fa-circle text-warning"></i> Normal
+                <i class="fa fa-circle text-danger"></i> Benigno
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block jscrpt %}
+<script type="text/javascript">
+var selet = document.getElementById('seti');
+var selpr = document.getElementById('sepr');
+var vals = [];
+var vals2 = [];
+var valstr=[];
+var valint=[];
+$( document ).ready(function() {
+  $("#graf_pie").hide();
+  $("#graf_barr").hide();
+
+  for (var i = 0; i < selet.children.length; ++i) {
+    var child = selet.children[i];
+    var child2 = selpr.children[i];
+    if (child.tagName == 'OPTION') vals.push(child.value);
+    if (child2.tagName == 'OPTION') vals2.push(child2.value);
+  }
+
+  for (var i = 0; i < vals2.length; i++) {
+    if (i==0) {
+      $('#tabres tr:last').after(
+        '<tr class="info">'
+        +'<td style="text-align:center;">'+vals[i]+'</td>'
+        +'<td style="text-align:center;">'+vals2[i]+' %</td>'
+        +'</tr>');
+    }
+    if (i==1) {
+      $('#tabres tr:last').after(
+        '<tr class="warning">'
+        +'<td style="text-align:center;">'+vals[i]+'</td>'
+        +'<td style="text-align:center;">'+vals2[i]+' %</td>'
+        +'</tr>');
+    }
+    if (i==2) {
+      $('#tabres tr:last').after(
+        '<tr class="danger">'
+        +'<td style="text-align:center;">'+vals[i]+'</td>'
+        +'<td style="text-align:center;">'+vals2[i]+' %</td>'
+        +'</tr>');
+    }
+  }
+
+
+
+  for (var i = 0; i < vals2.length; i++) {
+    valstr.push(""+vals2[i]+"%")
+  }
+
+  for (var i = 0; i < vals2.length; i++) {
+    valint.push(parseInt(vals2[i]))
+  }
+});
+$("#slt_graf").change(
+  function(){
+    if ($("#slt_graf").val()==1) {
+      $("#graf_barr").show();
+      $("#graf_pie").hide();
+      var dataSimpleBarChart = {
+              labels: vals,
+              series: [
+                valint
+              ]
+            };
+
+            var optionsSimpleBarChart = {
+              seriesBarDistance: 10,
+              // height: '300',
+              high: 100,
+              chartPadding: { top: 20, right: 0, bottom: 0, left: 0},
+              axisX: {
+                showGrid: false
+              }
+            };
+
+            var responsiveOptionsSimpleBarChart = [
+              ['screen and (max-width: 640px)', {
+                seriesBarDistance: 5,
+                axisX: {
+                  labelInterpolationFnc: function (value) {
+                    return value[0];
+                  }
+                }
+              }]
+            ];
+
+            var simpleBarChart = Chartist.Bar('#simpleBarChart', dataSimpleBarChart, optionsSimpleBarChart, responsiveOptionsSimpleBarChart);
+
+            //start animation for the Emails Subscription Chart
+            md.startAnimationForBarChart(simpleBarChart);
+    }
+    if ($("#slt_graf").val()==2) {
+      $("#graf_pie").show();
+      $("#graf_barr").hide();
+      var dataPreferences = {
+          labels: valstr,
+          series: valint
+      };
+
+      var optionsPreferences = {
+          height: '230px'
+      };
+
+      Chartist.Pie('#chartPreferences', dataPreferences, optionsPreferences);
+    }
+  }
+);
+</script>
+{% endblock jscrpt %}

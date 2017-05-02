@@ -201,8 +201,9 @@ def ImagenCreate(request, template_name='agregar/imagen_create.html'):
     return render(request,template_name,{'user':usuario,'form':form,"img_activacion":img_activacion})
 
 @login_required(login_url='/')
-def ImagenEvaluate(request,pk,template_name='agregar/resultado_evaluacion.html'):
+def ImagenEvaluate(request,pk,template_name='listar/resultado_evaluacion.html'):
     usuario=get_object_or_404(Usuario,cedula=request.user)
+    imagen=get_object_or_404(Imagen,img_id=pk)
     img_activacion='active'
     try:
         os.mkdir(os.path.join(settings.MEDIA_ROOT)+"\\reco\\"+str(usuario.cedula)+"\\")
@@ -226,7 +227,7 @@ def ImagenEvaluate(request,pk,template_name='agregar/resultado_evaluacion.html')
     etiqueta,porcentaje=reconocimiento(tmp_file)
     obj=etiqueta,porcentaje
     os.remove(tmp_file)
-    return render(request,template_name,{'obj':obj,'etiqueta':etiqueta,'porcentaje':porcentaje,'user':usuario,'img_activacion':img_activacion})
+    return render(request,template_name,{'imagen':imagen,'obj':obj,'etiqueta':etiqueta,'porcentaje':porcentaje,'user':usuario,'img_activacion':img_activacion})
 
 
 @login_required(login_url='/')
@@ -353,9 +354,9 @@ def Tipo_cancerList(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     tipo_c_activacion='active'
     if request.method=='POST':
-        tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_nombre__contains=request.POST["busca"],tc_estado='activo')
+        tip = Tipo_cancer.objects.order_by("tc_id").filter(tc_nombre__contains=request.POST["busca"],tc_estado='activo')
         return render_to_response('listar/tipo_cancer_list.html',{'img':img,'user':usuario})
-    tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_estado='activo')
+    tip = Tipo_cancer.objects.order_by("tc_id").filter(tc_estado='activo')
     return render_to_response('listar/tipo_cancer_list.html',{'tip':tip,'user':usuario,'tipo_c_activacion':tipo_c_activacion})
 
 @login_required(login_url='/')
@@ -363,9 +364,9 @@ def Tipo_cancerListin(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     tipo_c_activacion='active'
     if request.method=='POST':
-        tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_nombre__contains=request.POST["busca"],tc_estado='inactivo')
+        tip = Tipo_cancer.objects.order_by("tc_id").filter(tc_nombre__contains=request.POST["busca"],tc_estado='inactivo')
         return render_to_response('listar/tipo_cancer_listin.html',{'img':img,'user':usuario})
-    tip = Tipo_cancer.objects.order_by("tc_nombre").filter(tc_estado='inactivo')
+    tip = Tipo_cancer.objects.order_by("tc_id").filter(tc_estado='inactivo')
     return render_to_response('listar/tipo_cancer_listin.html',{'tip':tip,'user':usuario,'tipo_c_activacion':tipo_c_activacion})
 
 @login_required(login_url='/')
@@ -460,6 +461,11 @@ def reconocimiento(image_path):
 def convertir_a_jpg(archivo):
     cadena=str(archivo).split(".")
     Image.open(archivo).convert('RGB').save(str(cadena[0])+'.jpg', quality=95)
+
+def entrenar():
+    import subprocess
+    result=subprocess.call("python retrain.py --bottleneck_dir=./../media/cnn/bottlenecks --how_many_training_steps 500 --model_dir=./../media/cnn/inception --output_graph=./../media/cnn/retrained_graph.pb --output_labels=./../media/cnn/retrained_labels.txt --image_dir ./../media/cnn/imagenes")
+
 
 
 
