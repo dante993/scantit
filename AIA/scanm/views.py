@@ -248,21 +248,13 @@ def ImagenDelete(request,pk):
     obj.save()
     return redirect("imagen")
 
-# ------------------------------------------Area_Imagen-----------------------------------------
-@login_required(login_url='/')
-def Area_imagenCreate(request,pk, template_name='agregar/area_imagen_create.html'):
-    usuario=get_object_or_404(Usuario,cedula=request.user)
-    img=get_object_or_404(Imagen_adm, pk=pk)
-    ad_img_activacion='active'
-    return render(request,template_name,{'user':usuario,'img':img,"ad_img_activacion":ad_img_activacion})
-
 # ------------------------------------------Imagen de aprendizaje-----------------------------------------
 @login_required(login_url='/')
 def Imagen_admList(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     ad_img_activacion='active'
-    img = Imagen_adm.objects.order_by("imgad_fecha").filter(imgad_estado='no aprendida')
-    return render_to_response('listar/adm_imagen_list.html',{'img':img,'user':usuario,'ad_img_activacion':ad_img_activacion})
+    tip = Tipo_cancer.objects.order_by("tc_nombre")
+    return render_to_response('listar/adm_imagen_list.html',{'tip':tip,'user':usuario,'ad_img_activacion':ad_img_activacion})
 
 @login_required(login_url='/')
 def Imagen_admListap(request):

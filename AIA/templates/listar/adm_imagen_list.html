@@ -7,7 +7,7 @@
 
     <div class="row">
       <div class="col-md-5">
-        <a href="{% url 'crear_adm_imagen' %}" class="btn btn-rose"><i class="material-icons">playlist_add</i> Agregar imágenes</a>
+        <a href="{% url 'crear_adm_imagen' %}" class="btn btn-rose"><i class="material-icons">autorenew</i> Retrain</a>
       </div>
 
     </div>
@@ -16,40 +16,32 @@
 
 <div class="card">
   <div class="card-header" data-background-color="rose">
-    <h4 class="card-title">Mamografías</h4>
-    <p class="category">Listado de Mamografías para aprendizaje</p>
+    <h4 class="card-title">Mammographies</h4>
+    <p class="category">List of Mammographies for learning</p>
   </div>
   <div class="card-content table-responsive table-full-width">
     <table class="table table-hover">
       <thead class="text-danger">
-        <th>ID</th>
-        <th WIDTH="100">IMAGEN</th>
-        <th>DESCRIPCION</th>
-        <th>FECHA</th>
-        <th>DIMENSIONES</th>
-        <th>ESTADO</th>
-        <th>TIPO DE CANCER</th>
-        <th>OPCIONES</th>
+        <th><i class="fa fa-folder text-danger"></i> LABEL</th>
+        <th>CONTENT</th>
+        <th>ACTIONS</th>
       </thead>
       <tbody>
-        {% for im in img %}
+        {% for t in tip %}
         <tr>
-          <td>{{ im.imgad_id }}</td>
-          <td><img src="{{ im.imgad_ruta }}" style="max-width: 90%"></td>
-          <td><textarea name="txar" rows="6" disabled>{{ im.imgad_descripcion }}</textarea></td>
-          <td>{{ im.imgad_fecha }}</td>
-          <td>{{ im.imgad_ancho }} x {{ im.imgad_alto }}</td>
-          <td>{{ im.imgad_estado }}</td>
-          <td>{{ im.tc_id }}</td>
+          <td><a class="btn btn-primary btn-simple"><i class="material-icons">folder</i> {{ t.tc_nombre }}</a></td>
+          <td>{{ t.tc_id }}</td>
           <td class="td-actions">
-            <a href="{% url 'crear_area_imagen' im.imgad_id %}" class="btn btn-info " data-toggle="tooltip" data-placement="top" title="Aprender"><i class="material-icons">center_focus_strong</i></a>
-            <a href="{% url 'borrar_imagen' im.imgad_id %}" class="btn btn-danger " data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
+            <a href="{% url 'borrar_imagen' t.tc_id %}" class="btn btn-danger " data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
           </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td><h4 class="text-primary">No hay datos</h4></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-
   </div>
 </div>
 {% endblock content %}
