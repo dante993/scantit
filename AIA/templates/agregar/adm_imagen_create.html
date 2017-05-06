@@ -7,65 +7,37 @@
     <div class="">
       <div class="card">
         <div class="card-header" data-background-color="rose">
-          <h4 class="card-title">Agregar imagen</h4>
-          <p class="category">Imagen para aprendizaje</p>
+          <h4 class="card-title">Add pictures</h4>
+          <p class="category">Images for learning</p>
         </div>
-        <div class="card-content text-center">
+        <div class="card-content">
           <form method="post" class="form-horizontal" action="" ENCTYPE="multipart/form-data">{% csrf_token %}
-            <div class="row col-sm-offset-2">
-              <div class="col-sm-4">
-                <legend>Seleccione una mamografía</legend>
-                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
-                  <div class="fileinput-new thumbnail">
-                    <img src="{% static 'img/image_placeholder.jpg' %}" alt="...">
-                  </div>
-                  <div class="fileinput-preview fileinput-exists thumbnail"></div>
-                  <div>
-                    <span class="btn btn-rose btn-round btn-file">
-                      <span class="fileinput-new">Seleccionar imagen</span>
-                      <span class="fileinput-exists">Cambiar</span>
-                      {{ form.imgad_ruta }}
-                      <span class="text-danger">{{ form.errors.imgad_ruta.as_text }}</span>
-                    </span>
-                    <a href="#" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Quitar</a>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="row">
-                  <div class="form-group label-floating">
-                    {{ form.tc_id.label_tag }}
-                    {{ form.tc_id }}
-                    <span class="text-danger">{{ form.errors.tc_id.as_text }}</span>
-                  </div>
-                </div>
-                <br>
-                <div class="row">
-                  <div class="form-group label-floating">
-                    <label class="control-label">Descripcion de la imagen:</label>
-                    {{ form.imgad_descripcion }}
-                    <span class="text-danger">{{ form.errors.imgad_descripcion.as_text }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="row oculto">
+            <div class="row">
+              <div class="col-md-offset-4">
                 <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    {{ form.imgad_ancho }}
+                  <div class="text-center">
+                    <div class="form-group label-floating">
+                      <a class="btn btn-success">
+                        <span class="btn-label">
+                          <i class="material-icons">add_a_photo</i>
+                        </span>
+                        Select images
+                        <input type="file" multiple="true" name="id_imgad_ruta" id="id_imgad_ruta" accept="image/jpg,image/png,image/jepg,image/gif,image/bmp"/>
+                      </a>
+                    </div>
+                    <div class="form-group label-floating">
+                      <textarea id="ver_ruta" placeholder="Mammography pictures..." class="form-control" style="text-align:center" disabled></textarea>
+                        <!-- <input id="ver_ruta" type="text" value="" placeholder="Mammography pictures..." class="form-control" disabled/> -->
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="row oculto">
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    {{ form.imgad_alto }}
-                  </div>
                 </div>
-              </div>
             </div>
-            <a href="{% url 'imagen' %}" class="btn btn-danger pull-center">Cancelar</a>
-            <button type="submit" class="btn btn-success pull-center">Guardar</button>
-            <div class="clearfix"></div>
+            <div class="text-center">
+              <a href="{% url 'adm_imagen' %}" class="btn btn-danger pull-center">Cancel</a>
+              <button type="submit" class="btn btn-success pull-center">Save</button>
+              <div class="clearfix"></div>
+            </div>
           </form>
         </div>
       </div>
@@ -79,55 +51,20 @@
 $( document ).ready(function() {
   $(".oculto").hide();
 });
-//-----------------------------funcion apara vista previa-------------------------------------------
-function archivo(evt) {
-  var files = evt.target.files; // FileList object
-
-  // Obtenemos la imagen del campo "file".
-  for (var i = 0, f; f = files[i]; i++) {
-    //Solo admitimos imágenes.
-    if (!f.type.match('image.*')) {
-      continue;
-    }
-
-    var reader = new FileReader();
-
-    reader.onload = (function(theFile) {
-      return function(e) {
-        // Insertamos la imagen
-        // document.getElementById("list").innerHTML = ['<img class="thumb" src="', e.target.result,'" title="', escape(theFile.name), '"/>'].join('');
-        // alert('ruta:'+e.target.result+'');
-        $("#mifoto").attr('src', ''+e.target.result+'');
-        $("#mifoto").removeAttr('width');
-        $("#mifoto").removeAttr('height');
-        var imagen = $('#mifoto');
-        $("#id_imgad_ancho").val(''+imagen.width());
-        $("#id_imgad_alto").val(''+imagen.height());
-        // $('#ver_ruta').val('ruta:'+e.target.result+'');
-        // $('#canvas').css('background', 'url('+e.target.result+') ');
-        // $('#canvas').css('background-size', '100% 100%');
-        // $('#canvas').css('background', 'url('+e.target.result+')');
-      };
-    })(f);
-
-    reader.readAsDataURL(f);
-  }
-}
-
-document.getElementById('id_imgad_ruta').addEventListener('change', archivo, false);
 //-------------------------------------------------------------------------------------------------
 $("#id_imgad_ruta").change(function(e) {
   var x = document.getElementById("id_imgad_ruta");
   if ('files' in x) {
     if (x.files.length == 0) {
     } else {
-      for (var i = 0; i < x.files.length; i++) {
-        var file = x.files[i];
-        if ('name' in file) {
-          $("#ver_ruta").val(""+file.name);
-        }
-      }
-      $("#ver_ruta").val(""+file.name);
+      $("#ver_ruta").val(""+x.files.length+" files");
+      // for (var i = 0; i < x.files.length; i++) {
+      //   var file = x.files[i];
+      //   if ('name' in file) {
+      //     $("#ver_ruta").val(""+file.name);
+      //   }
+      // }
+      // $("#ver_ruta").val(""+file.name);
     }
   }
 });

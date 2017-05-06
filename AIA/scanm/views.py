@@ -253,21 +253,20 @@ def ImagenDelete(request,pk):
 def Imagen_admList(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     ad_img_activacion='active'
-    tip = Tipo_cancer.objects.order_by("tc_nombre")
-    return render_to_response('listar/adm_imagen_list.html',{'tip':tip,'user':usuario,'ad_img_activacion':ad_img_activacion})
+    etiquetas=[]
+    cantidad_et=[]
+    tipos = Tipo_cancer.objects.order_by("tc_id").filter(tc_estado='activo')
+    for i in tipos:
+        etiquetas.append(i.tc_nombre)
+        cantidad_et.append(len(os.listdir(os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\imagenes\\"+str(i.tc_nombre)+"")))
+    return render_to_response('listar/adm_imagen_list.html',{'etiquetas':etiquetas,'cantidad_et':cantidad_et,'user':usuario,'ad_img_activacion':ad_img_activacion})
 
 @login_required(login_url='/')
-def Imagen_admListap(request):
-    usuario=get_object_or_404(Usuario,cedula=request.user)
-    ad_img_activacion='active'
-    img = Imagen_adm.objects.order_by("imgad_fecha").filter(imgad_estado='aprendida')
-    return render_to_response('listar/adm_imagen_listap.html',{'img':img,'user':usuario,'ad_img_activacion':ad_img_activacion})
-
-@login_required(login_url='/')
-def Imagen_admCreate(request, template_name='agregar/adm_imagen_create.html'):
+def Imagen_admCreate(request,pk, template_name='agregar/adm_imagen_create.html'):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     form = Imagen_admForm(request.POST or None,request.FILES or None)
     ad_img_activacion='active'
+    # if request.method=='POST':id_imgad_ruta
     if form.is_valid():
         id_im=int(Imagen_adm.objects.all().count())
         id_im=id_im+1
@@ -345,10 +344,12 @@ def Imagen_admDelete(request,pk):
 def Tipo_cancerList(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     tipo_c_activacion='active'
+    # obtener archivos y cantidad de achivos por carpeta
+    tip = Tipo_cancer.objects.order_by("tc_id").filter(tc_estado='activo')
+
     if request.method=='POST':
         tip = Tipo_cancer.objects.order_by("tc_id").filter(tc_nombre__contains=request.POST["busca"],tc_estado='activo')
         return render_to_response('listar/tipo_cancer_list.html',{'img':img,'user':usuario})
-    tip = Tipo_cancer.objects.order_by("tc_id").filter(tc_estado='activo')
     return render_to_response('listar/tipo_cancer_list.html',{'tip':tip,'user':usuario,'tipo_c_activacion':tipo_c_activacion})
 
 @login_required(login_url='/')
@@ -366,9 +367,18 @@ def Tipo_cancerCreate(request, template_name='agregar/tipo_cancern_create.html')
     usuario=get_object_or_404(Usuario,cedula=request.user)
     form = Tipo_cancerForm(request.POST or None)
     tipo_c_activacion='active'
-    if form.is_valid():
-        form.save()
-        return redirect("tipo_cancer")
+    if request.method=='POST':
+        n_directorio = request.POST["tc_nombre"]
+        print("-------------------"+n_directorio)
+        if form.is_valid():
+            try:
+                print("------------------------------")
+                print(os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\imagenes\\"+str(n_directorio))
+                os.mkdir(os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\imagenes\\"+str(n_directorio))
+            except:
+                print("Error - puede que este directorio ya exista")
+            form.save()
+            return redirect("tipo_cancer")
     return render(request,template_name,{'user':usuario,'form':form,"tipo_c_activacion":tipo_c_activacion})
 
 @login_required(login_url='/')
@@ -424,10 +434,10 @@ def reconocimiento(image_path):
 
     # Loads label file, strips off carriage return
     label_lines = [line.rstrip() for line
-                       in tf.gfile.GFile(os.path.join(settings.MEDIA_ROOT)+"\\cnn\\"+"retrained_labels.txt")]
+                       in tf.gfile.GFile(os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\"+"retrained_labels.txt")]
 
     # Unpersists graph from file
-    with tf.gfile.FastGFile(os.path.join(settings.MEDIA_ROOT)+"\\cnn\\"+"retrained_graph.pb", 'rb') as f:
+    with tf.gfile.FastGFile(os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\"+"retrained_graph.pb", 'rb') as f:
         graph_def = tf.GraphDef()
         graph_def.ParseFromString(f.read())
         _ = tf.import_graph_def(graph_def, name='')
@@ -456,7 +466,7 @@ def convertir_a_jpg(archivo):
 
 def entrenar():
     import subprocess
-    result=subprocess.call("python retrain.py --bottleneck_dir=./../media/cnn/bottlenecks --how_many_training_steps 500 --model_dir=./../media/cnn/inception --output_graph=./../media/cnn/retrained_graph.pb --output_labels=./../media/cnn/retrained_labels.txt --image_dir ./../media/cnn/imagenes")
+    result=subprocess.call("python retrain.py --bottleneck_dir=./../static/cnn/bottlenecks --how_many_training_steps 500 --model_dir=./../static/cnn/inception --output_graph=./../static/cnn/retrained_graph.pb --output_labels=./../static/cnn/retrained_labels.txt --image_dir ./../static/cnn/imagenes")
 
 
 

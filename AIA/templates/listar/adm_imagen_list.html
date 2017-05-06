@@ -7,7 +7,7 @@
 
     <div class="row">
       <div class="col-md-5">
-        <a href="{% url 'crear_adm_imagen' %}" class="btn btn-rose"><i class="material-icons">autorenew</i> Retrain</a>
+        <a href="#" class="btn btn-rose"><i class="material-icons">autorenew</i> Retrain</a>
       </div>
 
     </div>
@@ -20,26 +20,23 @@
     <p class="category">List of Mammographies for learning</p>
   </div>
   <div class="card-content table-responsive table-full-width">
-    <table class="table table-hover">
+    <select class="hidden" name="sel_et" id="sel_et">
+      {% for et in etiquetas %}
+        <option value="{{et}}">{{et}}</option>
+      {% endfor %}
+    </select>
+    <select class="hidden" name="sel_cet" id="sel_cet">
+      {% for ce in cantidad_et %}
+        <option value="{{ce}}">{{ce}}</option>
+      {% endfor %}
+    </select>
+    <table class="table table-hover" id="tabla_et" name="tabla_et">
       <thead class="text-danger">
         <th><i class="fa fa-folder text-danger"></i> LABEL</th>
         <th>CONTENT</th>
         <th>ACTIONS</th>
       </thead>
       <tbody>
-        {% for t in tip %}
-        <tr>
-          <td><a class="btn btn-primary btn-simple"><i class="material-icons">folder</i> {{ t.tc_nombre }}</a></td>
-          <td>{{ t.tc_id }}</td>
-          <td class="td-actions">
-            <a href="{% url 'borrar_imagen' t.tc_id %}" class="btn btn-danger " data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td><h4 class="text-primary">No hay datos</h4></td>
-        </tr>
-        {% endfor %}
       </tbody>
     </table>
   </div>
@@ -48,7 +45,34 @@
 {% block jscrpt %}
 <script type="text/javascript">
 
-$('[data-toggle="tooltip"]').tooltip();
+$( document ).ready(function() {
+  var selet = document.getElementById('sel_et');
+  var selpr = document.getElementById('sel_cet');
+  var vals = [];
+  var vals2 = [];
+
+  for (var i = 0; i < selet.children.length; ++i) {
+    var child = selet.children[i];
+    var child2 = selpr.children[i];
+    if (child.tagName == 'OPTION') vals.push(child.value);
+    if (child2.tagName == 'OPTION') vals2.push(child2.value);
+  }
+
+
+  for (var i = 0; i < vals2.length; i++) {
+      $('#tabla_et tr:last').after(
+        '<tr>'
+        +'<td><a class="btn btn-primary btn-simple"><i class="material-icons">folder</i> '+vals[i]+'</a></td>'
+        +'<td class="info-title">'+vals2[i]+' images</td>'
+        +'<td class="td-actions">'
+        +'<a href="{% url "crear_adm_imagen" '+vals[i]+' %}" class="btn btn-success " data-toggle="tooltip" data-placement="top" title="Add images"><i class="material-icons">add_a_photo</i></a> '
+        +'<a href="#" class="btn btn-info " data-toggle="tooltip" data-placement="top" title="View images"><i class="material-icons">remove_red_eye</i></a>'
+      +'</td>'
+      +'</td>'
+        +'</tr>');
+  }
+  $('[data-toggle="tooltip"]').tooltip();
+});
 
 </script>
 {% endblock jscrpt %}
