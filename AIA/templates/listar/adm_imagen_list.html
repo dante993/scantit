@@ -30,6 +30,7 @@
         <option value="{{ce}}">{{ce}}</option>
       {% endfor %}
     </select>
+
     <table class="table table-hover" id="tabla_et" name="tabla_et">
       <thead class="text-danger">
         <th><i class="fa fa-folder text-danger"></i> LABEL</th>
@@ -65,7 +66,7 @@ $( document ).ready(function() {
         +'<td><a class="btn btn-primary btn-simple"><i class="material-icons">folder</i> '+vals[i]+'</a></td>'
         +'<td class="info-title">'+vals2[i]+' images</td>'
         +'<td class="td-actions">'
-        +'<a href="{% url "crear_adm_imagen" '+vals[i]+' %}" class="btn btn-success " data-toggle="tooltip" data-placement="top" title="Add images"><i class="material-icons">add_a_photo</i></a> '
+        +'<a name="'+vals[i]+'" id="'+vals2[i]+'" href="{% url "crear_adm_imagen" this.id  this.name %}" class="btn btn-success " data-toggle="tooltip" data-placement="top" title="Add images"><i class="material-icons">add_a_photo</i></a> '
         +'<a href="#" class="btn btn-info " data-toggle="tooltip" data-placement="top" title="View images"><i class="material-icons">remove_red_eye</i></a>'
       +'</td>'
       +'</td>'
