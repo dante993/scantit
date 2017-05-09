@@ -225,7 +225,8 @@ def ImagenEvaluate(request,pk,template_name='listar/resultado_evaluacion.html'):
             print ("No se ha podido encontrar el fichero  - ")
     except :
         print ("No se ha podido conectar al servidor  - ")
-    etiqueta,porcentaje=reconocimiento(tmp_file)
+    vre=tf.gfile.FastGFile(os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\"+"retrained_graph.pb", 'rb')
+    etiqueta,porcentaje=reconocimiento(tmp_file,vre)
     obj=etiqueta,porcentaje
     os.remove(tmp_file)
     return render(request,template_name,{'imagen':imagen,'obj':obj,'etiqueta':etiqueta,'porcentaje':porcentaje,'user':usuario,'img_activacion':img_activacion})
@@ -266,7 +267,12 @@ def Imagen_admRetrain(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     ad_img_activacion='active'
     pth=os.path.join(settings.BASE_DIR, 'static')
-    result=subprocess.call("python "+os.path.join(settings.BASE_DIR, 'scanm')+"\\retrain.py --bottleneck_dir="+pth+"/cnn/bottlenecks --how_many_training_steps 500 --model_dir="+pth+"/cnn/inception --output_graph="+pth+"/cnn/retrained_graph.pb --output_labels="+pth+"/cnn/retrained_labels.txt --image_dir="+pth+"/cnn/imagenes")
+    pth2=os.path.join(settings.BASE_DIR, 'scanm')
+    print("paso ... "+str(pth2))
+    result=subprocess.call("python "+str(pth2)+"\\retrain.py --bottleneck_dir="+
+    pth+"/cnn/bottlenecks --how_many_training_steps 500 --model_dir="+
+    pth+"/cnn/inception --output_graph="+pth+"/cnn/retrained_graph.pb --output_labels="+
+    pth+"/cnn/retrained_labels.txt --image_dir "+pth+"/cnn/imagenes")
     return redirect("adm_imagen")
 
 class Dirs_to_learn:
@@ -409,7 +415,7 @@ def convertBMP(ruta,id_r):
     for i, face in enumerate(images):
         face.save(ruta+"\\" + id_r + ".bmp")
 
-def reconocimiento(image_path):
+def reconocimiento(image_path,vre):
     # definimos dos listas para almacenar los resultados
     etiqueta=[]
     porcentaje=[]
@@ -421,10 +427,9 @@ def reconocimiento(image_path):
                        in tf.gfile.GFile(os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\"+"retrained_labels.txt")]
 
     # Unpersists graph from file
-    with tf.gfile.FastGFile(os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\"+"retrained_graph.pb", 'rb') as f:
-        graph_def = tf.GraphDef()
-        graph_def.ParseFromString(f.read())
-        _ = tf.import_graph_def(graph_def, name='')
+    graph_def = tf.GraphDef()
+    graph_def.ParseFromString(vre.read())
+    _ = tf.import_graph_def(graph_def, name='')
 
     with tf.Session() as sess:
         # Feed the image_data as input to the graph and get first prediction
@@ -453,27 +458,29 @@ def entrenar():
     result=subprocess.call("python "+os.path.join(settings.BASE_DIR, 'scanm')+"\\retrain.py --bottleneck_dir="+pth+"/cnn/bottlenecks --how_many_training_steps 500 --model_dir="+pth+"/cnn/inception --output_graph="+pth+"/cnn/retrained_graph.pb --output_labels="+pth+"/cnn/retrained_labels.txt --image_dir="+pth+"/cnn/imagenes")
 
 def Evaluar_aprendizaje(etiquetas):
+    vre=tf.gfile.FastGFile(os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\"+"retrained_graph.pb", 'rb')
     linea="imagen,"
     for i in range(len(etiquetas)):
         if(i!=(len(etiquetas)-1)):
             linea+=str(etiquetas[i])+","
         else:
-            linea+=str(i)+"\n"
+            linea+=str(etiquetas[i])+"\n"
+    print(linea)
     for (base, dirs, files) in os.walk(os.path.join(settings.BASE_DIR, 'static')+"/cnn/imagenes/"):
         for dr in os.listdir(base):
             if os.path.isdir(os.path.join(base,dr)):
                 for f in os.listdir(str(base)+'/'+str(dr)):
                     if os.path.isfile(os.path.join(base,dr,f)):
-                        et,pr=reconocimiento(os.path.join(base,dr,f))
-                        time.sleep(1.3)
+                        et,pr=reconocimiento(os.path.join(base,dr,f),vre)
+                        # time.sleep(1.3)
                         for i in range(len(pr)):
                             if i==0:
-                                linea+=str(os.path.join(dr,f))+","
+                                linea+=str(os.path.join(dr,f))+","+str(pr[i])+","
                             elif(i!=(len(pr)-1)):
                                 linea+=str(pr[i])+","
                             else:
                                 linea+=str(pr[i])+"\n"
-    archivo=open (os.path.join(settings.BASE_DIR, 'static')+"/cnn/eval/eval.csv","a")
+    archivo=open (os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\eval\\eval.csv","a")
     archivo.write(linea)
     archivo.close()
 
