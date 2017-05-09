@@ -52,7 +52,9 @@ urlpatterns = [
 
 # -----------------------------------------------admin-----------------------------------------------------
     url(r'^admin/imagen/$', Imagen_admList, name='adm_imagen'),
-    url(r'^admin/imagen/crear/(?P<pk>.*)/adm_img/(?P<pk2>.*)/$', Imagen_admCreate, name='crear_adm_imagen'),
+    url(r'^admin/imagen/crear/(?P<pk>.*)/(?P<pk2>.*)/$', Imagen_admCreate, name='crear_adm_imagen'),
+    url(r'^admin/imagen/retrain/$', Imagen_admRetrain, name='retrain_adm_imagen'),
+    url(r'^admin/imagen/evaluate/$', Imagen_admEvaluate, name='evaluate_adm_imagen'),
 
     # ------------------------------tipos de cancer-----------------------------------
     url(r'^admin/tipo_de_cancer/$', Tipo_cancerList, name='tipo_cancer'),

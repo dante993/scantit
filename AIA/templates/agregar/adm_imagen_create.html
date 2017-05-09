@@ -11,7 +11,13 @@
           <p class="category">Images for learning</p>
         </div>
         <div class="card-content">
-          <form method="post" class="form-horizontal" action="" ENCTYPE="multipart/form-data">{% csrf_token %}
+          <div class="" id="carga">
+            <legend class="text-rose text-center">Preprocessing images...</legend>
+            <div class="text-center">
+              <img src="{% static 'img/loading.gif' %}" style="max-width:5%;"/>
+            </div>
+          </div>
+          <form method="post" onsubmit= "ejecutarBP()" class="form-horizontal" action="" ENCTYPE="multipart/form-data">{% csrf_token %}
             <div class="row">
               <div class="col-md-offset-4">
                 <div class="col-md-6">
@@ -44,13 +50,13 @@
     </div>
   </div>
 </div>
-<img src=""  id="mifoto" class="oculto">
 {% endblock content %}
 {% block jscrpt %}
 <script type="text/javascript">
 $( document ).ready(function() {
-  $(".oculto").hide();
+  $("#carga").hide();
 });
+
 //-------------------------------------------------------------------------------------------------
 $("#id_imgad_ruta").change(function(e) {
   var x = document.getElementById("id_imgad_ruta");
@@ -68,5 +74,8 @@ $("#id_imgad_ruta").change(function(e) {
     }
   }
 });
+function ejecutarBP(){
+  $("#carga").show();
+}
 </script>
 {% endblock jscrpt %}
