@@ -275,7 +275,7 @@ def Imagen_admRetrain(request):
     pth+"/cnn/retrained_labels.txt --image_dir "+pth+"/cnn/imagenes")
     return redirect("adm_imagen")
 
-class Dirs_to_learn:
+class Obj_list:
     # esta clase nos permite crear un listado de directorios con su respectivo contenido para el aprendizaje
     def __init__(self, nombre, cantidad):
         self.nm = nombre
@@ -288,7 +288,7 @@ def Imagen_admList(request):
     dirs_to_learn=[]
     tipos = Tipo_cancer.objects.order_by("tc_id").filter(tc_estado='activo')
     for i in tipos:
-        dirs_to_learn.append(Dirs_to_learn(i.tc_nombre,len(os.listdir(os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\imagenes\\"+str(i.tc_nombre)+""))))
+        dirs_to_learn.append(Obj_list(i.tc_nombre,len(os.listdir(os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\imagenes\\"+str(i.tc_nombre)+""))))
     return render_to_response('listar/adm_imagen_list.html',{'dirs_to_learn':dirs_to_learn,'user':usuario,'ad_img_activacion':ad_img_activacion})
 
 @login_required(login_url='/')
@@ -459,27 +459,29 @@ def entrenar():
 
 def Evaluar_aprendizaje(etiquetas):
     vre=tf.gfile.FastGFile(os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\"+"retrained_graph.pb", 'rb')
-    linea="imagen,"
-    for i in range(len(etiquetas)):
-        if(i!=(len(etiquetas)-1)):
-            linea+=str(etiquetas[i])+","
-        else:
-            linea+=str(etiquetas[i])+"\n"
-    print(linea)
+    cabecera=""
+    linea="imagen,"+str(",".join(etiquetas))+"\n"
+    cabecera=linea.replace("\n","")
+    cabecera=cabecera.replace("imagen,","")
+    cabecera=cabecera.split(",")
+
     for (base, dirs, files) in os.walk(os.path.join(settings.BASE_DIR, 'static')+"/cnn/imagenes/"):
         for dr in os.listdir(base):
             if os.path.isdir(os.path.join(base,dr)):
                 for f in os.listdir(str(base)+'/'+str(dr)):
                     if os.path.isfile(os.path.join(base,dr,f)):
                         et,pr=reconocimiento(os.path.join(base,dr,f),vre)
-                        # time.sleep(1.3)
+                        # inicializar linea de escritura
+                        row=[]
+                        for i in range(len(cabecera)):
+                            row.append("")
+                        # -----------------------------
+
                         for i in range(len(pr)):
-                            if i==0:
-                                linea+=str(os.path.join(dr,f))+","+str(pr[i])+","
-                            elif(i!=(len(pr)-1)):
-                                linea+=str(pr[i])+","
-                            else:
-                                linea+=str(pr[i])+"\n"
+                            for j in range(len(cabecera)):
+                                if str(et[i]).lower()==str(cabecera[j]).lower():
+                                    row[j]=str(pr[i])
+                        linea+=str(os.path.join(dr,f))+","+str(",".join(row))+"\n"
     archivo=open (os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\eval\\eval.csv","a")
     archivo.write(linea)
     archivo.close()

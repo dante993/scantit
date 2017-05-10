@@ -1,17 +1,11 @@
 import os
 import subprocess
 import time
-linea=""
-a=[1,2,3]
-for i in range(len(a)):
-    if i==0:
-        linea+="edts,"
-    if(i!=(len(a)-1)):
-        linea+=str(a[i])+","
-    else:
-        linea+=str(a[i])+"\n"
-linea+="--------------"
-print (linea)
+a="1,2,3"
+a=a.split(",")
+b=["5","2","4"]
+if b[1]==a[1]:
+    print(len(a))
           # Espera 1 segundo antes de continuar.
 # archivo=open (os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+"/static/cnn/eval/eval.csv","a")
 # archivo.write(s)
