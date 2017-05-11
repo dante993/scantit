@@ -8,6 +8,7 @@ from django.template import loader, context,RequestContext
 from django.http import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
 import time
 import ftplib
 import os
@@ -54,8 +55,20 @@ def UsuaioC(request, template_name='agregar/usuario_create.html'):
         contra=request.POST.get("contra")
         Usuario.object.create_user(cedula,nombre,apellido,e_mail,contra,telefono=telefono,direccion=direccion,sexo=sexo,fecha_de_nacimiento=fecha_de_nacimiento)
         return redirect("login")
-
     return render(request,template_name,{'form':form})
+
+@login_required(login_url='/')
+def edt_password(request):
+    usuario=get_object_or_404(Usuario,cedula=request.user)
+    form = EditarContrasenaForm(request.POST or None)
+    if form.is_valid():
+        print("lo intento....")
+        request.user.password = make_password(form.cleaned_data['password'])
+        request.user.save()
+        return redirect('logout')
+    return render(request, 'editar/password_edit.html', {'form': form,'user':usuario})
+
+# ---------------------------------------------------------------------
 
 @login_required(login_url='/')
 def v_area_img(request):

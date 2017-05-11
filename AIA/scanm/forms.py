@@ -13,6 +13,27 @@ class LoginForm(Form):
                                                            "type": "password",
                                                            "placeholder": "Password..."}))
 
+# ------------------------------- editar clave -----------------------------
+class EditarContrasenaForm(forms.Form):
+    actual_password = forms.CharField(
+        label='Contraseña actual',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    password = forms.CharField(
+        label='Nueva contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    password2 = forms.CharField(
+        label='Repetir contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    def clean_password2(self):
+        """Comprueba que password y password2 sean iguales."""
+        password = self.cleaned_data['password']
+        password2 = self.cleaned_data['password2']
+        if password != password2:
+            raise forms.ValidationError('Las contrasenias no coinciden.')
+        return password2
 # ----------------------------------------------------------usuario----------------------------------------------------
 class UsuarioForm(forms.ModelForm):
     class Meta:
