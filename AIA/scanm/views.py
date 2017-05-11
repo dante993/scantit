@@ -19,7 +19,7 @@ import sys
 from scanm.forms import *
 from os import listdir
 from os.path import isfile, join
-from PIL import Image
+from PIL import Image, ImageFilter
 import shutil
 import subprocess
 
@@ -60,12 +60,14 @@ def UsuaioC(request, template_name='agregar/usuario_create.html'):
 @login_required(login_url='/')
 def edt_password(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
-    form = EditarContrasenaForm(request.POST or None)
-    if form.is_valid():
-        print("lo intento....")
-        request.user.password = make_password(form.cleaned_data['password'])
-        request.user.save()
-        return redirect('logout')
+    if request.method == 'POST':
+        form = EditarContrasenaForm(request.POST)
+        if form.is_valid():
+            request.user.password = make_password(form.cleaned_data['password'])
+            request.user.save()
+            return redirect('logout')
+    else:
+        form = EditarContrasenaForm()
     return render(request, 'editar/password_edit.html', {'form': form,'user':usuario})
 
 # ---------------------------------------------------------------------
@@ -239,6 +241,7 @@ def ImagenEvaluate(request,pk,template_name='listar/resultado_evaluacion.html'):
     except :
         print ("No se ha podido conectar al servidor  - ")
     vre=tf.gfile.FastGFile(os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\"+"retrained_graph.pb", 'rb')
+    aplicar_filtro(tmp_file)
     etiqueta,porcentaje=reconocimiento(tmp_file,vre)
     obj=etiqueta,porcentaje
     os.remove(tmp_file)
@@ -319,6 +322,7 @@ def Imagen_admCreate(request,pk,pk2, template_name='agregar/adm_imagen_create.ht
             convertir_a_jpg(path)
             os.remove(path)
             path=os.path.join(settings.MEDIA_ROOT)+'\\tmp\\'+str(usuario.cedula)+'\\'+str(cont)+'.jpg'
+            aplicar_filtro(path)
             shutil.move(path, os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\imagenes\\"+str(dir_l)+"\\"+str(cont)+".jpg")
             cont=cont+1
         return redirect("adm_imagen")
@@ -466,6 +470,25 @@ def convertir_a_jpg(archivo):
     cadena=str(archivo).split(".")
     Image.open(archivo).convert('RGB').save(str(cadena[0])+'.jpg', quality=95)
 
+def aplicar_filtro(archivo):
+    im = Image.open(archivo)
+    imagen = Image.new("RGB", im.size, (255, 255, 255))
+    imagen.paste(im)
+    desenfocada = imagen.filter(ImageFilter.BLUR)
+    contorneada = imagen.filter(ImageFilter.CONTOUR)
+    detallar = imagen.filter(ImageFilter.DETAIL)
+    realzarbordes = imagen.filter(ImageFilter.EDGE_ENHANCE_MORE)
+    relieve = imagen.filter(ImageFilter.EMBOSS)
+    limites = imagen.filter(ImageFilter.FIND_EDGES)
+    suavizar = imagen.filter(ImageFilter.SMOOTH_MORE)
+    afinar = imagen.filter(ImageFilter.SHARPEN)
+    width, height =realzarbordes.size
+    for w in range(width):
+        for h in range(height):
+            r, g, b =realzarbordes.getpixel((w, h))
+            gray = (r+g+b)/3
+            realzarbordes.putpixel((w, h), (255-r, 255-g, 255-b))
+    realzarbordes.save(archivo)
 
 def entrenar():
     result=subprocess.call("python "+os.path.join(settings.BASE_DIR, 'scanm')+"\\retrain.py --bottleneck_dir="+pth+"/cnn/bottlenecks --how_many_training_steps 500 --model_dir="+pth+"/cnn/inception --output_graph="+pth+"/cnn/retrained_graph.pb --output_labels="+pth+"/cnn/retrained_labels.txt --image_dir="+pth+"/cnn/imagenes")
