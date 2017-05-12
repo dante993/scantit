@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid">
+      <div class="card">
+        <div class="card-header" data-background-color="rose">
+          <h4 class="card-title">Edit profile</h4>
+          <p class="category">Change your user data</p>
+        </div>
+        <div class="card-content">
+          <form method="POST" class="" action="">{% csrf_token %}
+            <div class="row">
+                <h4 class="card-title text-center">Edit the fields you want to change</h4>
+                <div class="col-sm-offset-2">
+                  <div class="row">
+                    <div class="col-sm-5">
+                      <div class="input-group">
+                        <span class="input-group-addon">
+                          <i class="material-icons">face</i>
+                        </span>
+                        <div class="form-group label-floating">
+                          <label class="control-label">Nombres
+                          </label>
+                          {{ form.nombres }}
+                          <span class="text-danger">{{ form.errors.nombres.as_text }}</span>
+                        </div>
+                      </div>
+                      <div class="input-group">
+                        <span class="input-group-addon">
+                          <i class="material-icons">perm_identity</i>
+                        </span>
+                        <div class="form-group label-floating">
+                          <label class="control-label">Apellidos
+                          </label>
+                          {{ form.apellidos }}
+                          <span class="text-danger">{{ form.errors.apellidos.as_text }}</span>
+                        </div>
+                      </div>
+                      <div class="input-group">
+                        <span class="input-group-addon">
+                          <i class="material-icons">supervisor_account</i>
+                        </span>
+                        <div class="form-group label-floating">
+                          <label class="control-label">Sexo
+                          </label>
+                          {{ form.sexo }}
+                          <span class="text-danger">{{ form.errors.sexo.as_text }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-5">
+                      <div class="input-group">
+                        <span class="input-group-addon">
+                          <i class="material-icons">email</i>
+                        </span>
+                        <div class="form-group label-floating">
+                          <label class="control-label">E-mail
+                          </label>
+                          {{ form.e_mail }}
+                          <span class="text-danger">{{ form.errors.e_mail.as_text }}</span>
+                        </div>
+                      </div>
+                      <div class="input-group">
+                        <span class="input-group-addon">
+                          <i class="material-icons">phone</i>
+                        </span>
+                        <div class="form-group label-floating">
+                          <label class="control-label">Teléfono
+                          </label>
+                          {{ form.telefono }}
+                          <span class="text-danger">{{ form.errors.telefono.as_text }}</span>
+                        </div>
+                      </div>
+                      <div class="input-group">
+                        <span class="input-group-addon">
+                          <i class="material-icons">person_pin</i>
+                        </span>
+                        <div class="form-group label-floating">
+                          <label class="control-label">Dirección
+                          </label>
+                          {{ form.direccion }}
+                          <span class="text-danger">{{ form.errors.direccion.as_text }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-5">
+                      <div class="input-group">
+                        <span class="input-group-addon">
+                          <i class="material-icons">insert_invitation</i>
+                        </span>
+                        <div class="form-group label-floating">
+                          <label class="control-label">Fecha de nacimiento
+                          </label>
+                          {{ form.fecha_de_nacimiento }}
+                          <span class="text-danger">{{ form.errors.fecha_de_nacimiento.as_text }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="text-center">
+              <a href="{% url 'inicio' %}" class="btn btn-danger pull-center">Cancel</a>
+              <button type="submit" class="btn btn-success pull-center">Save</button>
+              <div class="clearfix"></div>
+            </div>
+            </form>
+        </div>
+      </div>
+</div>
+{% endblock content %}
+{% block jscrpt %}
+<script type="text/javascript">
+$( document ).ready(function() {
+  // var fecha = new Date();
+  // var a = "{{fecha_n}}".toString()+"hvfb"
+  // var eddad=parseInt(Math.abs(1993-parseInt(""+fecha.getFullYear())));
+  // alert(a);
+  // var fecha = new Date();
+	// alert(' El año actual es: '+fecha.getDate()+' - '+fecha.getMonth()+' - '+fecha.getFullYear());
+  $('#id_fecha_de_nacimiento').datetimepicker({
+     format: 'YYYY-MM-DD',
+     icons: {
+         time: "fa fa-clock-o",
+         date: "fa fa-calendar",
+         up: "fa fa-chevron-up",
+         down: "fa fa-chevron-down",
+         previous: 'fa fa-chevron-left',
+         next: 'fa fa-chevron-right',
+         today: 'fa fa-screenshot',
+         clear: 'fa fa-trash',
+         close: 'fa fa-remove',
+         inline: true
+     }
+  });
+});
+
+</script>
+{% endblock jscrpt %}

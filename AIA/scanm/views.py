@@ -58,6 +58,23 @@ def UsuaioC(request, template_name='agregar/usuario_create.html'):
     return render(request,template_name,{'form':form})
 
 @login_required(login_url='/')
+def UsuarioUpdate(request,template_name='editar/profile_edit.html'):
+    usuario=get_object_or_404(Usuario,cedula=request.user)
+    form = Usuario_edtForm(request.POST or None, instance=usuario)
+    fecha_n=str(usuario.fecha_de_nacimiento)
+    if form.is_valid():
+        usuario.nombres=request.POST.get("nombres")
+        usuario.apellidos=request.POST.get("apellidos")
+        usuario.e_mail=request.POST.get("e_mail")
+        usuario.telefono=request.POST.get("telefono")
+        usuario.direccion=request.POST.get("direccion")
+        usuario.sexo=request.POST.get("sexo")
+        usuario.fecha_de_nacimiento=request.POST.get("fecha_de_nacimiento")
+        usuario.save()
+        return redirect("inicio")
+    return render(request,template_name,{'fecha_n':fecha_n,'form':form,'user':usuario})
+
+@login_required(login_url='/')
 def edt_password(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     if request.method == 'POST':
@@ -71,12 +88,6 @@ def edt_password(request):
     return render(request, 'editar/password_edit.html', {'form': form,'user':usuario})
 
 # ---------------------------------------------------------------------
-
-@login_required(login_url='/')
-def v_area_img(request):
-    cargar_img_activacion='active'
-    mi_template = loader.get_template("agregar/marcar_img.html")
-    return HttpResponse(mi_template.render())
 
 def logoutView(request):
     logout(request)
@@ -92,7 +103,7 @@ def loginView(request):
                                 password=form.cleaned_data['password'])
             if user is not None and user.is_active:
                 login(request, user)
-                return redirect(request.POST.get('next', '/inicio/'))
+                return redirect(request.POST.get('next', '/home/'))
             else:
                 mensaje="Nombre de Usuario o clave Incorrecto"
                 return render(request, "login.html", {"form": form,"mensaje":mensaje})

@@ -24,9 +24,10 @@ urlpatterns = [
 
     url(r'^$', loginView, name='login'),
     url(r'^logout/$', logoutView, name='logout'),
-    url(r'^inicio/$', v_inicio, name='inicio'),
-    url(r'^registro/$', UsuaioC, name='registro'),
+    url(r'^home/$', v_inicio, name='inicio'),
+    url(r'^register/$', UsuaioC, name='registro'),
     url(r'^password_edit/$', edt_password, name='edit_password'),
+    url(r'^user/profile/edit/$', UsuarioUpdate, name='edit_profile'),
 
     # ------------------------------Historial_clinico-----------------------------------
     url(r'^historial_clinico/$', Historial_clinicoList, name='historial_clinico'),
@@ -44,8 +45,6 @@ urlpatterns = [
     url(r'^imagen/editar/(?P<pk>.*)/$', ImagenUpdate, name='editar_imagen'),
     url(r'^imagen/borrar/(?P<pk>.*)/$', ImagenDelete, name='borrar_imagen'),
     url(r'^imagen/evaluar_imagen/(?P<pk>.*)/$', ImagenEvaluate, name='evaluar_imagen'),
-
-    url(r'^area_imagen/$', v_area_img, name='area_img'),
 
     # url(r'^login/$', auth_views.login, name='login'),
     # url(r'^cerrar/$', auth_views.logout, name='logout'),

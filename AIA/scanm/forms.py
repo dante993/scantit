@@ -47,6 +47,36 @@ class EditarContrasenaForm(forms.Form):
 
         return password2
 # ----------------------------------------------------------usuario----------------------------------------------------
+class Usuario_edtForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        widgets={
+            'nombres':forms.TextInput(attrs={
+                'class':'form-control'
+            }),
+            'apellidos':forms.TextInput(attrs={
+                'class':'form-control'
+            }),
+            'e_mail':forms.EmailInput(attrs={
+                'class':'form-control'
+            }),
+            'telefono':forms.TextInput(attrs={
+                'class':'form-control'
+            }),
+            'direccion':forms.TextInput(attrs={
+                'class':'form-control'
+            }),
+            'sexo':forms.Select(attrs={
+                'class':'form-control'
+            }),
+            'fecha_de_nacimiento':forms.TextInput(attrs={
+                'class':'form-control datepicker',
+                'type':'text',
+                'value':'2016-10-10'
+            }),
+        }
+        fields = ('nombres','apellidos','e_mail','telefono','direccion','sexo','fecha_de_nacimiento',)
+
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
@@ -79,7 +109,7 @@ class UsuarioForm(forms.ModelForm):
             'fecha_de_nacimiento':forms.TextInput(attrs={
                 'class':'form-control datepicker',
                 'type':'text',
-                'value':'2016/10/10'
+                'value':'2016-10-10'
             }),
         }
         fields = ('cedula','nombres','apellidos','e_mail','telefono','direccion','sexo','fecha_de_nacimiento',)
