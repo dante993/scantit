@@ -10,7 +10,7 @@
         <div class="card-content">
           <form method="POST" class="" action="">{% csrf_token %}
             <div class="row">
-                <h4 class="card-title text-center">Edit the fields you want to change</h4>
+                <h4 class="card-title text-center">Enter the fields you want to change</h4>
                 <div class="col-sm-offset-2">
                   <div class="row">
                     <div class="col-sm-5">
@@ -19,7 +19,7 @@
                           <i class="material-icons">face</i>
                         </span>
                         <div class="form-group label-floating">
-                          <label class="control-label">Nombres
+                          <label class="control-label">First name
                           </label>
                           {{ form.nombres }}
                           <span class="text-danger">{{ form.errors.nombres.as_text }}</span>
@@ -30,7 +30,7 @@
                           <i class="material-icons">perm_identity</i>
                         </span>
                         <div class="form-group label-floating">
-                          <label class="control-label">Apellidos
+                          <label class="control-label">last name
                           </label>
                           {{ form.apellidos }}
                           <span class="text-danger">{{ form.errors.apellidos.as_text }}</span>
@@ -41,7 +41,7 @@
                           <i class="material-icons">supervisor_account</i>
                         </span>
                         <div class="form-group label-floating">
-                          <label class="control-label">Sexo
+                          <label class="control-label">Sex
                           </label>
                           {{ form.sexo }}
                           <span class="text-danger">{{ form.errors.sexo.as_text }}</span>
@@ -65,7 +65,7 @@
                           <i class="material-icons">phone</i>
                         </span>
                         <div class="form-group label-floating">
-                          <label class="control-label">Teléfono
+                          <label class="control-label">Phone number
                           </label>
                           {{ form.telefono }}
                           <span class="text-danger">{{ form.errors.telefono.as_text }}</span>
@@ -76,7 +76,7 @@
                           <i class="material-icons">person_pin</i>
                         </span>
                         <div class="form-group label-floating">
-                          <label class="control-label">Dirección
+                          <label class="control-label">Address
                           </label>
                           {{ form.direccion }}
                           <span class="text-danger">{{ form.errors.direccion.as_text }}</span>
@@ -91,7 +91,7 @@
                           <i class="material-icons">insert_invitation</i>
                         </span>
                         <div class="form-group label-floating">
-                          <label class="control-label">Fecha de nacimiento
+                          <label class="control-label">Birthdate
                           </label>
                           {{ form.fecha_de_nacimiento }}
                           <span class="text-danger">{{ form.errors.fecha_de_nacimiento.as_text }}</span>

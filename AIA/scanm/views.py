@@ -33,13 +33,12 @@ ftp_clave = 'scanm'
 def v_inicio(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     inicio_activacion='active'
-    img_c_apr=Imagen_adm.objects.filter(imgad_estado='aprendida').count()
     img_c_rec=Imagen.objects.count()
     admins_c=Usuario.object.filter(is_superuser=True).count()
     users_c=Usuario.object.filter(is_superuser=False).count()
     hc_c=Historial_clinico.objects.count()
     return render(request, "inicio.html",
-                  {"hc_c":hc_c,"users_c":users_c,"admins_c":admins_c,"img_c_rec":img_c_rec,"img_c_apr":img_c_apr,"usuario": usuario,"inicio_activacion":inicio_activacion})
+                  {"hc_c":hc_c,"users_c":users_c,"admins_c":admins_c,"img_c_rec":img_c_rec,"usuario": usuario,"inicio_activacion":inicio_activacion})
 
 def UsuaioC(request, template_name='agregar/usuario_create.html'):
     form = UsuarioForm(request.POST or None)
@@ -115,9 +114,9 @@ def Historial_clinicoList(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     hc_activacion='active'
     if request.method=='POST':
-        hist_c = Historial_clinico.objects.order_by("hc_apellido").filter(hc_id__contains=request.POST["busca"],hc_estado='activo')
+        hist_c = Historial_clinico.objects.order_by("hc_apellido").filter(hc_id__contains=request.POST["busca"],hc_estado='Active',cedula=usuario)
         return render_to_response('listar/historial_clinico_list.html',{'historial':hist_c,'user':usuario})
-    hist_c = Historial_clinico.objects.order_by("hc_apellido").filter(hc_estado='activo')
+    hist_c = Historial_clinico.objects.order_by("hc_apellido").filter(hc_estado='Active',cedula=usuario)
     return render_to_response('listar/historial_clinico_list.html',{'historial':hist_c,'user':usuario,'hc_activacion':hc_activacion})
 
 @login_required(login_url='/')
@@ -125,9 +124,9 @@ def Historial_clinicoListin(request):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     hc_activacion='active'
     if request.method=='POST':
-        hist_c = Historial_clinico.objects.order_by("hc_apellido").filter(hc_id__contains=request.POST["busca"],hc_estado='inactivo')
+        hist_c = Historial_clinico.objects.order_by("hc_apellido").filter(hc_id__contains=request.POST["busca"],hc_estado='Inactive',cedula=usuario)
         return render_to_response('listar/historial_clinico_list.html',{'historial':hist_c,'user':usuario})
-    hist_c = Historial_clinico.objects.order_by("hc_apellido").filter(hc_estado='inactivo')
+    hist_c = Historial_clinico.objects.order_by("hc_apellido").filter(hc_estado='Inactive',cedula=usuario)
     return render_to_response('listar/historial_clinico_listin.html',{'historial':hist_c,'user':usuario,'hc_activacion':hc_activacion})
 
 @login_required(login_url='/')
@@ -186,6 +185,7 @@ def ImagenList(request):
 def ImagenCreate(request, template_name='agregar/imagen_create.html'):
     usuario=get_object_or_404(Usuario,cedula=request.user)
     form = ImagenForm(request.POST or None,request.FILES or None)
+    hist_c = Historial_clinico.objects.order_by("hc_apellido").filter(hc_estado='Active',cedula=usuario)
     img_activacion='active'
     if form.is_valid():
         # id_im = Producto.objects.latest('img_id')+1
@@ -221,7 +221,7 @@ def ImagenCreate(request, template_name='agregar/imagen_create.html'):
         fecha=str(time.strftime("%d/%m/%y"))
         hcc=request.POST["hc_cedula"]
         hcc_obj=get_object_or_404(Historial_clinico,hc_cedula=hcc)
-        obj = Imagen(img_ruta=ruta,img_descripcion=descripcion,img_estado='no analizada',img_validez='no definido',img_fecha=fecha,hc_cedula=hcc_obj)
+        obj = Imagen(img_ruta=ruta,img_descripcion=descripcion,img_estado='Not analyzed',img_validez='Undefined',img_fecha=fecha,hc_cedula=hcc_obj)
         obj.save()
         os.remove(tmp_file)
         return redirect("imagen")
@@ -321,7 +321,6 @@ def Imagen_admList(request):
 @login_required(login_url='/')
 def Imagen_admCreate(request,pk,pk2, template_name='agregar/adm_imagen_create.html'):
     usuario=get_object_or_404(Usuario,cedula=request.user)
-    form = Imagen_admForm(request.POST or None,request.FILES or None)
     ad_img_activacion='active'
     if request.method=='POST':
         data = request.FILES['imgad_ruta']
@@ -337,25 +336,7 @@ def Imagen_admCreate(request,pk,pk2, template_name='agregar/adm_imagen_create.ht
             shutil.move(path, os.path.join(settings.BASE_DIR, 'static')+"\\cnn\\imagenes\\"+str(dir_l)+"\\"+str(cont)+".jpg")
             cont=cont+1
         return redirect("adm_imagen")
-    return render(request,template_name,{"user":usuario,"form":form,"ad_img_activacion":ad_img_activacion})
-
-@login_required(login_url='/')
-def Imagen_admUpdate(request,pk,template_name='editar/imagen_update.html'):
-    usuario=get_object_or_404(Usuario,cedula=request.user)
-    obj = get_object_or_404(Imagen, pk=pk)
-    form = Imagen_admForm(request.POST or None, instance=obj)
-    ad_img_activacion='active'
-    if form.is_valid():
-        form.save()
-        return redirect("imagen")
-    return render(request,template_name,{'form':form,'user':usuario,'ad_img_activacion':ad_img_activacion})
-
-@login_required(login_url='/')
-def Imagen_admDelete(request,pk):
-    obj = get_object_or_404(Imagen, pk=pk)
-    obj.img_validez='no valida'
-    obj.save()
-    return redirect("imagen")
+    return render(request,template_name,{"user":usuario,"ad_img_activacion":ad_img_activacion})
 
 # ------------------------------------------tipo de cancer-----------------------------------------
 @login_required(login_url='/')

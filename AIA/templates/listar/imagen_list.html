@@ -28,12 +28,12 @@
     <p class="category">Listado de imagenes de los pacientes</p>
   </div>
   <div class="card-content table-responsive table-full-width">
-    <!-- <div class="" id="carga">
+    <div class="" id="carga" hidden="true">
       <legend class="text-rose text-center">Evaluating image...</legend>
       <div class="text-center">
         <img src="{% static 'img/loading.gif' %}" style="max-width:5%;"/>
       </div>
-    </div> -->
+    </div>
     <table class="table table-hover">
       <thead class="text-danger">
         <th>ID</th>
@@ -56,7 +56,7 @@
           <td>{{ im.img_fecha }}</td>
           <td>{{ im.hc_cedula }}</td>
           <td class="td-actions">
-            <a href="{% url 'evaluar_imagen' im.img_id %}" class="btn btn-info btn-just-icon" data-toggle="tooltip" data-placement="top" title="Evaluar"><i class="material-icons">center_focus_strong</i></a>
+            <a href="{% url 'evaluar_imagen' im.img_id %}" onclick="ejecutarBP()" class="btn btn-info btn-just-icon" data-toggle="tooltip" data-placement="top" title="Evaluar"><i class="material-icons">center_focus_strong</i></a>
             <a href="{% url 'editar_imagen' im.img_id %}" class="btn btn-success btn-just-icon" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
             <a href="{% url 'borrar_imagen' im.img_id %}" class="btn btn-danger btn-just-icon" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
           </td>
@@ -71,5 +71,8 @@
 {% block jscrpt %}
 <script type="text/javascript">
 $('[data-toggle="tooltip"]').tooltip();
+function ejecutarBP(){
+  $("#carga").show();
+}
 </script>
 {% endblock jscrpt %}

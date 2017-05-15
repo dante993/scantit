@@ -185,32 +185,3 @@ class Tipo_cancerForm(forms.ModelForm):
             })
         }
         fields = '__all__'
-
-# ---------------------------------------imagenes para aprendizaje--------------------------------------------------------
-class Imagen_admForm(forms.ModelForm):
-    class Meta:
-        model = Imagen_adm
-        widgets={
-            'imgad_ruta':forms.FileInput(attrs={
-                'accept':'image/jpg,image/png,image/jepg,image/gif'
-            }),
-            'imgad_descripcion':forms.Textarea(attrs={
-                'class':'form-control',
-            }),
-            'imgad_ancho':forms.TextInput(attrs={
-                'class':'form-control',
-                'placeholder':'ancho...'
-            }),
-            'imgad_alto':forms.TextInput(attrs={
-                'class':'form-control',
-                'placeholder':'alto...'
-            }),
-            'imgad_estado':forms.Select(attrs={
-                'class':'form-control'
-            }),
-            'tc_id':forms.Select(attrs={
-                'class':'selectpicker',
-                'data-style':'btn btn-rose btn-round'
-            }),
-        }
-        fields = '__all__'

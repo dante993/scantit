@@ -1,11 +1,14 @@
 import os
 import subprocess
 import time
-a="1,2,3"
-a=a.split(",")
-b=["5","2","4"]
-if b[1]==a[1]:
-    print(len(a))
+import shutil
+
+# shutil.rmtree(os.path.dirname(os.path.abspath(__file__))+"\\holaaa\\", ignore_errors=False, onerror=None)
+# a="1,2,3"
+# a=a.split(",")
+# b=["5","2","4"]
+# if b[1]==a[1]:
+#     print(len(a))
           # Espera 1 segundo antes de continuar.
 # archivo=open (os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+"/static/cnn/eval/eval.csv","a")
 # archivo.write(s)

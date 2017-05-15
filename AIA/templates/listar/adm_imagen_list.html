@@ -20,13 +20,13 @@
     <p class="category">List of Mammographies for learning</p>
   </div>
   <div class="card-content table-responsive table-full-width">
-    <div class="" id="carga">
+    <div class="" id="carga" hidden="true">
       <legend class="text-rose text-center">Learning...</legend>
       <div class="text-center">
         <img src="{% static 'img/loading.gif' %}" style="max-width:5%;"/>
       </div>
     </div>
-    <div class="" id="carga2">
+    <div class="" id="carga2" hidden="true">
       <legend class="text-rose text-center">Evaluating...</legend>
       <div class="text-center">
         <img src="{% static 'img/loading.gif' %}" style="max-width:5%;"/>
@@ -57,12 +57,6 @@
 {% endblock content %}
 {% block jscrpt %}
 <script type="text/javascript">
-
-$( document ).ready(function() {
-  $('[data-toggle="tooltip"]').tooltip();
-  $("#carga").hide();
-  $("#carga2").hide();
-});
 function ejecutarBP(){
   $("#carga").show();
 }

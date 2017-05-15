@@ -49,8 +49,8 @@ class Usuario (AbstractBaseUser,PermissionsMixin):
     telefono = models.CharField(max_length = 25)
     direccion=models.CharField(max_length = 200)
     SEXO_CHOICES = (
-        (u'm', u'Malculino'),
-        (u'f', u'Femenino'),
+        (u'm', u'Male'),
+        (u'f', u'Female'),
     )
     sexo=models.CharField(max_length = 2,choices=SEXO_CHOICES,default="m")
     fecha_de_nacimiento=models.DateField(null=True)
@@ -75,9 +75,9 @@ class Historial_clinico(models.Model):
     hc_apellido = models.CharField(max_length = 25,verbose_name="Apellido")
     hc_edad = models.IntegerField(verbose_name="Edad")
     hc_fecha = models.DateField(auto_now_add = True,verbose_name="Fecha",blank=True)
-    ESTADO_CHOICES =((u'activo',u'Activo'),
-                    (u'inactivo',u'Inactivo'),)
-    hc_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES,verbose_name="Estado", default='activo',blank=True)
+    ESTADO_CHOICES =((u'Active',u'Active'),
+                    (u'Inactive',u'Inactive'),)
+    hc_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES,verbose_name="State", default='Active',blank=True)
     cedula=models.ForeignKey(Usuario,verbose_name="Usuario")
     def __str__(self):
         strgn=self.hc_nombre+' '+self.hc_apellido
@@ -86,14 +86,14 @@ class Historial_clinico(models.Model):
 class Imagen(models.Model):
     img_id=models.AutoField(primary_key=True)
     img_ruta = models.CharField(max_length = 500,verbose_name="Ruta del archivo")
-    img_descripcion=models.TextField(verbose_name="Descripcion de la imagen",blank=True,default="sin comentarios...")
-    ESTADO_CHOICES =((u'analizada',u'Analizada'),
-                    (u'no analizada',u'No Analizada'),)
-    img_estado = models.CharField(verbose_name="Estado",max_length = 25,choices=ESTADO_CHOICES, default='no analizada',blank=True)
-    VALIDEZ_CHOICES =((u'valida',u'Valida'),
-                    (u'no definido',u'No definido'),
-                    (u'no valida',u'No Valida'),)
-    img_validez = models.CharField(verbose_name="Validez",max_length = 25,choices=VALIDEZ_CHOICES, default='no definido',blank=True)
+    img_descripcion=models.TextField(verbose_name="Descripcion de la imagen",blank=True,default="No comment...")
+    ESTADO_CHOICES =((u'Analyzed',u'Analyzed'),
+                    (u'Not analyzed',u'Not analyzed'),)
+    img_estado = models.CharField(verbose_name="Estado",max_length = 25,choices=ESTADO_CHOICES, default='Not analyzed',blank=True)
+    VALIDEZ_CHOICES =((u'Valid',u'Valid'),
+                    (u'Undefined',u'Undefined'),
+                    (u'Invalid',u'Invalid'),)
+    img_validez = models.CharField(verbose_name="Validez",max_length = 25,choices=VALIDEZ_CHOICES, default='Undefined',blank=True)
     img_fecha=models.DateField(auto_now_add=True,blank=True)
     hc_cedula=models.ForeignKey(Historial_clinico,verbose_name="Historial clinico")
     def __str__(self):
@@ -111,36 +111,11 @@ class Tipo_cancer(models.Model):
 
 
 class Resultados_analisis(models.Model):
-    resan_id=models.AutoField(primary_key=True)
+    img_id=models.ForeignKey(Imagen,verbose_name="Image")
+    tc_id=models.ForeignKey(Tipo_cancer,verbose_name="Label")
+    resan_valor = models.CharField(max_length = 25)
     resan_fecha=models.DateField(auto_now_add=True)
-    resan_descripcion=models.TextField()
-    img_id=models.ForeignKey(Imagen,verbose_name="imagen")
-    tc_id=models.ForeignKey(Tipo_cancer,verbose_name="tipo_cancer")
 
-# -----------------------------------admin--------------------------------------
-class Imagen_adm(models.Model):
-    imgad_id=models.AutoField(primary_key=True)
-    imgad_ruta = models.CharField(max_length = 500)
-    imgad_descripcion=models.TextField(verbose_name="Descripcion de la imagen",blank=True,default="sin comentarios...")
-    imgad_fecha=models.DateField(auto_now_add=True,blank=True)
-    imgad_ancho=models.CharField(max_length = 100)
-    imgad_alto=models.CharField(max_length = 100)
-    ESTADO_CHOICES =((u'aprendida',u'Aprendida'),
-                    (u'no aprendida',u'No aprendida'),)
-    imgad_estado = models.CharField(max_length = 25,choices=ESTADO_CHOICES, default='no aprendida',blank=True,verbose_name="Estado")
-    tc_id=models.ForeignKey(Tipo_cancer,verbose_name="Tipo de cancer")
-    def __str__(self):
-        return self.imgad_ruta
-
-class Area_imagen(models.Model):
-    arim_id=models.AutoField(primary_key=True)
-    arim_pos_x = models.IntegerField(verbose_name="Y")
-    arim_pos_y = models.IntegerField(verbose_name="X")
-    arim_ancho = models.IntegerField(verbose_name="Ancho")
-    arim_alto = models.IntegerField(verbose_name="Alto")
-    imgad_id=models.ForeignKey(Imagen_adm,verbose_name="imagen")
-    def __str__(self):
-        return self.arim_id
 
 
 
