@@ -299,7 +299,9 @@ def Imagen_admRetrain(request):
     result=subprocess.call("python "+str(pth2)+"\\retrain.py --bottleneck_dir="+
     pth+"/cnn/bottlenecks --how_many_training_steps 500 --model_dir="+
     pth+"/cnn/inception --output_graph="+pth+"/cnn/retrained_graph.pb --output_labels="+
-    pth+"/cnn/retrained_labels.txt --image_dir "+pth+"/cnn/imagenes")
+    pth+"/cnn/retrained_labels.txt --image_dir "+pth+"/cnn/imagenes "+
+    "--print_misclassified_test_images "+
+    "--testing_percentage=10 --validation_percentage=10")
     return redirect("adm_imagen")
 
 class Obj_list:
