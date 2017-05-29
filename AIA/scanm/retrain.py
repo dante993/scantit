@@ -87,7 +87,6 @@ JPEG_DATA_TENSOR_NAME = 'DecodeJpeg/contents:0'
 RESIZED_INPUT_TENSOR_NAME = 'ResizeBilinear:0'
 MAX_NUM_IMAGES_PER_CLASS = 2 ** 27 - 1  # ~134M
 
-
 def create_image_lists(image_dir, testing_percentage, validation_percentage):
   """Builds a list of training images from the file system.
   Analyzes the sub folders in the image directory, splits them into stable
@@ -133,6 +132,9 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
     training_images = []
     testing_images = []
     validation_images = []
+    contador=0
+    contador2=0
+    contador3=0
     for file_name in file_list:
       base_name = os.path.basename(file_name)
       # We want to ignore anything after '_nohash_' in the file name when
@@ -153,11 +155,23 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
                           (MAX_NUM_IMAGES_PER_CLASS + 1)) *
                          (100.0 / MAX_NUM_IMAGES_PER_CLASS))
       if percentage_hash < validation_percentage:
+        contador = contador+1
         validation_images.append(base_name)
       elif percentage_hash < (testing_percentage + validation_percentage):
+        contador2 = contador2+1
         testing_images.append(base_name)
       else:
+        contador3 = contador3+1
         training_images.append(base_name)
+    print("-------------------------------------------")
+    print(contador)
+    print(contador2)
+    print(contador3)
+    print(percentage_hash)
+    print(len(training_images))
+    print(len(testing_images))
+    print(len(validation_images))
+    print("-------------------------------------------")
     result[label_name] = {
         'dir': dir_name,
         'training': training_images,
